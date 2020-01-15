@@ -12,71 +12,7 @@
 #include <math.h>
 
 #include "graphics.h"
-
-extern GLubyte world[WORLDX][WORLDY][WORLDZ];
-
-/* mouse function called by GLUT when a button is pressed or released */
-void mouse(int, int, int, int);
-
-/* initialize graphics library */
-extern void graphicsInit(int *, char **);
-
-/* lighting control */
-extern void setLightPosition(GLfloat, GLfloat, GLfloat);
-extern GLfloat *getLightPosition();
-
-/* viewpoint control */
-extern void setViewPosition(float, float, float);
-extern void getViewPosition(float *, float *, float *);
-extern void getOldViewPosition(float *, float *, float *);
-extern void setOldViewPosition(float, float, float);
-extern void setViewOrientation(float, float, float);
-extern void getViewOrientation(float *, float *, float *);
-
-/* add cube to display list so it will be drawn */
-extern void addDisplayList(int, int, int);
-
-/* mob controls */
-extern void createMob(int, float, float, float, float);
-extern void setMobPosition(int, float, float, float, float);
-extern void hideMob(int);
-extern void showMob(int);
-
-/* player controls */
-extern void createPlayer(int, float, float, float, float);
-extern void setPlayerPosition(int, float, float, float, float);
-extern void hidePlayer(int);
-extern void showPlayer(int);
-
-/* tube controls */
-extern void createTube(int, float, float, float, float, float, float, int);
-extern void hideTube(int);
-extern void showTube(int);
-
-/* 2D drawing functions */
-extern void draw2Dline(int, int, int, int, int);
-extern void draw2Dbox(int, int, int, int);
-extern void draw2Dtriangle(int, int, int, int, int, int);
-extern void set2Dcolour(float[]);
-
-/* flag which is set to 1 when flying behaviour is desired */
-extern int flycontrol;
-/* flag used to indicate that the test world should be used */
-extern int testWorld;
-/* flag to print out frames per second */
-extern int fps;
-/* flag to indicate the space bar has been pressed */
-extern int space;
-/* flag indicates the program is a client when set = 1 */
-extern int netClient;
-/* flag indicates the program is a server when set = 1 */
-extern int netServer;
-/* size of the window in pixels */
-extern int screenWidth, screenHeight;
-/* flag indicates if map is to be printed */
-extern int displayMap;
-/* flag indicates use of a fixed viewpoint */
-extern int fixedVP;
+#include "generation.h"
 
 /* frustum corner coordinates, used for visibility determination  */
 extern float corners[4][3];
@@ -84,13 +20,6 @@ extern float corners[4][3];
 /* determine which cubes are visible e.g. in view frustum */
 extern void ExtractFrustum();
 extern void tree(float, float, float, float, float, float, int);
-
-/* allows users to define colours */
-extern int setUserColour(int, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat,
-                         GLfloat, GLfloat, GLfloat);
-void unsetUserColour(int);
-extern void getUserColour(int, GLfloat *, GLfloat *, GLfloat *, GLfloat *,
-                          GLfloat *, GLfloat *, GLfloat *, GLfloat *);
 
 /********* end of extern variable declarations **************/
 
@@ -288,68 +217,19 @@ void mouse(int button, int state, int x, int y)
 
 int main(int argc, char **argv)
 {
-   int i, j, k;
    /* initialize the graphics system */
    graphicsInit(&argc, argv);
 
-   /* the first part of this if statement builds a sample */
-   /* world which will be used for testing */
-   /* DO NOT remove this code. */
-   /* Put your code in the else statment below */
-   /* The testworld is only guaranteed to work with a world of
-		with dimensions of 100,50,100. */
    if (testWorld == 1)
    {
-      /* initialize world to empty */
-      for (i = 0; i < WORLDX; i++)
-         for (j = 0; j < WORLDY; j++)
-            for (k = 0; k < WORLDZ; k++)
-               world[i][j][k] = 0;
-
-      /* some sample objects */
-      /* build a red platform */
-      for (i = 0; i < WORLDX; i++)
-      {
-         for (j = 0; j < WORLDZ; j++)
-         {
-            world[i][24][j] = 3;
-         }
-      }
-      /* create some green and blue cubes */
-      world[50][25][50] = 1;
-      world[49][25][50] = 1;
-      world[49][26][50] = 1;
-      world[52][25][52] = 2;
-      world[52][26][52] = 2;
-
-      /* create user defined colour and draw cube */
-      setUserColour(9, 0.7, 0.3, 0.7, 1.0, 0.3, 0.15, 0.3, 1.0);
-      world[54][25][50] = 9;
-
-      /* blue box shows xy bounds of the world */
-      for (i = 0; i < WORLDX - 1; i++)
-      {
-         world[i][25][0] = 2;
-         world[i][25][WORLDZ - 1] = 2;
-      }
-      for (i = 0; i < WORLDZ - 1; i++)
-      {
-         world[0][25][i] = 2;
-         world[WORLDX - 1][25][i] = 2;
-      }
-
-      /* create two sample mobs */
-      /* these are animated in the update() function */
-      createMob(0, 50.0, 25.0, 52.0, 0.0);
-      createMob(1, 50.0, 25.0, 52.0, 0.0);
-
-      /* create sample player */
-      createPlayer(0, 52.0, 27.0, 52.0, 0.0);
+      /* Builds a sample world which will be used for testing */
+      /* The testworld is only guaranteed to work with world
+      dimensions of 100,50,100 */
+      testWorld_init();
    }
    else
    {
-
-      /* your code to build the world goes here */
+      mainWorld_init();
    }
 
    /* starts the graphics processing loop */
