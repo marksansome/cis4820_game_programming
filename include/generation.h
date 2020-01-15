@@ -1,0 +1,4 @@
+#ifndef __MSANSOME_GENERATION__
+#define __MSANSOME_GENERATION__
+
+#endif // __MSANSOME_GENERATION__
