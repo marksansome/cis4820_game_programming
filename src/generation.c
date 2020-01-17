@@ -1,15 +1,29 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
-#include "graphics.h"
 #include "generation.h"
+#include "hill.h"
+#include "valley.h"
 
-void testWorld_init()
+void initializeWorld()
 {
     /* initialize world to empty */
     for (int i = 0; i < WORLDX; i++)
+    {
         for (int j = 0; j < WORLDY; j++)
+        {
             for (int k = 0; k < WORLDZ; k++)
+            {
                 world[i][j][k] = 0;
+            }
+        }
+    }
+}
 
+void createTestWorld()
+{
     /* some sample objects */
     /* build a red platform */
     for (int i = 0; i < WORLDX; i++)
@@ -27,7 +41,7 @@ void testWorld_init()
     world[52][26][52] = 2;
 
     /* create user defined colour and draw cube */
-    setUserColour(9, 0.7, 0.3, 0.7, 1.0, 0.3, 0.15, 0.3, 1.0);
+    // colour is now created in createUserColours()
     world[54][25][50] = 9;
 
     /* blue box shows xy bounds of the world */
@@ -51,6 +65,52 @@ void testWorld_init()
     createPlayer(0, 52.0, 27.0, 52.0, 0.0);
 }
 
-void mainWorld_init()
+void createMainWorld()
 {
+    /* Intializes random number generator */
+    time_t t;
+    srand((unsigned)time(&t));
+
+    // place initial floor
+    for (int y = 0; y < GROUND_DEPTH; y++)
+    {
+        for (int x = 0; x < WORLDX; x++)
+        {
+            for (int z = 0; z < WORLDZ; z++)
+            {
+                // set top layer of ground to green, rest to brown
+                if (y == (GROUND_DEPTH - 1))
+                {
+                    // green
+                    world[x][y][z] = 10;
+                }
+                else
+                {
+                    // brown
+                    world[x][y][z] = 11;
+                }
+            }
+        }
+    }
+
+    // add team bases
+
+    // add valleys
+    for (int i = 0; i < NUM_VALLEYS; i++)
+    {
+        Valley vall;
+        initializeValley(&vall);
+        generateValley(vall);
+    }
+
+    // add hills
+    for (int i = 0; i < NUM_HILLS; i++)
+    {
+        Hill hill;
+        initializeValley(&hill);
+        generateHill(hill);
+    }
+
+    // set player starting positon
+    setViewPosition(-1, -6, -1);
 }

@@ -12,6 +12,7 @@
 #define WORLDX 100
 #define WORLDY 50
 #define WORLDZ 100
+#define WORLD_CLOUD_GAP 3
 
 /* list of cubes to draw with each screen update */
 #define MAX_DISPLAY_LIST 500000

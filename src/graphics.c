@@ -52,8 +52,10 @@ GLfloat viewpointLight[] = {-50.0, -50.0, -50.0, 1.0};
 float skySize;
 
 /* screen dimensions */
-int screenWidth = 1024;
-int screenHeight = 768;
+// int screenWidth = 1024;
+// int screenHeight = 768;
+int screenWidth = 2048;
+int screenHeight = 1536;
 
 /* command line flags */
 int flycontrol = 1;      // allow viewpoint to move in y axis when 1

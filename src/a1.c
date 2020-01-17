@@ -13,6 +13,7 @@
 
 #include "graphics.h"
 #include "generation.h"
+#include "utility.h"
 
 /* frustum corner coordinates, used for visibility determination  */
 extern float corners[4][3];
@@ -43,6 +44,32 @@ void collisionResponse()
    // position = getOldViewPosition();
    // if getViewPosition() != 0 { setViewPosition(position) }
    //
+
+   // get current VP and make positive
+   float x, y, z = 0.0;
+   getViewPosition(&x, &y, &z);
+
+   x = x * -1.0;
+   y = y * -1.0;
+   z = z * -1.0;
+
+   // check VP collision with items in world
+   if (world[(int)x][(int)y][(int)z] != 0)
+   {
+      printf("COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
+      float ox, oy, oz = 0.0;
+      getOldViewPosition(&ox, &oy, &oz);
+      setViewPosition(ox, oy, oz);
+   }
+
+   // check VP collision with world border
+   if (x > (WORLDX - 1) || x < 0 || z > (WORLDZ - 1) || z < 0 || y > (WORLDY - WORLD_CLOUD_GAP) || y < 0)
+   {
+      printf("WORLD COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
+      float ox, oy, oz = 0.0;
+      getOldViewPosition(&ox, &oy, &oz);
+      setViewPosition(ox, oy, oz);
+   }
 }
 
 /******* draw2D() *******/
@@ -217,19 +244,25 @@ void mouse(int button, int state, int x, int y)
 
 int main(int argc, char **argv)
 {
-   /* initialize the graphics system */
+   // initialize the graphics system
    graphicsInit(&argc, argv);
+
+   // initialize world to empty
+   initializeWorld();
+
+   // create user defined colours
+   createUserColours();
 
    if (testWorld == 1)
    {
       /* Builds a sample world which will be used for testing */
       /* The testworld is only guaranteed to work with world
       dimensions of 100,50,100 */
-      testWorld_init();
+      createTestWorld();
    }
    else
    {
-      mainWorld_init();
+      createMainWorld();
    }
 
    /* starts the graphics processing loop */

@@ -14,6 +14,9 @@ SRC = \
 	src/a1.c \
 	src/generation.c \
 	src/graphics.c \
+	src/hill.c \
+	src/utility.c \
+	src/valley.c \
 	src/visible.c
 
 all: $(EXE)
