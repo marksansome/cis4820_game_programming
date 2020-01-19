@@ -4,7 +4,7 @@
 #define NUM_VALLEYS 10
 #define VALLEY_DEPTH 3
 #define MIN_VALLEY_RADIUS 5
-#define MAX_VALLEY_RADIUS 15
+#define MAX_VALLEY_RADIUS 10
 
 typedef struct valley
 {
@@ -13,7 +13,8 @@ typedef struct valley
     int z;
 } Valley;
 
-void initializeValley(Valley *);
-void generateValley(Valley);
+extern Valley *createValley();
+extern void initializeValley(Valley *);
+extern void generateValley(Valley *);
 
 #endif //__MSANSOME_VALLEY__

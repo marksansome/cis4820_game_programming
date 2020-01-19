@@ -7,6 +7,8 @@
 #include "hill.h"
 #include "valley.h"
 
+GameObjects *gameObjects;
+
 void initializeWorld()
 {
     /* initialize world to empty */
@@ -98,19 +100,54 @@ void createMainWorld()
     // add valleys
     for (int i = 0; i < NUM_VALLEYS; i++)
     {
-        Valley vall;
-        initializeValley(&vall);
-        generateValley(vall);
+        Valley *v = createValley();
+        Structure *s = createStructure(id_valley, 1, v);
+
+        initializeValley(v);
+
+        // if valley can be placed, add structure to main list
+
+        generateValley(v);
+        printf("Valley gen at x = %i, z = %i\n", v->x, v->z);
+
+        gameObjects->structures[gameObjects->numStructures] = s;
+        gameObjects->numStructures += 1;
     }
+
+    Valley *test = gameObjects->structures[0]->ptr;
+
+    printf("Test valley 1 at x = %i, z = %i\n", test->x, test->z);
 
     // add hills
     for (int i = 0; i < NUM_HILLS; i++)
     {
         Hill hill;
-        initializeValley(&hill);
+        initializeHill(&hill);
         generateHill(hill);
+        printf("Hill gen at x = %i, z = %i\n", hill.x, hill.z);
     }
 
     // set player starting positon
-    setViewPosition(-1, -6, -1);
+    setViewPosition(-50, -20, -50);
+}
+
+Structure *createStructure(StructureId id, int render, void *ptr)
+{
+    Structure *s = (Structure *)malloc(sizeof(Structure));
+    if (s == NULL)
+    {
+        printf("Unable to allocate memory!\n");
+        exit(1);
+    }
+    s->id = id;
+    s->render = render;
+    s->ptr = ptr;
+
+    return s;
+}
+
+void freeStructures()
+{
+    //TODO: handle memory management
+    return;
 }

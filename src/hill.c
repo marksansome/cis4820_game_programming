@@ -1,4 +1,8 @@
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
 #include "hill.h"
 #include "generation.h"
 

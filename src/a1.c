@@ -45,6 +45,11 @@ void collisionResponse()
    // if getViewPosition() != 0 { setViewPosition(position) }
    //
 
+   if (testWorld)
+   {
+      return;
+   }
+
    // get current VP and make positive
    float x, y, z = 0.0;
    getViewPosition(&x, &y, &z);
@@ -247,6 +252,15 @@ int main(int argc, char **argv)
    // initialize the graphics system
    graphicsInit(&argc, argv);
 
+   // initialize worlds game object
+   gameObjects = (GameObjects *)malloc(sizeof(GameObjects));
+   if (gameObjects == NULL)
+   {
+      printf("Unable to allocate memory!\n");
+      exit(1);
+   }
+   gameObjects->numStructures = 0;
+
    // initialize world to empty
    initializeWorld();
 
@@ -268,5 +282,9 @@ int main(int argc, char **argv)
    /* starts the graphics processing loop */
    /* code after this will not run until the program exits */
    glutMainLoop();
+
+   freeStructures();
+   free(gameObjects);
+
    return 0;
 }

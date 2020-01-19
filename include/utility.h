@@ -5,8 +5,8 @@
 * createUserColours
 * Creates a list of user defined colours
 */
-void createUserColours();
+extern void createUserColours();
 
-void drawCircle(int xCentre, int y, int zCentre, int r, int colour);
+extern void drawCircle(int xCentre, int y, int zCentre, int r, int colour);
 
 #endif //__MSANSOME_UTILITY__

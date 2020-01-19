@@ -3,8 +3,11 @@
 
 #include "graphics.h"
 #include "utility.h"
+#include "hill.h"
+#include "valley.h"
 
 #define GROUND_DEPTH 5 // depth of the ground (top layer will be green)
+#define MAX_OBJECTS 100
 
 // number of items that will be attempted to generate
 // if there is a collision item will not be generated
@@ -17,32 +20,51 @@ typedef enum structureId
     id_base
 } StructureId;
 
-typedef struct structures
+typedef struct structure
 {
-    void *ptr;
     StructureId id;
-} Structures;
+    void *ptr;
+    int render;
+} Structure;
+
+typedef struct gameObjects
+{
+    int numStructures;
+    Structure *structures[MAX_OBJECTS];
+} GameObjects;
+
+extern GameObjects *gameObjects;
 
 /*
 * initializeWorld
 * Set the world array to 0
 */
-void initializeWorld();
+extern void initializeWorld();
 
 /*
 * createTestWorld
 * Initalize the game world
 * Generate a test world to debug the graphics engine
 */
-void createTestWorld();
+extern void createTestWorld();
 
 /*
 * createMainWorld
 * Initalize the game world
 * Generate the games main world environment
 */
-void createMainWorld();
+extern void createMainWorld();
 
-void generateHill(Hill);
+/*
+* createStructure
+* Creates and allocates memory for a Structure
+*/
+extern Structure *createStructure(StructureId id, int render, void *ptr);
+
+/*
+* freeStructures
+* Free memory allocated for all structures in gameObjects
+*/
+extern void freeStructures();
 
 #endif // __MSANSOME_GENERATION__
