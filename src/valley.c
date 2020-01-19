@@ -36,3 +36,8 @@ void generateValley(Valley *v)
         drawCircle(v->x, GROUND_DEPTH - 1 - i, v->z, v->radius - i, 0);
     }
 }
+
+void freeValley(Valley *v)
+{
+    free(v);
+}

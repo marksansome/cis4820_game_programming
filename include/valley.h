@@ -16,5 +16,6 @@ typedef struct valley
 extern Valley *createValley();
 extern void initializeValley(Valley *);
 extern void generateValley(Valley *);
+extern void freeValley(Valley *v);
 
 #endif //__MSANSOME_VALLEY__

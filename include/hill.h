@@ -13,7 +13,9 @@ typedef struct hill
     int z;
 } Hill;
 
+extern Hill *createHill();
 extern void initializeHill(Hill *);
-extern void generateHill(Hill);
+extern void generateHill(Hill *);
+extern void freeHill(Hill *);
 
 #endif //__MSANSOME_HILL__

@@ -101,30 +101,31 @@ void createMainWorld()
     for (int i = 0; i < NUM_VALLEYS; i++)
     {
         Valley *v = createValley();
-        Structure *s = createStructure(id_valley, 1, v);
-
         initializeValley(v);
 
+        Structure *s = createStructure(id_valley, 1, v);
+
         // if valley can be placed, add structure to main list
-
         generateValley(v);
-        printf("Valley gen at x = %i, z = %i\n", v->x, v->z);
-
         gameObjects->structures[gameObjects->numStructures] = s;
         gameObjects->numStructures += 1;
     }
 
-    Valley *test = gameObjects->structures[0]->ptr;
-
-    printf("Test valley 1 at x = %i, z = %i\n", test->x, test->z);
+    // Valley *test = gameObjects->structures[0]->ptr;
+    // printf("Test valley 1 at x = %i, z = %i\n", test->x, test->z);
 
     // add hills
     for (int i = 0; i < NUM_HILLS; i++)
     {
-        Hill hill;
-        initializeHill(&hill);
-        generateHill(hill);
-        printf("Hill gen at x = %i, z = %i\n", hill.x, hill.z);
+        Hill *h = createHill();
+        initializeHill(h);
+
+        Structure *s = createStructure(id_hill, 1, h);
+
+        generateHill(h);
+        gameObjects->structures[gameObjects->numStructures] = h;
+        gameObjects->numStructures += 1;
+        // printf("Hill gen at x = %i, z = %i\n", hill.x, hill.z);
     }
 
     // set player starting positon
@@ -148,6 +149,6 @@ Structure *createStructure(StructureId id, int render, void *ptr)
 
 void freeStructures()
 {
-    //TODO: handle memory management
+    //TODO: handle freeing memory. Call each objects free
     return;
 }
