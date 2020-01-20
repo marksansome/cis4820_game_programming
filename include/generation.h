@@ -7,7 +7,8 @@
 #include "valley.h"
 
 #define GROUND_DEPTH 5 // depth of the ground (top layer will be green)
-#define MAX_OBJECTS 100
+#define MAX_OBJECTS 250
+#define MAX_TERRAIN 30
 
 // number of items that will be attempted to generate
 // if there is a collision item will not be generated
@@ -60,6 +61,28 @@ extern void createMainWorld();
 * Creates and allocates memory for a Structure
 */
 extern Structure *createStructure(StructureId id, int render, void *ptr);
+
+/*
+* checkStructureCollision
+* Checks if the values collide with any
+* other structure in gameObjects. Exclude its own index
+* Out:
+* 1 = collision
+* 0 = no collision
+*/
+extern int checkStructureCollision(int index, int x, int z, int radius);
+
+/*
+* getStructureXZR
+* Gets the x, z, and radius of a gameObject at
+* the given index in the gameObject->structure
+* Out:
+* 1 = ERROR
+* 0 = success
+* In:
+* x, z, radius are updated with respective structures values
+*/
+extern int getStructureXZR(int index, int *x, int *z, int *radius);
 
 /*
 * freeStructures

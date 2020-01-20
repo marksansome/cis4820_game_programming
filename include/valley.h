@@ -1,7 +1,7 @@
 #ifndef __MSANSOME_VALLEY__
 #define __MSANSOME_VALLEY__
 
-#define NUM_VALLEYS 10
+#define NUM_VALLEYS 25
 #define VALLEY_DEPTH 3
 #define MIN_VALLEY_RADIUS 5
 #define MAX_VALLEY_RADIUS 10

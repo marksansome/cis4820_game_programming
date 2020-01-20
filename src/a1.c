@@ -45,11 +45,6 @@ void collisionResponse()
    // if getViewPosition() != 0 { setViewPosition(position) }
    //
 
-   if (testWorld)
-   {
-      return;
-   }
-
    // get current VP and make positive
    float x, y, z = 0.0;
    getViewPosition(&x, &y, &z);
@@ -59,21 +54,39 @@ void collisionResponse()
    z = z * -1.0;
 
    // check VP collision with items in world
-   if (world[(int)x][(int)y][(int)z] != 0)
+   // if (world[(int)x][(int)y][(int)z] != 0)
+   // {
+   //    printf("COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
+   //    float ox, oy, oz = 0.0;
+   //    getOldViewPosition(&ox, &oy, &oz);
+   //    setViewPosition(ox, oy, oz);
+   // }
+
+   if (world[(int)floor(x)][(int)floor(y)][(int)floor(z)] != 0 ||
+       world[(int)floor(x)][(int)floor(y)][(int)ceil(z)] != 0 ||
+       world[(int)floor(x)][(int)ceil(y)][(int)floor(z)] != 0 ||
+       world[(int)ceil(x)][(int)floor(y)][(int)floor(z)] != 0 ||
+       world[(int)floor(x)][(int)ceil(y)][(int)ceil(z)] != 0 ||
+       world[(int)ceil(x)][(int)ceil(y)][(int)floor(z)] != 0 ||
+       world[(int)ceil(x)][(int)floor(y)][(int)ceil(z)] != 0 ||
+       world[(int)ceil(x)][(int)ceil(y)][(int)ceil(z)] != 0)
    {
-      printf("COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
+      // printf("COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
       float ox, oy, oz = 0.0;
       getOldViewPosition(&ox, &oy, &oz);
       setViewPosition(ox, oy, oz);
    }
 
    // check VP collision with world border
-   if (x > (WORLDX - 1) || x < 0 || z > (WORLDZ - 1) || z < 0 || y > (WORLDY - WORLD_CLOUD_GAP) || y < 0)
+   if (!testWorld)
    {
-      printf("WORLD COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
-      float ox, oy, oz = 0.0;
-      getOldViewPosition(&ox, &oy, &oz);
-      setViewPosition(ox, oy, oz);
+      if (x > (WORLDX - 1) || x < 0 || z > (WORLDZ - 1) || z < 0 || y > (WORLDY - WORLD_CLOUD_GAP) || y < 0)
+      {
+         // printf("WORLD COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
+         float ox, oy, oz = 0.0;
+         getOldViewPosition(&ox, &oy, &oz);
+         setViewPosition(ox, oy, oz);
+      }
    }
 }
 

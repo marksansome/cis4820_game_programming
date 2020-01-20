@@ -1,7 +1,7 @@
 #ifndef __MSANSOME_HILL__
 #define __MSANSOME_HILL__
 
-#define NUM_HILLS 10
+#define NUM_HILLS 25
 #define HILL_DEPTH 3
 #define MIN_HILL_RADIUS 5
 #define MAX_HILL_RADIUS 10

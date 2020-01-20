@@ -105,14 +105,18 @@ void createMainWorld()
 
         Structure *s = createStructure(id_valley, 1, v);
 
-        // if valley can be placed, add structure to main list
-        generateValley(v);
+        // if (checkStructureCollision(v->x, v->z, v->radius))
+        // {
+        //     initializeValley(v);
+        //     if (checkStructureCollision(v->x, v->z, v->radius))
+        //     {
+        //         continue;
+        //     }
+        // }
+
         gameObjects->structures[gameObjects->numStructures] = s;
         gameObjects->numStructures += 1;
     }
-
-    // Valley *test = gameObjects->structures[0]->ptr;
-    // printf("Test valley 1 at x = %i, z = %i\n", test->x, test->z);
 
     // add hills
     for (int i = 0; i < NUM_HILLS; i++)
@@ -122,10 +126,67 @@ void createMainWorld()
 
         Structure *s = createStructure(id_hill, 1, h);
 
-        generateHill(h);
-        gameObjects->structures[gameObjects->numStructures] = h;
+        // check for collision with other structures
+        // if (checkStructureCollision(h->x, h->z, h->radius))
+        // {
+        //     initializeHill(h);
+        //     if (checkStructureCollision(h->x, h->z, h->radius))
+        //     {
+        //         continue;
+        //     }
+        // }
+
+        gameObjects->structures[gameObjects->numStructures] = s;
         gameObjects->numStructures += 1;
-        // printf("Hill gen at x = %i, z = %i\n", hill.x, hill.z);
+    }
+
+    //TODO: collision. if valley can be placed
+
+    for (int i = 0; i < gameObjects->numStructures; i++)
+    {
+        if (gameObjects->structures[i]->render)
+        {
+            Structure *s = gameObjects->structures[i];
+            switch (s->id)
+            {
+            case id_valley:
+            {
+                Valley *v = s->ptr;
+                // if (checkStructureCollision(i, v->x, v->z, v->radius))
+                // {
+                //     s->render = 0;
+                // }
+                // else
+                // {
+                generateValley(v);
+                // }
+                break;
+            }
+            case id_hill:
+            {
+                Hill *h = s->ptr;
+                // if (checkStructureCollision(i, h->x, h->z, h->radius))
+                // {
+                //     s->render = 0;
+                // }
+                // else
+                // {
+                generateHill(h);
+                // }
+                break;
+            }
+            case id_base:
+            {
+                //TODO: add generation for bases
+                break;
+            }
+            default:
+            {
+                printf("ERROR: Invalid structure ID\n");
+                break;
+            }
+            }
+        }
     }
 
     // set player starting positon
@@ -145,6 +206,85 @@ Structure *createStructure(StructureId id, int render, void *ptr)
     s->ptr = ptr;
 
     return s;
+}
+
+int checkStructureCollision(int i, int x, int z, int r)
+{
+    // Note: object 1 is A, object 2 is B
+    for (int j = 0; j < gameObjects->numStructures; j++)
+    {
+        // get a structures x, z, radius
+        int xb, zb, rb = 0;
+        getStructureXZR(j, &xb, &zb, &rb);
+
+        // check if B structure collides with A x, z, radius
+        // get top left and bottom right coords of each object
+        int x1A = x - r;
+        int x2A = x + r;
+        int z1A = z + r;
+        int z2A = z - r;
+
+        int x1B = xb - rb;
+        int x2B = xb + rb;
+        int z1B = zb + rb;
+        int z2B = zb - rb;
+
+        if (x1A <= x2B && x2A >= x1B && z1A >= z2B && z2A <= z1B)
+        {
+            if (i == j)
+            {
+                // Collision is with itself
+                return (0);
+            }
+            return (1);
+        }
+    }
+
+    return (0);
+}
+
+int getStructureXZR(int index, int *x, int *z, int *r)
+{
+    if (index >= gameObjects->numStructures)
+    {
+        printf("ERROR: Out Of Bounds. Trying to access gameObject outside of array\n");
+        return (1);
+    }
+    Structure *s = gameObjects->structures[index];
+    switch (s->id)
+    {
+    case id_valley:
+    {
+        Valley *v = s->ptr;
+        *x = v->x;
+        *z = v->z;
+        *r = v->radius;
+        break;
+    }
+    case id_hill:
+    {
+        Hill *h = s->ptr;
+        *x = h->x;
+        *z = h->z;
+        *r = h->radius;
+        break;
+    }
+    case id_base:
+    {
+        //TODO: add generation for bases
+        // Base *b = b->ptr;
+        // *x = b->x;
+        // *z = b->z;
+        // *r = b->radius;
+        break;
+    }
+    default:
+    {
+        printf("ERROR: Invalid structure ID\n");
+        return (1);
+    }
+    }
+    return (0);
 }
 
 void freeStructures()
