@@ -82,28 +82,26 @@ void createMainWorld()
                 if (y == (GROUND_DEPTH - 1))
                 {
                     // green
-                    world[x][y][z] = 10;
+                    world[x][y][z] = getColour(GREEN);
                 }
                 else
                 {
                     // brown
-                    world[x][y][z] = 11;
+                    world[x][y][z] = getColour(BROWN);
                 }
             }
         }
     }
 
     // add team bases
-    //red
-    Base *b1 = createBase();
-    initializeBase(b1, 2, 15);
-    Structure *sb1 = createStructure(id_base, 1, b1);
-    addGameObject(sb1);
-    //blue
-    Base *b2 = createBase();
-    initializeBase(b2, 3, 75);
-    Structure *sb2 = createStructure(id_base, 1, b2);
-    addGameObject(sb2);
+    // red
+    Base *bRed = createBase();
+    initializeBase(bRed, 2, 15);
+    addGameObject(createStructure(id_base, 1, bRed));
+    // blue
+    Base *bBlue = createBase();
+    initializeBase(bBlue, 3, 75);
+    addGameObject(createStructure(id_base, 1, bBlue));
 
     for (int i = 0; i < MAX_TERRAIN; i++)
     {
@@ -113,10 +111,9 @@ void createMainWorld()
             Valley *v = createValley();
             initializeValley(v);
 
-            if (!checkCircleStructureCollision(-1, v->x, v->z, v->radius))
+            if (!checkStructureCollision(-1, v->x1, v->z1, v->x2, v->z2))
             {
-                Structure *s = createStructure(id_valley, 1, v);
-                addGameObject(s);
+                addGameObject(createStructure(id_valley, 1, v));
             }
         }
         else //hill
@@ -124,15 +121,12 @@ void createMainWorld()
             Hill *h = createHill();
             initializeHill(h);
 
-            if (!checkCircleStructureCollision(-1, h->x, h->z, h->radius))
+            if (!checkStructureCollision(-1, h->x1, h->z1, h->x2, h->z2))
             {
-                Structure *s = createStructure(id_hill, 1, h);
-                addGameObject(s);
+                addGameObject(createStructure(id_hill, 1, h));
             }
         }
     }
-
-    //TODO: collision. if valley can be placed
 
     // place generated objects into world
     for (int i = 0; i < gameObjects->numStructures; i++)
@@ -144,20 +138,18 @@ void createMainWorld()
             {
             case id_valley:
             {
-                Valley *v = s->ptr;
-                generateValley(v);
+
+                generateValley((Valley *)s->ptr);
                 break;
             }
             case id_hill:
             {
-                Hill *h = s->ptr;
-                generateHill(h);
+                generateHill((Hill *)s->ptr);
                 break;
             }
             case id_base:
             {
-                Base *b = s->ptr;
-                generateBase(b);
+                generateBase((Base *)s->ptr);
                 break;
             }
             default:
@@ -194,99 +186,71 @@ void addGameObject(Structure *s)
     gameObjects->numStructures += 1;
 }
 
-int checkCircleStructureCollision(int i, int x, int z, int r)
+int checkStructureCollision(int index, int x1, int z1, int x2, int z2)
 {
     int isCollision = 0;
-
-    // Note: object 1 is A, object 2 is B
-    for (int j = 0; j < gameObjects->numStructures; j++)
+    for (int i = 0; i < gameObjects->numStructures; i++)
     {
         if (isCollision)
         {
             break;
         }
 
-        // Collision is with itself or similar typed object
-        if (i == j)
-        {
-            isCollision = 0;
-        }
+        // get next structures (x1, z1) (x2, z2)
+        int x1b, z1b, x2b, z2b = 0;
+        getStructureSquare(i, &x1b, &z1b, &x2b, &z2b);
 
-        int x1A, x2A, z1A, z2A = 0;
-        int x1B, x2B, z1B, z2B = 0;
-        Structure *s = gameObjects->structures[j];
-
-        // get top left and bottom right coords of object
-        x1A = x - r;
-        x2A = x + r;
-        z1A = z + r;
-        z2A = z - r;
-
-        if (s->id == id_base)
-        {
-            Base *b = s->ptr;
-
-            // get top left and bottom right coords of object
-            x1B = b->x;
-            x2B = b->x + b->length;
-            z1B = b->z;
-            z2B = b->z + b->width;
-        }
-        else
-        {
-            // get a structures x, z, radius
-            int xb, zb, rb = 0;
-            getStructureXZR(j, &xb, &zb, &rb);
-
-            // get top left and bottom right coords of object
-            x1B = xb - rb;
-            x2B = xb + rb;
-            z1B = zb + rb;
-            z2B = zb - rb;
-        }
-
-        if (x1A <= x2B && x2A >= x1B && z1A >= z2B && z2A <= z1B)
+        if (x1 <= x2b && x2 >= x1b && z1 >= z2b && z2 <= z1b)
         {
             isCollision = 1;
         }
+
+        // collision is with itself, ignore
+        if (i == index)
+        {
+            isCollision = 0;
+        }
     }
 
-    return (isCollision);
+    return isCollision;
 }
 
-int getStructureXZR(int index, int *x, int *z, int *r)
+int getStructureSquare(int index, int *x1, int *z1, int *x2, int *z2)
 {
     if (index >= gameObjects->numStructures)
     {
         printf("ERROR: Out Of Bounds. Trying to access gameObject outside of array\n");
-        return (1);
+        return 1;
     }
+
     Structure *s = gameObjects->structures[index];
     switch (s->id)
     {
     case id_valley:
     {
         Valley *v = s->ptr;
-        *x = v->x;
-        *z = v->z;
-        *r = v->radius;
+        *x1 = v->x1;
+        *z1 = v->z1;
+        *x2 = v->x2;
+        *z2 = v->z2;
         break;
     }
     case id_hill:
     {
         Hill *h = s->ptr;
-        *x = h->x;
-        *z = h->z;
-        *r = h->radius;
+        *x1 = h->x1;
+        *z1 = h->z1;
+        *x2 = h->x2;
+        *z2 = h->z2;
         break;
     }
     case id_base:
     {
-        //TODO: add generation for bases
-        // Base *b = b->ptr;
-        // *x = b->x;
-        // *z = b->z;
-        // *r = b->radius;
+        Base *b = s->ptr;
+        *x1 = b->x1;
+        *z1 = b->z1;
+        *x2 = b->x2;
+        *z2 = b->z2;
         break;
     }
     default:
@@ -303,3 +267,107 @@ void freeStructures()
     //TODO: handle freeing memory. Call each objects free
     return;
 }
+
+// int checkCircleStructureCollision(int i, int x, int z, int r)
+// {
+//     int isCollision = 0;
+
+//     // Note: object 1 is A, object 2 is B
+//     for (int j = 0; j < gameObjects->numStructures; j++)
+//     {
+//         if (isCollision)
+//         {
+//             break;
+//         }
+
+//         // Collision is with itself or similar typed object
+//         if (i == j)
+//         {
+//             isCollision = 0;
+//         }
+
+//         int x1A, x2A, z1A, z2A = 0;
+//         int x1B, x2B, z1B, z2B = 0;
+//         Structure *s = gameObjects->structures[j];
+
+//         // get top left and bottom right coords of object
+//         x1A = x - r;
+//         x2A = x + r;
+//         z1A = z + r;
+//         z2A = z - r;
+
+//         if (s->id == id_base)
+//         {
+//             Base *b = s->ptr;
+
+//             // get top left and bottom right coords of object
+//             x1B = b->x1;
+//             x2B = b->x1 + BASE_EDGE_LENGTH;
+//             z1B = b->z1;
+//             z2B = b->z1 + BASE_EDGE_LENGTH;
+//         }
+//         else
+//         {
+//             // get a structures x, z, radius
+//             int xb, zb, rb = 0;
+//             getStructureXZR(j, &xb, &zb, &rb);
+
+//             // get top left and bottom right coords of object
+//             x1B = xb - rb;
+//             x2B = xb + rb;
+//             z1B = zb + rb;
+//             z2B = zb - rb;
+//         }
+
+//         if (x1A <= x2B && x2A >= x1B && z1A >= z2B && z2A <= z1B)
+//         {
+//             isCollision = 1;
+//         }
+//     }
+
+//     return (isCollision);
+// }
+
+// int getStructureXZR(int index, int *x, int *z, int *r)
+// {
+//     if (index >= gameObjects->numStructures)
+//     {
+//         printf("ERROR: Out Of Bounds. Trying to access gameObject outside of array\n");
+//         return (1);
+//     }
+//     Structure *s = gameObjects->structures[index];
+//     switch (s->id)
+//     {
+//     case id_valley:
+//     {
+//         Valley *v = s->ptr;
+//         *x = v->xCenter;
+//         *z = v->zCenter;
+//         *r = v->radius;
+//         break;
+//     }
+//     case id_hill:
+//     {
+//         Hill *h = s->ptr;
+//         *x = h->xCenter;
+//         *z = h->zCenter;
+//         *r = h->radius;
+//         break;
+//     }
+//     case id_base:
+//     {
+//         //add generation for bases
+//         // Base *b = b->ptr;
+//         // *x = b->x;
+//         // *z = b->z;
+//         // *r = b->radius;
+//         break;
+//     }
+//     default:
+//     {
+//         printf("ERROR: Invalid structure ID\n");
+//         return (1);
+//     }
+//     }
+//     return (0);
+// }

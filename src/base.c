@@ -14,39 +14,48 @@ Base *createBase()
         exit(1);
     }
 
-    b->width = BASE_WIDTH;
-    b->length = BASE_LENGTH;
-    b->height = BASE_HEIGHT;
-    b->x = 0;
-    b->z = 0;
-    b->y = GROUND_DEPTH + 1;
+    b->colour = 0;
+    b->height = 0;
+    b->x1 = 0;
+    b->z1 = 0;
+    b->y1 = 0;
+    b->x2 = 0;
+    b->z2 = 0;
+    b->y2 = 0;
 
     return b;
 }
 
 void initializeBase(Base *b, int colour, int basePos)
 {
-    b->x = basePos;
-    b->z = (rand() % (WORLDZ - (2 * b->width) - 1)) + b->width;
     b->colour = colour;
+    b->height = BASE_HEIGHT;
+
+    b->x1 = basePos;
+    b->y1 = GROUND_DEPTH;
+    b->z1 = (rand() % (WORLDZ - (2 * BASE_EDGE_LENGTH) - 1)) + BASE_EDGE_LENGTH;
+    b->x2 = b->x1 + BASE_EDGE_LENGTH;
+    b->y2 = b->y1 + b->height;
+    b->z2 = b->z1 - BASE_EDGE_LENGTH;
 }
 
 void generateBase(Base *b)
 {
-    // draw centre block
-    world[b->x][b->y][b->z] = b->colour;
-
     // draw square size of base edge
-    // for (int y = b->y; y <= b->height; y++)
-    // {
-    for (int x = 0; x <= b->length; x++)
+    for (int y = b->y1; y <= b->y2; y++)
     {
-        for (int z = 0; z <= b->width; z++)
+        for (int x = b->x1; x <= b->x2; x++)
         {
-            world[b->x + x][b->y][b->z + z] = b->colour;
+            for (int z = b->z1; z >= b->z2; z--)
+            {
+                world[x][y][z] = b->colour;
+            }
         }
     }
-    // }
+
+    // debug: show square (x1,z1) (x2,z2)
+    // world[b->x1][b->y2][b->z1] = 4;
+    // world[b->x2][b->y2][b->z2] = 5;
 }
 
 void freeBase(Base *v)

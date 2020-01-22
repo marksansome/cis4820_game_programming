@@ -1,22 +1,19 @@
 #ifndef __MSANSOME_BASE__
 #define __MSANSOME_BASE__
 
-// y
 #define BASE_HEIGHT 3
-// x
-#define BASE_LENGTH 5
-// z
-#define BASE_WIDTH 5
+#define BASE_EDGE_LENGTH 5
 
 typedef struct base
 {
     int colour;
-    int length;
-    int width;
     int height;
-    int x;
-    int y;
-    int z;
+    int x1;
+    int y1;
+    int z1;
+    int x2;
+    int y2;
+    int z2;
 } Base;
 
 extern Base *createBase();

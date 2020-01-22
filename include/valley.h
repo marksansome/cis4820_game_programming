@@ -1,16 +1,22 @@
 #ifndef __MSANSOME_VALLEY__
 #define __MSANSOME_VALLEY__
 
-#define NUM_VALLEYS 25
-#define VALLEY_DEPTH 3
+#define MIN_VALLEY_DEPTH 2
+#define MAX_VALLEY_DEPTH 3
 #define MIN_VALLEY_RADIUS 6
 #define MAX_VALLEY_RADIUS 12
 
 typedef struct valley
 {
     int radius;
-    int x;
-    int z;
+    int depth;
+    int xCenter;
+    int yCenter;
+    int zCenter;
+    int x1;
+    int z1;
+    int x2;
+    int z2;
 } Valley;
 
 extern Valley *createValley();

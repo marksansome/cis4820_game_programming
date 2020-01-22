@@ -9,7 +9,7 @@
 
 #define GROUND_DEPTH 5 // depth of the ground (top layer will be green)
 #define MAX_OBJECTS 250
-#define MAX_TERRAIN 100
+#define MAX_TERRAIN 150
 
 // number of items that will be attempted to generate
 // if there is a collision item will not be generated
@@ -70,6 +70,16 @@ extern Structure *createStructure(StructureId id, int render, void *ptr);
 extern void addGameObject(Structure *s);
 
 /*
+* checkStructureCollision
+* Checks if the square defined by (x1,z1) (x2,z2) collides with
+* any other structure in gameObjects. Exclude its own index
+* Out:
+* 1 = collision
+* 0 = no collision
+*/
+extern int checkStructureCollision(int index, int x1, int z1, int x2, int z2);
+
+/*
 * checkCircleStructureCollision
 * Checks if the values collide with any other
 * structure in gameObjects. Exclude its own index
@@ -77,7 +87,19 @@ extern void addGameObject(Structure *s);
 * 1 = collision
 * 0 = no collision
 */
-extern int checkCircleStructureCollision(int index, int x, int z, int radius);
+// extern int checkCircleStructureCollision(int index, int x, int z, int radius);
+
+/*
+* getStructureSquare
+* Gets the (x1,z1) (x2,z2) of a gameObject at
+* the given index in the gameObject->structure
+* Out:
+* 1 = ERROR
+* 0 = success
+* In:
+* (x1,z1) (x2,z2) are updated with respective structures values
+*/
+extern int getStructureSquare(int index, int *x1, int *z1, int *x2, int *z2);
 
 /*
 * getStructureXZR
@@ -89,7 +111,7 @@ extern int checkCircleStructureCollision(int index, int x, int z, int radius);
 * In:
 * x, z, radius are updated with respective structures values
 */
-extern int getStructureXZR(int index, int *x, int *z, int *radius);
+// extern int getStructureXZR(int index, int *x, int *z, int *radius);
 
 /*
 * freeStructures
