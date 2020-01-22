@@ -4,8 +4,6 @@
 #include <time.h>
 
 #include "generation.h"
-#include "hill.h"
-#include "valley.h"
 
 GameObjects *gameObjects;
 
@@ -96,52 +94,47 @@ void createMainWorld()
     }
 
     // add team bases
+    //red
+    Base *b1 = createBase();
+    initializeBase(b1, 2, 15);
+    Structure *sb1 = createStructure(id_base, 1, b1);
+    addGameObject(sb1);
+    //blue
+    Base *b2 = createBase();
+    initializeBase(b2, 3, 75);
+    Structure *sb2 = createStructure(id_base, 1, b2);
+    addGameObject(sb2);
 
-    // add valleys
-    for (int i = 0; i < NUM_VALLEYS; i++)
+    for (int i = 0; i < MAX_TERRAIN; i++)
     {
-        Valley *v = createValley();
-        initializeValley(v);
+        // alternate between generating valleys and hills
+        if ((i % 2) != 0) //valley
+        {
+            Valley *v = createValley();
+            initializeValley(v);
 
-        Structure *s = createStructure(id_valley, 1, v);
+            if (!checkCircleStructureCollision(-1, v->x, v->z, v->radius))
+            {
+                Structure *s = createStructure(id_valley, 1, v);
+                addGameObject(s);
+            }
+        }
+        else //hill
+        {
+            Hill *h = createHill();
+            initializeHill(h);
 
-        // if (checkStructureCollision(v->x, v->z, v->radius))
-        // {
-        //     initializeValley(v);
-        //     if (checkStructureCollision(v->x, v->z, v->radius))
-        //     {
-        //         continue;
-        //     }
-        // }
-
-        gameObjects->structures[gameObjects->numStructures] = s;
-        gameObjects->numStructures += 1;
-    }
-
-    // add hills
-    for (int i = 0; i < NUM_HILLS; i++)
-    {
-        Hill *h = createHill();
-        initializeHill(h);
-
-        Structure *s = createStructure(id_hill, 1, h);
-
-        // check for collision with other structures
-        // if (checkStructureCollision(h->x, h->z, h->radius))
-        // {
-        //     initializeHill(h);
-        //     if (checkStructureCollision(h->x, h->z, h->radius))
-        //     {
-        //         continue;
-        //     }
-        // }
-
-        gameObjects->structures[gameObjects->numStructures] = s;
-        gameObjects->numStructures += 1;
+            if (!checkCircleStructureCollision(-1, h->x, h->z, h->radius))
+            {
+                Structure *s = createStructure(id_hill, 1, h);
+                addGameObject(s);
+            }
+        }
     }
 
     //TODO: collision. if valley can be placed
 
+    // place generated objects into world
     for (int i = 0; i < gameObjects->numStructures; i++)
     {
         if (gameObjects->structures[i]->render)
@@ -152,32 +145,19 @@ void createMainWorld()
             case id_valley:
             {
                 Valley *v = s->ptr;
-                // if (checkStructureCollision(i, v->x, v->z, v->radius))
-                // {
-                //     s->render = 0;
-                // }
-                // else
-                // {
                 generateValley(v);
-                // }
                 break;
             }
             case id_hill:
             {
                 Hill *h = s->ptr;
-                // if (checkStructureCollision(i, h->x, h->z, h->radius))
-                // {
-                //     s->render = 0;
-                // }
-                // else
-                // {
                 generateHill(h);
-                // }
                 break;
             }
             case id_base:
             {
-                //TODO: add generation for bases
+                Base *b = s->ptr;
+                generateBase(b);
                 break;
             }
             default:
@@ -208,39 +188,70 @@ Structure *createStructure(StructureId id, int render, void *ptr)
     return s;
 }
 
-int checkStructureCollision(int i, int x, int z, int r)
+void addGameObject(Structure *s)
 {
+    gameObjects->structures[gameObjects->numStructures] = s;
+    gameObjects->numStructures += 1;
+}
+
+int checkCircleStructureCollision(int i, int x, int z, int r)
+{
+    int isCollision = 0;
+
     // Note: object 1 is A, object 2 is B
     for (int j = 0; j < gameObjects->numStructures; j++)
     {
-        // get a structures x, z, radius
-        int xb, zb, rb = 0;
-        getStructureXZR(j, &xb, &zb, &rb);
+        if (isCollision)
+        {
+            break;
+        }
 
-        // check if B structure collides with A x, z, radius
-        // get top left and bottom right coords of each object
-        int x1A = x - r;
-        int x2A = x + r;
-        int z1A = z + r;
-        int z2A = z - r;
+        // Collision is with itself or similar typed object
+        if (i == j)
+        {
+            isCollision = 0;
+        }
 
-        int x1B = xb - rb;
-        int x2B = xb + rb;
-        int z1B = zb + rb;
-        int z2B = zb - rb;
+        int x1A, x2A, z1A, z2A = 0;
+        int x1B, x2B, z1B, z2B = 0;
+        Structure *s = gameObjects->structures[j];
+
+        // get top left and bottom right coords of object
+        x1A = x - r;
+        x2A = x + r;
+        z1A = z + r;
+        z2A = z - r;
+
+        if (s->id == id_base)
+        {
+            Base *b = s->ptr;
+
+            // get top left and bottom right coords of object
+            x1B = b->x;
+            x2B = b->x + b->length;
+            z1B = b->z;
+            z2B = b->z + b->width;
+        }
+        else
+        {
+            // get a structures x, z, radius
+            int xb, zb, rb = 0;
+            getStructureXZR(j, &xb, &zb, &rb);
+
+            // get top left and bottom right coords of object
+            x1B = xb - rb;
+            x2B = xb + rb;
+            z1B = zb + rb;
+            z2B = zb - rb;
+        }
 
         if (x1A <= x2B && x2A >= x1B && z1A >= z2B && z2A <= z1B)
         {
-            if (i == j)
-            {
-                // Collision is with itself
-                return (0);
-            }
-            return (1);
+            isCollision = 1;
         }
     }
 
-    return (0);
+    return (isCollision);
 }
 
 int getStructureXZR(int index, int *x, int *z, int *r)

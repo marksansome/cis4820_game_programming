@@ -12,6 +12,7 @@ COMPILE_FLAGS = -Iinclude $(INCLUDE_FRAMEWORK) -Wno-deprecated-declarations
 OBJS = $(SRC:.c=.o)
 SRC = \
 	src/a1.c \
+	src/base.c \
 	src/generation.c \
 	src/graphics.c \
 	src/hill.c \
@@ -19,7 +20,7 @@ SRC = \
 	src/valley.c \
 	src/visible.c
 
-all: $(EXE)
+all: clean $(EXE)
 
 $(EXE): $(OBJS)
 	$(CC) $(LINK_FLAGS) -o $@ $(OBJS)

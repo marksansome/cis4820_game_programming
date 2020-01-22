@@ -24,6 +24,72 @@ extern void tree(float, float, float, float, float, float, int);
 
 /********* end of extern variable declarations **************/
 
+int permuteCollision(int *v, int k, int x, int y, int z)
+{
+   float buff = 0.15;
+   float buffY = 0.6;
+
+   // get current VP and make positive
+   float xN, yN, zN = 0.0;
+   xN = x;
+   yN = y;
+   zN = z;
+
+   if (k != -1)
+   {
+      v[k] = 1;
+   }
+
+   // x
+   if (v[0])
+   {
+      x += buff;
+      xN -= buff;
+   }
+   // y
+   if (v[1])
+   {
+      y += buffY;
+      yN -= buffY;
+   }
+   // z
+   if (v[2])
+   {
+      z += buff;
+      zN -= buff;
+   }
+
+   // check the collision
+   if (world[(int)x][(int)y][(int)z] != 0 ||
+       world[(int)xN][(int)yN][(int)zN] != 0)
+   {
+      return (1);
+   }
+
+   // no collision, check permute
+   for (int i = 0; i < 3; i++)
+   {
+      if (v[i] == 0)
+      {
+         if (permuteCollision(v, i, x, y, z))
+         {
+            return (1);
+         }
+         else
+         {
+            return (0);
+         }
+      }
+   }
+
+   if (k != -1)
+   {
+      v[k] = 0;
+   }
+
+   return (0);
+}
+
 /*** collisionResponse() ***/
 /* -performs collision detection and response */
 /*  sets new xyz  to position of the viewpoint after collision */
@@ -45,7 +111,6 @@ void collisionResponse()
    // if getViewPosition() != 0 { setViewPosition(position) }
    //
 
-   // get current VP and make positive
    float x, y, z = 0.0;
    getViewPosition(&x, &y, &z);
 
@@ -53,23 +118,12 @@ void collisionResponse()
    y = y * -1.0;
    z = z * -1.0;
 
-   // check VP collision with items in world
-   // if (world[(int)x][(int)y][(int)z] != 0)
-   // {
-   //    printf("COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
-   //    float ox, oy, oz = 0.0;
-   //    getOldViewPosition(&ox, &oy, &oz);
-   //    setViewPosition(ox, oy, oz);
-   // }
-
-   if (world[(int)floor(x)][(int)floor(y)][(int)floor(z)] != 0 ||
-       world[(int)floor(x)][(int)floor(y)][(int)ceil(z)] != 0 ||
-       world[(int)floor(x)][(int)ceil(y)][(int)floor(z)] != 0 ||
-       world[(int)ceil(x)][(int)floor(y)][(int)floor(z)] != 0 ||
-       world[(int)floor(x)][(int)ceil(y)][(int)ceil(z)] != 0 ||
-       world[(int)ceil(x)][(int)ceil(y)][(int)floor(z)] != 0 ||
-       world[(int)ceil(x)][(int)floor(y)][(int)ceil(z)] != 0 ||
-       world[(int)ceil(x)][(int)ceil(y)][(int)ceil(z)] != 0)
+   int v[3];
+   for (int i = 0; i < 3; i++)
+   {
+      v[i] = 0;
+   }
+   if (permuteCollision(v, -1, x, y, z))
    {
       // printf("COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
       float ox, oy, oz = 0.0;
@@ -80,9 +134,11 @@ void collisionResponse()
    // check VP collision with world border
    if (!testWorld)
    {
-      if (x > (WORLDX - 1) || x < 0 || z > (WORLDZ - 1) || z < 0 || y > (WORLDY - WORLD_CLOUD_GAP) || y < 0)
+      if (x >= (WORLDX - 1.15) || x <= 0.15 ||
+          z >= (WORLDZ - 1.15) || z <= 0.15 ||
+          y >= (WORLDY - WORLD_CLOUD_GAP - 0.15) || y <= 0.15)
       {
-         // printf("WORLD COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
+         printf("WORLD COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
          float ox, oy, oz = 0.0;
          getOldViewPosition(&ox, &oy, &oz);
          setViewPosition(ox, oy, oz);
@@ -273,6 +329,10 @@ int main(int argc, char **argv)
       exit(1);
    }
    gameObjects->numStructures = 0;
+   for (int i = 0; i < MAX_OBJECTS; i++)
+   {
+      gameObjects->structures[i] = NULL;
+   }
 
    // initialize world to empty
    initializeWorld();

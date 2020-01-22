@@ -3,12 +3,13 @@
 
 #include "graphics.h"
 #include "utility.h"
+#include "base.h"
 #include "hill.h"
 #include "valley.h"
 
 #define GROUND_DEPTH 5 // depth of the ground (top layer will be green)
 #define MAX_OBJECTS 250
-#define MAX_TERRAIN 30
+#define MAX_TERRAIN 100
 
 // number of items that will be attempted to generate
 // if there is a collision item will not be generated
@@ -63,14 +64,20 @@ extern void createMainWorld();
 extern Structure *createStructure(StructureId id, int render, void *ptr);
 
 /*
-* checkStructureCollision
-* Checks if the values collide with any
-* other structure in gameObjects. Exclude its own index
+* addGameObject
+* Adds a structure to gameObjects
+*/
+extern void addGameObject(Structure *s);
+
+/*
+* checkCircleStructureCollision
+* Checks if the values collide with any other
+* structure in gameObjects. Exclude its own index
 * Out:
 * 1 = collision
 * 0 = no collision
 */
-extern int checkStructureCollision(int index, int x, int z, int radius);
+extern int checkCircleStructureCollision(int index, int x, int z, int radius);
 
 /*
 * getStructureXZR

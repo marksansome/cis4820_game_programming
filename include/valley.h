@@ -3,8 +3,8 @@
 
 #define NUM_VALLEYS 25
 #define VALLEY_DEPTH 3
-#define MIN_VALLEY_RADIUS 5
-#define MAX_VALLEY_RADIUS 10
+#define MIN_VALLEY_RADIUS 6
+#define MAX_VALLEY_RADIUS 12
 
 typedef struct valley
 {

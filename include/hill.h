@@ -3,8 +3,8 @@
 
 #define NUM_HILLS 25
 #define HILL_DEPTH 3
-#define MIN_HILL_RADIUS 5
-#define MAX_HILL_RADIUS 10
+#define MIN_HILL_RADIUS 6
+#define MAX_HILL_RADIUS 12
 
 typedef struct hill
 {
