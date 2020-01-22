@@ -7,6 +7,8 @@
 
 GameObjects *gameObjects;
 
+CloudObjects *cloudObjects;
+
 void initializeWorld()
 {
     /* initialize world to empty */
@@ -19,6 +21,36 @@ void initializeWorld()
                 world[i][j][k] = 0;
             }
         }
+    }
+}
+
+void initializeGameObjects()
+{
+    gameObjects = (GameObjects *)malloc(sizeof(GameObjects));
+    if (gameObjects == NULL)
+    {
+        printf("Unable to allocate memory!\n");
+        exit(1);
+    }
+    gameObjects->numStructures = 0;
+    for (int i = 0; i < MAX_OBJECTS; i++)
+    {
+        gameObjects->structures[i] = NULL;
+    }
+}
+
+void initializeCloudObjects()
+{
+    cloudObjects = (CloudObjects *)malloc(sizeof(CloudObjects));
+    if (cloudObjects == NULL)
+    {
+        printf("Unable to allocate memory!\n");
+        exit(1);
+    }
+    cloudObjects->numClouds = 0;
+    for (int i = 0; i < MAX_CLOUDS; i++)
+    {
+        cloudObjects->clouds[i] = NULL;
     }
 }
 
@@ -159,6 +191,16 @@ void createMainWorld()
             }
             }
         }
+    }
+
+    // generate clouds
+    for (int i = 0; i < MAX_CLOUDS; i++)
+    {
+        Cloud *c = createCloud();
+        initializeCloud(c);
+        cloudObjects->clouds[cloudObjects->numClouds] = c;
+        cloudObjects->numClouds += 1;
+        generateCloud(c);
     }
 
     // set player starting positon

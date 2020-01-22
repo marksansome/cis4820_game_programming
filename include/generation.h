@@ -4,22 +4,27 @@
 #include "graphics.h"
 #include "utility.h"
 #include "base.h"
+#include "cloud.h"
 #include "hill.h"
 #include "valley.h"
 
-#define GROUND_DEPTH 5 // depth of the ground (top layer will be green)
+// depth of the ground (top layer will be green)
+#define GROUND_DEPTH 5
+// size of gameObjects storage
 #define MAX_OBJECTS 250
-#define MAX_TERRAIN 150
-
 // number of items that will be attempted to generate
 // if there is a collision item will not be generated
+#define MAX_TERRAIN 150
+
+#define MAX_CLOUDS 1750
 
 typedef enum structureId
 {
     id_invalid = 0,
     id_valley,
     id_hill,
-    id_base
+    id_base,
+    id_cloud
 } StructureId;
 
 typedef struct structure
@@ -35,13 +40,33 @@ typedef struct gameObjects
     Structure *structures[MAX_OBJECTS];
 } GameObjects;
 
+typedef struct cloudObjects
+{
+    int numClouds;
+    Cloud *clouds[MAX_CLOUDS];
+} CloudObjects;
+
 extern GameObjects *gameObjects;
+
+extern CloudObjects *cloudObjects;
 
 /*
 * initializeWorld
 * Set the world array to 0
 */
 extern void initializeWorld();
+
+/*
+* initializeGameObjects
+* Set gameObjects to 0
+*/
+extern void initializeGameObjects();
+
+/*
+* initializeCloudObjects
+* Set cloudObjects to 0
+*/
+extern void initializeCloudObjects();
 
 /*
 * createTestWorld

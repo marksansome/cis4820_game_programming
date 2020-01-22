@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <sys/time.h>
 
 #include "graphics.h"
 #include "generation.h"
@@ -127,7 +128,7 @@ void collisionResponse()
    }
    if (permuteCollision(v, -1, x, y, z))
    {
-      printf("COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
+      // printf("COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
       float ox, oy, oz = 0.0;
       getOldViewPosition(&ox, &oy, &oz);
       setViewPosition(ox, oy, oz);
@@ -140,7 +141,7 @@ void collisionResponse()
           z >= (WORLDZ - 1.15) || z <= 0.15 ||
           y >= (WORLDY - WORLD_CLOUD_GAP - 0.15) || y <= 0.15)
       {
-         printf("WORLD COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
+         // printf("WORLD COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
          float ox, oy, oz = 0.0;
          getOldViewPosition(&ox, &oy, &oz);
          setViewPosition(ox, oy, oz);
@@ -290,12 +291,25 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
    }
    else
    {
-      getViewPosition(&x, &y, &z);
-      setOldViewPosition(x, y, z);
+      static double oldTime = 0.0;
+      struct timeval  tv;
+      gettimeofday(&tv, NULL);
 
-      world[1][49][1] = getColour(WHITE);
+      double curTime = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000;
 
-      /* your code goes here */
+      if (curTime - oldTime >= 300.00){
+         oldTime = curTime;
+
+         for (int i = 0; i < cloudObjects->numClouds; i++)
+         {
+            Cloud *c = cloudObjects->clouds[i];
+            int oldX = moveCloud(c, 1);
+            world[oldX][c->y][c->z] = getColour(EMPTY);
+            generateCloud(c);
+         }
+      }
+
+      // world[1][49][1] = getColour(WHITE);
    }
 }
 
@@ -327,18 +341,9 @@ int main(int argc, char **argv)
    // initialize the graphics system
    graphicsInit(&argc, argv);
 
-   // initialize worlds game object
-   gameObjects = (GameObjects *)malloc(sizeof(GameObjects));
-   if (gameObjects == NULL)
-   {
-      printf("Unable to allocate memory!\n");
-      exit(1);
-   }
-   gameObjects->numStructures = 0;
-   for (int i = 0; i < MAX_OBJECTS; i++)
-   {
-      gameObjects->structures[i] = NULL;
-   }
+   // initialize worlds game and cloud objects storage
+   initializeGameObjects();
+   initializeCloudObjects();
 
    // initialize world to empty
    initializeWorld();

@@ -13,6 +13,7 @@ OBJS = $(SRC:.c=.o)
 SRC = \
 	src/a1.c \
 	src/base.c \
+	src/cloud.c \
 	src/generation.c \
 	src/graphics.c \
 	src/hill.c \
