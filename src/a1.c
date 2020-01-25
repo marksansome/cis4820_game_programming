@@ -1,3 +1,7 @@
+/* CIS4820 Game Programming - Winter 2020
+ * Mark Sansome
+ * 0916066
+*/
 
 /* Derived from scene.c in the The OpenGL Programming Guide */
 /* Keyboard and mouse rotation taken from Swiftless Tutorials #23 Part 2 */

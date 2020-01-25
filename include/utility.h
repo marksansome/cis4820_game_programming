@@ -1,3 +1,8 @@
+/* CIS4820 Game Programming - Winter 2020
+ * Mark Sansome
+ * 0916066
+*/
+
 #ifndef __MSANSOME_UTILITY__
 #define __MSANSOME_UTILITY__
 
@@ -18,7 +23,7 @@ extern void createUserColours();
 
 /*
 * drawCircle
-* Draws a circle 
+* Draws a circle
 */
 extern void drawCircle(int xCentre, int y, int zCentre, int r, Colours colour);
 

@@ -1,3 +1,8 @@
+/* CIS4820 Game Programming - Winter 2020
+ * Mark Sansome
+ * 0916066
+*/
+
 #ifndef __MSANSOME_BASE__
 #define __MSANSOME_BASE__
 
@@ -17,8 +22,11 @@ typedef struct base
 } Base;
 
 extern Base *createBase();
+
 extern void initializeBase(Base *, int, int);
+
 extern void generateBase(Base *);
+
 extern void freeBase(Base *);
 
 #endif //__MSANSOME_BASE__

@@ -1,3 +1,8 @@
+/* CIS4820 Game Programming - Winter 2020
+ * Mark Sansome
+ * 0916066
+*/
+
 #ifndef __MSANSOME_VALLEY__
 #define __MSANSOME_VALLEY__
 
@@ -20,8 +25,11 @@ typedef struct valley
 } Valley;
 
 extern Valley *createValley();
+
 extern void initializeValley(Valley *);
+
 extern void generateValley(Valley *);
+
 extern void freeValley(Valley *v);
 
 #endif //__MSANSOME_VALLEY__
