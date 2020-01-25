@@ -25,72 +25,6 @@ extern void tree(float, float, float, float, float, float, int);
 
 /********* end of extern variable declarations **************/
 
-int permuteCollision(int *v, int k, int x, int y, int z)
-{
-   float buff = 0.15;
-   float buffY = 0.6;
-
-   // get current VP and make positive
-   float xN, yN, zN = 0.0;
-   xN = x;
-   yN = y;
-   zN = z;
-
-   if (k != -1)
-   {
-      v[k] = 1;
-   }
-
-   // x
-   if (v[0])
-   {
-      x += buff;
-      xN -= buff;
-   }
-   // y
-   if (v[1])
-   {
-      y += buffY;
-      yN -= buffY;
-   }
-   // z
-   if (v[2])
-   {
-      z += buff;
-      zN -= buff;
-   }
-
-   // check the collision
-   if (world[(int)x][(int)y][(int)z] != 0 ||
-       world[(int)xN][(int)yN][(int)zN] != 0)
-   {
-      return (1);
-   }
-
-   // no collision, check permute
-   for (int i = 0; i < 3; i++)
-   {
-      if (v[i] == 0)
-      {
-         if (permuteCollision(v, i, x, y, z))
-         {
-            return (1);
-         }
-         else
-         {
-            return (0);
-         }
-      }
-   }
-
-   if (k != -1)
-   {
-      v[k] = 0;
-   }
-
-   return (0);
-}
-
 /*** collisionResponse() ***/
 /* -performs collision detection and response */
 /*  sets new xyz  to position of the viewpoint after collision */
@@ -99,39 +33,28 @@ int permuteCollision(int *v, int k, int x, int y, int z)
 	   will be the negative value of the array indices */
 void collisionResponse()
 {
-
-   /* your code for collisions goes here */
-
-   // we can call getViewPosition() to see where the player will be next.
-   // check that this position is not moving into an occupied space (block array value != 0)
-   // getOldViewPosition() current view position
-   // setViewPosition() set where the view position will move next
-   // if next position is cube, get current postion and set the position of player back to that
-   //
-   // position = getOldViewPosition();
-   // if getViewPosition() != 0 { setViewPosition(position) }
-   //
-
+   float buffer = 0.1;
    float x, y, z = 0.0;
-   getViewPosition(&x, &y, &z);
 
+   getViewPosition(&x, &y, &z);
    x = x * -1.0;
    y = y * -1.0;
    z = z * -1.0;
 
-   // printf("Position x = %f, y = %f, z = %f\n", x, y, z);
-
-   int v[3];
-   for (int i = 0; i < 3; i++)
+   for (float i = x - buffer; i < x + (buffer * 2.0); i += buffer)
    {
-      v[i] = 0;
-   }
-   if (permuteCollision(v, -1, x, y, z))
-   {
-      // printf("COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
-      float ox, oy, oz = 0.0;
-      getOldViewPosition(&ox, &oy, &oz);
-      setViewPosition(ox, oy, oz);
+      for (float j = y - buffer; j < y + (buffer * 2.0); j += buffer)
+      {
+         for (float k = z - buffer; k < z + (buffer * 2.0); k += buffer)
+         {
+            if (world[(int)i][(int)j][(int)k] != 0)
+            {
+               float ox, oy, oz = 0.0;
+               getOldViewPosition(&ox, &oy, &oz);
+               setViewPosition(ox, oy, oz);
+            }
+         }
+      }
    }
 
    // check VP collision with world border
@@ -141,7 +64,6 @@ void collisionResponse()
           z >= (WORLDZ - 1.15) || z <= 0.15 ||
           y >= (WORLDY - WORLD_CLOUD_GAP - 0.15) || y <= 0.15)
       {
-         // printf("WORLD COLLISION x = %f, y =  %f, z = %f\n", x, y, z);
          float ox, oy, oz = 0.0;
          getOldViewPosition(&ox, &oy, &oz);
          setViewPosition(ox, oy, oz);
@@ -292,12 +214,13 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
    else
    {
       static double oldTime = 0.0;
-      struct timeval  tv;
+      struct timeval tv;
       gettimeofday(&tv, NULL);
 
       double curTime = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000;
 
-      if (curTime - oldTime >= 300.00){
+      if (curTime - oldTime >= 300.00)
+      {
          oldTime = curTime;
 
          for (int i = 0; i < cloudObjects->numClouds; i++)
@@ -308,8 +231,6 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
             generateCloud(c);
          }
       }
-
-      // world[1][49][1] = getColour(WHITE);
    }
 }
 
@@ -369,6 +290,7 @@ int main(int argc, char **argv)
 
    freeStructures();
    free(gameObjects);
+   free(cloudObjects);
 
    return 0;
 }

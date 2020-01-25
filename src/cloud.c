@@ -32,14 +32,13 @@ void initializeCloud(Cloud *c)
 
 void generateCloud(Cloud *c)
 {
-    // draw square size of base edge
     world[c->x][c->y][c->z] = c->colour;
 }
 
 int moveCloud(Cloud *c, int speed)
 {
     int oldX = c->x;
-    if ((c->x + 1) >= WORLDX)
+    if ((c->x + 1) >= WORLDX - 1)
     {
         c->x = 0;
     }

@@ -28,12 +28,12 @@ example of a hill and a valley seen from the side.  The slope on the edges
 is gradual and there are no places where there are two stacked cubes
 on the edge.
 
-       XXXXXX
+       XXXXXXX
       XXXXXXXX
-     XXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXX               XXXXXXXXXXXXXX
-                      X             X
-                       XXXXXXXXXXXXX
+     XXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXX                  XXXXXXXXXXXXXX
+                                                     X             X
+                                                       XXXXX
 
 The following is an example of a hill and valley that has edges which are
 too steep.
@@ -41,9 +41,9 @@ too steep.
      XXXXXXXXXX
      XXXXXXXXXX
      XXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXX             XXXXXXXXXXXXXXX
-                      X             X
-                      XXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXX             XXXXXXXXXXXXXXX
+                                                     X             X
+                                                     XXXXXXX
 
 We will eventually create players in the game which can climb up one
 cube but will not be able to climb two stacked cubes. The intention 
