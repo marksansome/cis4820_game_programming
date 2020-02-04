@@ -63,7 +63,7 @@ void generateBase(Base *b)
     // world[b->x2][b->y2][b->z2] = 5;
 }
 
-void freeBase(Base *v)
+void freeBase(Base *b)
 {
-    free(v);
+    free(b);
 }

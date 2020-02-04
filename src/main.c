@@ -17,6 +17,9 @@
 #include <sys/time.h>
 
 #include "graphics.h"
+#include "config.h"
+#include "data.h"
+
 #include "generation.h"
 #include "utility.h"
 
@@ -227,9 +230,10 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
       {
          oldTime = curTime;
 
-         for (int i = 0; i < cloudObjects->numClouds; i++)
+         for (int i = 0; i < g_clouds->numObj; i++)
          {
-            Cloud *c = cloudObjects->clouds[i];
+            Object *o = g_clouds->object[i];
+            Cloud *c = o->ptr;
             int oldX = moveCloud(c, 1);
             world[oldX][c->y][c->z] = getColour(EMPTY);
             generateCloud(c);
@@ -288,11 +292,11 @@ int main(int argc, char **argv)
    graphicsInit(&argc, argv);
 
    // initialize worlds game and cloud objects storage
-   initializeGameObjects();
-   initializeCloudObjects();
+   initStructureStore();
+   initCloudStore();
 
    // initialize world to empty
-   initializeWorld();
+   initWorld();
 
    // create user defined colours
    createUserColours();
@@ -313,9 +317,9 @@ int main(int argc, char **argv)
    /* code after this will not run until the program exits */
    glutMainLoop();
 
-   freeStructures();
-   free(gameObjects);
-   free(cloudObjects);
+   // freeObjectStore();
+   free(g_structures);
+   free(g_clouds);
 
    return 0;
 }

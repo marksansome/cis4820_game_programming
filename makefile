@@ -14,6 +14,7 @@ SRC = \
 	src/main.c \
 	src/base.c \
 	src/cloud.c \
+	src/data.c \
 	src/generation.c \
 	src/graphics.c \
 	src/hill.c \

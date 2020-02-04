@@ -10,55 +10,6 @@
 
 #include "generation.h"
 
-GameObjects *gameObjects;
-
-CloudObjects *cloudObjects;
-
-void initializeWorld()
-{
-    /* initialize world to empty */
-    for (int i = 0; i < WORLDX; i++)
-    {
-        for (int j = 0; j < WORLDY; j++)
-        {
-            for (int k = 0; k < WORLDZ; k++)
-            {
-                world[i][j][k] = 0;
-            }
-        }
-    }
-}
-
-void initializeGameObjects()
-{
-    gameObjects = (GameObjects *)malloc(sizeof(GameObjects));
-    if (gameObjects == NULL)
-    {
-        printf("Unable to allocate memory!\n");
-        exit(1);
-    }
-    gameObjects->numStructures = 0;
-    for (int i = 0; i < MAX_OBJECTS; i++)
-    {
-        gameObjects->structures[i] = NULL;
-    }
-}
-
-void initializeCloudObjects()
-{
-    cloudObjects = (CloudObjects *)malloc(sizeof(CloudObjects));
-    if (cloudObjects == NULL)
-    {
-        printf("Unable to allocate memory!\n");
-        exit(1);
-    }
-    cloudObjects->numClouds = 0;
-    for (int i = 0; i < MAX_CLOUDS; i++)
-    {
-        cloudObjects->clouds[i] = NULL;
-    }
-}
-
 void createTestWorld()
 {
     /* some sample objects */
@@ -134,11 +85,12 @@ void createMainWorld()
     // red
     Base *bRed = createBase();
     initializeBase(bRed, 2, 15);
-    addGameObject(createStructure(id_base, 1, bRed));
+    addStructure(createObject(BASE, 1, bRed));
+
     // blue
     Base *bBlue = createBase();
     initializeBase(bBlue, 3, 75);
-    addGameObject(createStructure(id_base, 1, bBlue));
+    addStructure(createObject(BASE, 1, bBlue));
 
     for (int i = 0; i < MAX_TERRAIN; i++)
     {
@@ -150,7 +102,7 @@ void createMainWorld()
 
             if (!checkStructureCollision(-1, v->x1, v->z1, v->x2, v->z2))
             {
-                addGameObject(createStructure(id_valley, 1, v));
+                addStructure(createObject(VALLEY, 1, v));
             }
         }
         else //hill
@@ -160,31 +112,31 @@ void createMainWorld()
 
             if (!checkStructureCollision(-1, h->x1, h->z1, h->x2, h->z2))
             {
-                addGameObject(createStructure(id_hill, 1, h));
+                addStructure(createObject(HILL, 1, h));
             }
         }
     }
 
     // place generated objects into world
-    for (int i = 0; i < gameObjects->numStructures; i++)
+    for (int i = 0; i < g_structures->numObj; i++)
     {
-        if (gameObjects->structures[i]->render)
+        if (g_structures->object[i]->render)
         {
-            Structure *s = gameObjects->structures[i];
-            switch (s->id)
+            Object *s = g_structures->object[i];
+            switch (s->type)
             {
-            case id_valley:
+            case VALLEY:
             {
 
                 generateValley((Valley *)s->ptr);
                 break;
             }
-            case id_hill:
+            case HILL:
             {
                 generateHill((Hill *)s->ptr);
                 break;
             }
-            case id_base:
+            case BASE:
             {
                 generateBase((Base *)s->ptr);
                 break;
@@ -203,8 +155,7 @@ void createMainWorld()
     {
         Cloud *c = createCloud();
         initializeCloud(c);
-        cloudObjects->clouds[cloudObjects->numClouds] = c;
-        cloudObjects->numClouds += 1;
+        addCloud(createObject(CLOUD, 1, c));
         generateCloud(c);
     }
 
@@ -215,31 +166,10 @@ void createMainWorld()
     createMob(0, 60.0, 21.0, 60.0, 0.0);
 }
 
-Structure *createStructure(StructureId id, int render, void *ptr)
-{
-    Structure *s = (Structure *)malloc(sizeof(Structure));
-    if (s == NULL)
-    {
-        printf("Unable to allocate memory!\n");
-        exit(1);
-    }
-    s->id = id;
-    s->render = render;
-    s->ptr = ptr;
-
-    return s;
-}
-
-void addGameObject(Structure *s)
-{
-    gameObjects->structures[gameObjects->numStructures] = s;
-    gameObjects->numStructures += 1;
-}
-
 int checkStructureCollision(int index, int x1, int z1, int x2, int z2)
 {
     int isCollision = 0;
-    for (int i = 0; i < gameObjects->numStructures; i++)
+    for (int i = 0; i < g_structures->numObj; i++)
     {
         if (isCollision)
         {
@@ -267,36 +197,36 @@ int checkStructureCollision(int index, int x1, int z1, int x2, int z2)
 
 int getStructureSquare(int index, int *x1, int *z1, int *x2, int *z2)
 {
-    if (index >= gameObjects->numStructures)
+    if (index >= g_structures->numObj)
     {
-        printf("ERROR: Out Of Bounds. Trying to access gameObject outside of array\n");
+        printf("ERROR: Out Of Bounds. Trying to access g_structures outside of array\n");
         return 1;
     }
 
-    Structure *s = gameObjects->structures[index];
-    switch (s->id)
+    Object *o = g_structures->object[index];
+    switch (o->type)
     {
-    case id_valley:
+    case VALLEY:
     {
-        Valley *v = s->ptr;
+        Valley *v = o->ptr;
         *x1 = v->x1;
         *z1 = v->z1;
         *x2 = v->x2;
         *z2 = v->z2;
         break;
     }
-    case id_hill:
+    case HILL:
     {
-        Hill *h = s->ptr;
+        Hill *h = o->ptr;
         *x1 = h->x1;
         *z1 = h->z1;
         *x2 = h->x2;
         *z2 = h->z2;
         break;
     }
-    case id_base:
+    case BASE:
     {
-        Base *b = s->ptr;
+        Base *b = o->ptr;
         *x1 = b->x1;
         *z1 = b->z1;
         *x2 = b->x2;
@@ -310,10 +240,4 @@ int getStructureSquare(int index, int *x1, int *z1, int *x2, int *z2)
     }
     }
     return (0);
-}
-
-void freeStructures()
-{
-    //TODO: handle freeing memory. Call each objects free
-    return;
 }
