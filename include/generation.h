@@ -6,22 +6,15 @@
 #ifndef __MSANSOME_GENERATION__
 #define __MSANSOME_GENERATION__
 
+#include "config.h"
+
 #include "graphics.h"
 #include "utility.h"
 #include "base.h"
 #include "cloud.h"
 #include "hill.h"
+#include "projectile.h"
 #include "valley.h"
-
-// depth of the ground (top layer will be green)
-#define GROUND_DEPTH 5
-// size of gameObjects storage
-#define MAX_OBJECTS 250
-// number of items that will be attempted to generate
-// if there is a collision item will not be generated
-#define MAX_TERRAIN 150
-
-#define MAX_CLOUDS 1750
 
 typedef enum structureId
 {
@@ -51,9 +44,17 @@ typedef struct cloudObjects
     Cloud *clouds[MAX_CLOUDS];
 } CloudObjects;
 
+typedef struct projectileObjects
+{
+    int numProjectiles;
+    Structure *projectiles[MAX_PROJECTILES];
+} ProjectileObjects;
+
 extern GameObjects *gameObjects;
 
 extern CloudObjects *cloudObjects;
+
+extern ProjectileObjects *projectileObjects;
 
 /*
 * initializeWorld

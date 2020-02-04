@@ -246,19 +246,40 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
 void mouse(int button, int state, int x, int y)
 {
 
-   if (button == GLUT_LEFT_BUTTON)
-      printf("left button - ");
-   else if (button == GLUT_MIDDLE_BUTTON)
-      printf("middle button - ");
-   else
-      printf("right button - ");
+   if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+   {
+      // TODO: Add projectile
+      float xf, yf, zf, xRot, yRot, zRot = 0.0;
 
-   if (state == GLUT_UP)
-      printf("up - ");
-   else
-      printf("down - ");
+      getViewPosition(&xf, &yf, &zf);
+      getViewOrientation(&xRot, &yRot, &zRot);
 
-   printf("%d %d\n", x, y);
+      xf = -1.0 * xf;
+      yf = -1.0 * yf;
+      zf = -1.0 * zf;
+
+      setMobPosition(0, xf, yf, zf, yRot);
+
+      // printf("mouse at x = %f, y = %f, z = %f\n", xf, yf, zf);
+   }
+
+   // if (button == GLUT_LEFT_BUTTON)
+   //    printf("left button - ");
+   // else if (button == GLUT_MIDDLE_BUTTON)
+   //    printf("middle button - ");
+   // else
+   //    printf("right button - ");
+
+   // if (state == GLUT_UP)
+   // {
+   //    printf("up - ");
+   // }
+   // else
+   // {
+   //    printf("down - ");
+   // }
+
+   // printf("%d %d\n", x, y);
 }
 
 int main(int argc, char **argv)

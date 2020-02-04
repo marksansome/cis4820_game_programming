@@ -6,8 +6,7 @@
 #ifndef __MSANSOME_BASE__
 #define __MSANSOME_BASE__
 
-#define BASE_HEIGHT 3
-#define BASE_EDGE_LENGTH 5
+#include "config.h"
 
 typedef struct base
 {

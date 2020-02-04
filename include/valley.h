@@ -6,10 +6,7 @@
 #ifndef __MSANSOME_VALLEY__
 #define __MSANSOME_VALLEY__
 
-#define MIN_VALLEY_DEPTH 2
-#define MAX_VALLEY_DEPTH 3
-#define MIN_VALLEY_RADIUS 6
-#define MAX_VALLEY_RADIUS 12
+#include "config.h"
 
 typedef struct valley
 {

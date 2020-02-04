@@ -6,7 +6,7 @@
 #ifndef __MSANSOME_CLOUD__
 #define __MSANSOME_CLOUD__
 
-#define CLOUD_LEVEL 48
+#include "config.h"
 
 typedef struct cloud
 {

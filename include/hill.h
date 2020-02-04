@@ -6,10 +6,8 @@
 #ifndef __MSANSOME_HILL__
 #define __MSANSOME_HILL__
 
-#define MIN_HILL_HEIGHT 2
-#define MAX_HILL_HEIGHT 3
-#define MIN_HILL_RADIUS 6
-#define MAX_HILL_RADIUS 12
+#include "config.h"
+
 typedef struct hill
 {
     int radius;

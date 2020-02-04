@@ -11,12 +11,13 @@ COMPILE_FLAGS = -Iinclude $(INCLUDE_FRAMEWORK) -Wno-deprecated-declarations
 
 OBJS = $(SRC:.c=.o)
 SRC = \
-	src/a1.c \
+	src/main.c \
 	src/base.c \
 	src/cloud.c \
 	src/generation.c \
 	src/graphics.c \
 	src/hill.c \
+	src/projectile.c \
 	src/utility.c \
 	src/valley.c \
 	src/visible.c

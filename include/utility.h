@@ -6,6 +6,8 @@
 #ifndef __MSANSOME_UTILITY__
 #define __MSANSOME_UTILITY__
 
+#include "config.h"
+
 typedef enum colours
 {
     INVALID_COLOUR = 0,

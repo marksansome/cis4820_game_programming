@@ -210,6 +210,9 @@ void createMainWorld()
 
     // set player starting positon
     setViewPosition(-50, -20, -50);
+
+    // add projectile mob
+    createMob(0, 60.0, 21.0, 60.0, 0.0);
 }
 
 Structure *createStructure(StructureId id, int render, void *ptr)
