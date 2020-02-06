@@ -1,5 +1,6 @@
-/* CIS4820 Game Programming - Winter 2020
- * Mark Sansome
+/**
+ * CIS4820 Game Programming - Winter 2020
+ * @author Mark Sansome
  * 0916066
 */
 
@@ -20,14 +21,12 @@ typedef struct projectile
 
 extern Projectile *g_projectile;
 
-extern void initProjectile();
+extern Projectile *createProjectile();
 
 extern void fireProjectile();
 
 extern void moveProjectile();
 
 extern void checkProjectileCollision();
-
-extern double toRadians(float degrees);
 
 #endif //msansome_projectile_h

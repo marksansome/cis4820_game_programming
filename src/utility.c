@@ -1,15 +1,16 @@
-/* CIS4820 Game Programming - Winter 2020
- * Mark Sansome
+/**
+ * CIS4820 Game Programming - Winter 2020
+ * @author Mark Sansome
  * 0916066
 */
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
-#include "utility.h"
 #include "config.h"
 #include "graphics.h"
+#include "utility.h"
 
 void createUserColours()
 {
@@ -66,4 +67,9 @@ int getColour(Colours colour)
         printf("WARNING: random colour not found\n");
         return 0;
     }
+}
+
+double toRadians(float degree)
+{
+    return degree / 180.0 * M_PI;
 }

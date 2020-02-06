@@ -1,5 +1,6 @@
-/* CIS4820 Game Programming - Winter 2020
- * Mark Sansome
+/**
+ * CIS4820 Game Programming - Winter 2020
+ * @author Mark Sansome
  * 0916066
 */
 
@@ -10,10 +11,10 @@
 /* Frames per second code taken from : */
 /* http://www.lighthouse3d.com/opengl/glut/index.php?fps */
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 #include <sys/time.h>
 
 #include "config.h"
@@ -290,19 +291,23 @@ void mouse(int button, int state, int x, int y)
 
 int main(int argc, char **argv)
 {
+   /* Intializes random number generator */
+   time_t t;
+   srand((unsigned)time(&t));
+
    // initialize the graphics system
    graphicsInit(&argc, argv);
-
-   // initialize worlds game objects storage
-   initStructureStore();
-   initCloudStore();
-   initProjectile();
 
    // initialize world to empty
    initWorld();
 
    // initialize global tracking values
    g_num_mobs = 0;
+
+   // initialize worlds game objects storage
+   g_structures = createObjectStore(MAX_OBJECTS);
+   g_clouds = createObjectStore(MAX_CLOUDS);
+   g_projectile = createProjectile();
 
    // create user defined colours
    createUserColours();
@@ -326,6 +331,7 @@ int main(int argc, char **argv)
    // freeObjectStore();
    free(g_structures);
    free(g_clouds);
+   free(g_projectile);
 
    return 0;
 }

@@ -1,5 +1,6 @@
-/* CIS4820 Game Programming - Winter 2020
- * Mark Sansome
+/**
+ * CIS4820 Game Programming - Winter 2020
+ * @author Mark Sansome
  * 0916066
 */
 
@@ -15,22 +16,33 @@ typedef enum colours
     WHITE
 } Colours;
 
-/*
-* createUserColours
-* Creates a list of user defined colours
+/**
+* Creates a set of user defined colours
 */
 extern void createUserColours();
 
-/*
-* drawCircle
-* Draws a circle
+/**
+* Draws a circle in the world array
+* @param x x position of center
+* @param y y position of center
+* @param z z position of center
+* @param r radius of circle
+* @param colour user defined colour of the circle 
 */
-extern void drawCircle(int xCentre, int y, int zCentre, int r, Colours colour);
+extern void drawCircle(int x, int y, int z, int r, Colours colour);
 
-/*
-* getColour
+/**
 * Returns a random colour of type colour
+* @param colour type of user defined colour
+* @return integer of user defined colour
 */
 extern int getColour(Colours colour);
+
+/**
+ * converts degrees to radians
+ * @param degree
+ * @return radians
+ */
+extern double toRadians(float degree);
 
 #endif //__MSANSOME_UTILITY__

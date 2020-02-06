@@ -1,12 +1,12 @@
-/* CIS4820 Game Programming - Winter 2020
- * Mark Sansome
+/**
+ * CIS4820 Game Programming - Winter 2020
+ * @author Mark Sansome
  * 0916066
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 #include "generation.h"
 
@@ -65,10 +65,6 @@ void createTestWorld()
 
 void createMainWorld()
 {
-    /* Intializes random number generator */
-    time_t t;
-    srand((unsigned)time(&t));
-
     // place initial floor
     for (int y = 0; y < GROUND_DEPTH; y++)
     {

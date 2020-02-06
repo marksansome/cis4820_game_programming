@@ -1,42 +1,47 @@
-/* CIS4820 Game Programming - Winter 2020
- * Mark Sansome
+/**
+ * CIS4820 Game Programming - Winter 2020
+ * @author Mark Sansome
  * 0916066
 */
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 #include "projectile.h"
+
 #include "data.h"
 #include "graphics.h"
+#include "utility.h"
 
 Projectile *g_projectile;
 
-void initProjectile()
+Projectile *createProjectile()
 {
-    g_projectile = (Projectile *)malloc(sizeof(Projectile));
-    if (g_projectile == NULL)
+    Projectile *p = (Projectile *)malloc(sizeof(Projectile));
+    if (p == NULL)
     {
         printf("Unable to allocate memory!\n");
         exit(1);
     }
 
-    // add projectile mob
+    // add projectile mob to global mob counter
     int id = g_num_mobs;
     g_num_mobs += 1; // add to mob counter
 
     createMob(id, 0.0, 0.0, 0.0, 0.0);
     hideMob(id);
 
-    g_projectile->mobId = id;
-    g_projectile->inMotion = 0;
-    g_projectile->x = 0.0;
-    g_projectile->y = 0.0;
-    g_projectile->z = 0.0;
-    g_projectile->xRot = 0.0;
-    g_projectile->yRot = 0.0;
-    g_projectile->zRot = 0.0;
+    p->mobId = id;
+    p->inMotion = 0;
+    p->x = 0.0;
+    p->y = 0.0;
+    p->z = 0.0;
+    p->xRot = 0.0;
+    p->yRot = 0.0;
+    p->zRot = 0.0;
+
+    return p;
 }
 
 void fireProjectile()
@@ -51,6 +56,10 @@ void fireProjectile()
         g_projectile->y *= -1.0;
         g_projectile->z *= -1.0;
 
+        g_projectile->x -= 0.5;
+        g_projectile->y -= 0.5;
+        g_projectile->z -= 0.5;
+
         setMobPosition(g_projectile->mobId, g_projectile->x, g_projectile->y, g_projectile->z, g_projectile->zRot);
         showMob(g_projectile->mobId);
         g_projectile->inMotion = 1;
@@ -63,9 +72,9 @@ void moveProjectile()
     {
         float unitMultiplier = 1.0 - fabs(pow(sin(toRadians(g_projectile->xRot)), 3));
 
-        g_projectile->x += sin(toRadians(g_projectile->yRot)) * cos(toRadians(g_projectile->xRot)) * unitMultiplier;
-        g_projectile->y -= sin(toRadians(g_projectile->xRot));
-        g_projectile->z -= cos(toRadians(g_projectile->yRot)) * cos(toRadians(g_projectile->xRot)) * unitMultiplier;
+        g_projectile->x += (sin(toRadians(g_projectile->yRot)) * cos(toRadians(g_projectile->xRot)) * unitMultiplier);
+        g_projectile->y -= (sin(toRadians(g_projectile->xRot)));
+        g_projectile->z -= (cos(toRadians(g_projectile->yRot)) * cos(toRadians(g_projectile->xRot)) * unitMultiplier);
 
         checkProjectileCollision();
         // calculate new position
@@ -107,9 +116,4 @@ void checkProjectileCollision()
         hideMob(g_projectile->mobId);
         g_projectile->inMotion = 0;
     }
-}
-
-double toRadians(float degree)
-{
-    return degree / 180.0 * M_PI;
 }

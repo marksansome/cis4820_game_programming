@@ -1,5 +1,6 @@
-/* CIS4820 Game Programming - Winter 2020
- * Mark Sansome
+/**
+ * CIS4820 Game Programming - Winter 2020
+ * @author Mark Sansome
  * 0916066
 */
 
@@ -34,11 +35,17 @@ extern ObjectStore *g_clouds;
 
 extern int g_num_mobs;
 
-/*
-* initWorld
+/**
 * Set the world array to 0
 */
 extern void initWorld();
+
+/**
+* Allocates memory and initalizes an ObjectStore
+* @param maxObj size of object array
+* @return pointer to allocated ObjectStore
+*/
+extern ObjectStore *createObjectStore(int maxObj);
 
 /*
 * initStructureStore

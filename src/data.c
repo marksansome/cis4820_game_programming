@@ -1,5 +1,6 @@
-/* CIS4820 Game Programming - Winter 2020
- * Mark Sansome
+/**
+ * CIS4820 Game Programming - Winter 2020
+ * @author Mark Sansome
  * 0916066
 */
 
@@ -7,8 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "data.h"
 #include "config.h"
+#include "data.h"
 #include "graphics.h"
 
 ObjectStore *g_structures;
@@ -29,6 +30,23 @@ void initWorld()
             }
         }
     }
+}
+
+ObjectStore *createObjectStore(int maxObj)
+{
+    ObjectStore *os = (ObjectStore *)malloc(sizeof(ObjectStore) + sizeof(Object[maxObj]));
+    if (os == NULL)
+    {
+        printf("Unable to allocate memory!\n");
+        exit(1);
+    }
+    os->numObj = 0;
+    for (int i = 0; i < maxObj; i++)
+    {
+        os->object[i] = NULL;
+    }
+
+    return os;
 }
 
 void initStructureStore()
@@ -93,7 +111,7 @@ Object *createObject(object_type type, int render, void *ptr)
 
 void addStructure(Object *o)
 {
-    //TODO: add error checking here to see if added object excedes max object
+    //! @todo add error checking here to see if added object excedes max object
     // limit
     g_structures->object[g_structures->numObj] = o;
     g_structures->numObj += 1;
@@ -101,7 +119,7 @@ void addStructure(Object *o)
 
 void addCloud(Object *o)
 {
-    //TODO: add error checking here to see if added object excedes max object
+    //! @todo add error checking here to see if added object excedes max object
     // limit
     g_clouds->object[g_clouds->numObj] = o;
     g_clouds->numObj += 1;
@@ -109,6 +127,6 @@ void addCloud(Object *o)
 
 void freeObjectStore()
 {
-    //TODO: handle freeing memory. Call each objects free
+    //! @todo handle freeing memory. Call each objects free
     return;
 }
