@@ -10,6 +10,16 @@
 
 #include "generation.h"
 
+#include "config.h"
+#include "data.h"
+#include "graphics.h"
+
+#include "base.h"
+#include "cloud.h"
+#include "hill.h"
+#include "utility.h"
+#include "valley.h"
+
 void createTestWorld()
 {
     /* some sample objects */
@@ -161,9 +171,6 @@ void createMainWorld()
 
     // set player starting positon
     setViewPosition(-50, -20, -50);
-
-    // add projectile mob
-    createMob(0, 60.0, 21.0, 60.0, 0.0);
 }
 
 int checkStructureCollision(int index, int x1, int z1, int x2, int z2)

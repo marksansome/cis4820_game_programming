@@ -18,6 +18,7 @@ SRC = \
 	src/generation.c \
 	src/graphics.c \
 	src/hill.c \
+	src/meteor.c \
 	src/projectile.c \
 	src/utility.c \
 	src/valley.c \

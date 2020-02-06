@@ -3,10 +3,8 @@
  * 0916066
 */
 
-#ifndef __MSANSOME_CLOUD__
-#define __MSANSOME_CLOUD__
-
-#include "config.h"
+#ifndef msansome_cloud_h
+#define msansome_cloud_h
 
 typedef struct cloud
 {
@@ -26,4 +24,4 @@ extern int moveCloud(Cloud *c, int speed);
 
 extern void freeCloud(Cloud *);
 
-#endif //__MSANSOME_CLOUD__
+#endif //msansome_cloud_h

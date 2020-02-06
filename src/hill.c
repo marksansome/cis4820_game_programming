@@ -8,7 +8,9 @@
 #include <time.h>
 
 #include "hill.h"
-#include "generation.h"
+#include "config.h"
+#include "utility.h"
+#include "graphics.h"
 
 Hill *createHill()
 {

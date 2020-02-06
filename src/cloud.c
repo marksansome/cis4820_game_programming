@@ -8,7 +8,9 @@
 #include <time.h>
 
 #include "cloud.h"
-#include "generation.h"
+#include "config.h"
+#include "utility.h"
+#include "graphics.h"
 
 Cloud *createCloud()
 {

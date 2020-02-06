@@ -3,19 +3,8 @@
  * 0916066
 */
 
-#ifndef __MSANSOME_GENERATION__
-#define __MSANSOME_GENERATION__
-
-#include "graphics.h"
-#include "config.h"
-#include "data.h"
-
-#include "utility.h"
-#include "base.h"
-#include "cloud.h"
-#include "hill.h"
-#include "projectile.h"
-#include "valley.h"
+#ifndef msansome_generation_h
+#define msansome_generation_h
 
 /*
 * createTestWorld
@@ -75,4 +64,4 @@ extern int getStructureSquare(int index, int *x1, int *z1, int *x2, int *z2);
 */
 // extern int getStructureXZR(int index, int *x, int *z, int *radius);
 
-#endif // __MSANSOME_GENERATION__
+#endif //msansome_generation_h

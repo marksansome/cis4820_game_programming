@@ -5,8 +5,8 @@
 #include <GLUT/glut.h>
 #endif
 
-#ifndef __MSANSOME_GRAPHICS__
-#define __MSANSOME_GRAPHICS__
+#ifndef msansome_graphics_h
+#define msansome_graphics_h
 
 #include "config.h"
 
@@ -83,4 +83,4 @@ extern int setUserColour(int, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLflo
 extern void unsetUserColour(int);
 extern void getUserColour(int, GLfloat *, GLfloat *, GLfloat *, GLfloat *, GLfloat *, GLfloat *, GLfloat *, GLfloat *);
 
-#endif // __MSANSOME_GRAPHICS__
+#endif //msansome_graphics_h

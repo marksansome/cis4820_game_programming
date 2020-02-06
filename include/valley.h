@@ -3,10 +3,8 @@
  * 0916066
 */
 
-#ifndef __MSANSOME_VALLEY__
-#define __MSANSOME_VALLEY__
-
-#include "config.h"
+#ifndef msansome_valley_h
+#define msansome_valley_h
 
 typedef struct valley
 {
@@ -29,4 +27,4 @@ extern void generateValley(Valley *);
 
 extern void freeValley(Valley *v);
 
-#endif //__MSANSOME_VALLEY__
+#endif //msansome_valley_h

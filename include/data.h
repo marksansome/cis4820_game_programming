@@ -3,11 +3,8 @@
  * 0916066
 */
 
-#ifndef __MSANSOME_DATA__
-#define __MSANSOME_DATA__
-
-#include "config.h"
-#include "graphics.h"
+#ifndef msansome_data_h
+#define msansome_data_h
 
 typedef enum object_type
 {
@@ -32,23 +29,10 @@ typedef struct object_store
     Object *object[];
 } ObjectStore;
 
-// typedef struct cloudObjects
-// {
-//     int numClouds;
-//     Cloud *clouds[MAX_CLOUDS];
-// } CloudObjects;
-
-// typedef struct projectileObjects
-// {
-//     int numProjectiles;
-//     Structure *projectiles[MAX_PROJECTILES];
-// } ProjectileObjects;
-
 extern ObjectStore *g_structures;
-
 extern ObjectStore *g_clouds;
 
-extern ObjectStore *g_projectiles;
+extern int g_num_mobs;
 
 /*
 * initWorld
@@ -57,10 +41,15 @@ extern ObjectStore *g_projectiles;
 extern void initWorld();
 
 /*
-* initObjectStore
-* Set gameObjects to 0
+* initStructureStore
+* Set g_structures to 0
 */
 extern void initStructureStore();
+
+/*
+* initCloudStore
+* Set g_clouds to 0
+*/
 extern void initCloudStore();
 
 /*
@@ -70,18 +59,16 @@ extern void initCloudStore();
 extern Object *createObject(object_type type, int render, void *ptr);
 
 /*
-* addObject
-* Adds a object to ObjectStore
+* addStructure
+* Adds an object to g_structures
 */
 extern void addStructure(Object *o);
 
-extern void addCloud(Object *o);
-
 /*
-* initializeCloudObjects
-* Set cloudObjects to 0
+* addCloud
+* Adds an object to g_cloud
 */
-// extern void initializeCloudObjects();
+extern void addCloud(Object *o);
 
 /*
 * freeObjectStore
@@ -89,4 +76,4 @@ extern void addCloud(Object *o);
 */
 extern void freeObjectStore();
 
-#endif // __MSANSOME_DATA__
+#endif //msansome_data_h

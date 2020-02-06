@@ -3,22 +3,31 @@
  * 0916066
 */
 
-#ifndef __MSANSOME_PROJECTILE__
-#define __MSANSOME_PROJECTILE__
-
-#include "config.h"
-
-#include "projectile.h"
+#ifndef msansome_projectile_h
+#define msansome_projectile_h
 
 typedef struct projectile
 {
     int mobId;
+    int inMotion;
     float x;
     float y;
     float z;
+    float xRot;
     float yRot;
+    float zRot;
 } Projectile;
 
-extern Projectile *createProjectile();
+extern Projectile *g_projectile;
 
-#endif // __MSANSOME_PROJECTILE__
+extern void initProjectile();
+
+extern void fireProjectile();
+
+extern void moveProjectile();
+
+extern void checkProjectileCollision();
+
+extern double toRadians(float degrees);
+
+#endif //msansome_projectile_h

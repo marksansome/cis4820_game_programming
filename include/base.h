@@ -3,10 +3,8 @@
  * 0916066
 */
 
-#ifndef __MSANSOME_BASE__
-#define __MSANSOME_BASE__
-
-#include "config.h"
+#ifndef msansome_base_h
+#define msansome_base_h
 
 typedef struct base
 {
@@ -28,4 +26,4 @@ extern void generateBase(Base *);
 
 extern void freeBase(Base *);
 
-#endif //__MSANSOME_BASE__
+#endif //msansome_base_h

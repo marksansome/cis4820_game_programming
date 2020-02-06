@@ -3,8 +3,8 @@
  * 0916066
 */
 
-#ifndef __MSANSOME_CONFIG__
-#define __MSANSOME_CONFIG__
+#ifndef msansome_config_h
+#define msansome_config_h
 
 // BASE
 #define BASE_HEIGHT 3
@@ -13,6 +13,7 @@
 // CLOUD
 #define CLOUD_LEVEL 48
 #define MAX_CLOUDS 1750
+#define CLOUD_SPEED 300.00 // in milliseconds
 
 // GENERATION
 #define GROUND_DEPTH 5  // depth of the ground (top layer will be green)
@@ -38,8 +39,8 @@
 #define MAX_VALLEY_RADIUS 12
 
 // PROJECTILE
-#define MAX_PROJECTILES 1
+#define PROJECTILE_SPEED 50.0
 
 // UTILITY
 
-#endif // __MSANSOME_CONFIG__
+#endif //msansome_config_h

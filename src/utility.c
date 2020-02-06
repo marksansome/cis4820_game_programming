@@ -7,8 +7,9 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "graphics.h"
 #include "utility.h"
+#include "config.h"
+#include "graphics.h"
 
 void createUserColours()
 {

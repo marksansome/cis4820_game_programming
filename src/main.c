@@ -16,12 +16,17 @@
 #include <math.h>
 #include <sys/time.h>
 
-#include "graphics.h"
 #include "config.h"
 #include "data.h"
+#include "graphics.h"
 
+#include "base.h"
+#include "cloud.h"
 #include "generation.h"
+#include "hill.h"
+#include "projectile.h"
 #include "utility.h"
+#include "valley.h"
 
 /* frustum corner coordinates, used for visibility determination  */
 extern float corners[4][3];
@@ -220,15 +225,16 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
    }
    else
    {
-      static double oldTime = 0.0;
+      static double cloudTime, projTime = 0.0;
       struct timeval tv;
       gettimeofday(&tv, NULL);
 
       double curTime = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000;
 
-      if (curTime - oldTime >= 300.00)
+      // cloud movement
+      if (curTime - cloudTime >= CLOUD_SPEED)
       {
-         oldTime = curTime;
+         cloudTime = curTime;
 
          for (int i = 0; i < g_clouds->numObj; i++)
          {
@@ -238,6 +244,14 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
             world[oldX][c->y][c->z] = getColour(EMPTY);
             generateCloud(c);
          }
+      }
+
+      // projectile movement and collision
+      if (curTime - projTime >= PROJECTILE_SPEED)
+      {
+         projTime = curTime;
+
+         moveProjectile();
       }
    }
 }
@@ -252,19 +266,7 @@ void mouse(int button, int state, int x, int y)
 
    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
    {
-      // TODO: Add projectile
-      float xf, yf, zf, xRot, yRot, zRot = 0.0;
-
-      getViewPosition(&xf, &yf, &zf);
-      getViewOrientation(&xRot, &yRot, &zRot);
-
-      xf = -1.0 * xf;
-      yf = -1.0 * yf;
-      zf = -1.0 * zf;
-
-      setMobPosition(0, xf, yf, zf, yRot);
-
-      // printf("mouse at x = %f, y = %f, z = %f\n", xf, yf, zf);
+      fireProjectile();
    }
 
    // if (button == GLUT_LEFT_BUTTON)
@@ -291,12 +293,16 @@ int main(int argc, char **argv)
    // initialize the graphics system
    graphicsInit(&argc, argv);
 
-   // initialize worlds game and cloud objects storage
+   // initialize worlds game objects storage
    initStructureStore();
    initCloudStore();
+   initProjectile();
 
    // initialize world to empty
    initWorld();
+
+   // initialize global tracking values
+   g_num_mobs = 0;
 
    // create user defined colours
    createUserColours();

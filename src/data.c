@@ -8,10 +8,13 @@
 #include <string.h>
 
 #include "data.h"
+#include "config.h"
+#include "graphics.h"
 
 ObjectStore *g_structures;
 ObjectStore *g_clouds;
-ObjectStore *g_projectiles;
+
+int g_num_mobs;
 
 void initWorld()
 {

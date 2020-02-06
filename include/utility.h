@@ -3,10 +3,8 @@
  * 0916066
 */
 
-#ifndef __MSANSOME_UTILITY__
-#define __MSANSOME_UTILITY__
-
-#include "config.h"
+#ifndef msansome_utility_h
+#define msansome_utility_h
 
 typedef enum colours
 {

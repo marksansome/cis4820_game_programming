@@ -3,10 +3,8 @@
  * 0916066
 */
 
-#ifndef __MSANSOME_HILL__
-#define __MSANSOME_HILL__
-
-#include "config.h"
+#ifndef msansome_hill_h
+#define msansome_hill_h
 
 typedef struct hill
 {
@@ -29,4 +27,4 @@ extern void generateHill(Hill *);
 
 extern void freeHill(Hill *);
 
-#endif //__MSANSOME_HILL__
+#endif //msansome_hill_h

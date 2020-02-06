@@ -8,7 +8,8 @@
 #include <time.h>
 
 #include "base.h"
-#include "generation.h"
+#include "config.h"
+#include "graphics.h"
 
 Base *createBase()
 {
