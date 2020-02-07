@@ -7,6 +7,8 @@
 #ifndef msansome_data_h
 #define msansome_data_h
 
+#include "linkedList.h"
+
 typedef enum object_type
 {
     INVALID = 0,
@@ -32,6 +34,8 @@ typedef struct object_store
 
 extern ObjectStore *g_structures;
 extern ObjectStore *g_clouds;
+
+List *g_structureList;
 
 extern int g_num_mobs;
 

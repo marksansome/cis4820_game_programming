@@ -11,9 +11,12 @@
 #include "config.h"
 #include "data.h"
 #include "graphics.h"
+#include "linkedList.h"
 
 ObjectStore *g_structures;
 ObjectStore *g_clouds;
+
+List *g_structureList;
 
 int g_num_mobs;
 
@@ -48,51 +51,6 @@ ObjectStore *createObjectStore(int maxObj)
 
     return os;
 }
-
-void initStructureStore()
-{
-    g_structures = (ObjectStore *)malloc(sizeof(ObjectStore) + sizeof(Object[MAX_OBJECTS]));
-    if (g_structures == NULL)
-    {
-        printf("Unable to allocate memory!\n");
-        exit(1);
-    }
-    g_structures->numObj = 0;
-    for (int i = 0; i < MAX_OBJECTS; i++)
-    {
-        g_structures->object[i] = NULL;
-    }
-}
-
-void initCloudStore()
-{
-    g_clouds = (ObjectStore *)malloc(sizeof(ObjectStore) + sizeof(Object[MAX_CLOUDS]));
-    if (g_clouds == NULL)
-    {
-        printf("Unable to allocate memory!\n");
-        exit(1);
-    }
-    g_clouds->numObj = 0;
-    for (int i = 0; i < MAX_CLOUDS; i++)
-    {
-        g_clouds->object[i] = NULL;
-    }
-}
-
-// void initObjectStore(ObjectStore *os, int maxObj)
-// {
-//     os = (ObjectStore *)malloc(sizeof(ObjectStore) + sizeof(Object[maxObj]));
-//     if (os == NULL)
-//     {
-//         printf("Unable to allocate memory!\n");
-//         exit(1);
-//     }
-//     os->numObj = 0;
-//     for (int i = 0; i < maxObj; i++)
-//     {
-//         os->object[i] = NULL;
-//     }
-// }
 
 Object *createObject(object_type type, int render, void *ptr)
 {

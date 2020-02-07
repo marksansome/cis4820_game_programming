@@ -308,6 +308,7 @@ int main(int argc, char **argv)
    g_structures = createObjectStore(MAX_OBJECTS);
    g_clouds = createObjectStore(MAX_CLOUDS);
    g_projectile = createProjectile();
+   g_structureList = createList();
 
    // create user defined colours
    createUserColours();
