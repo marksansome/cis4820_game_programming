@@ -28,7 +28,7 @@ List *createList();
 /**
  * Adds an item to the end of the list
  * @param list list to add to
- * @param item item to store in list.
+ * @param item item to store in list
  */
 void addItem(List *list, void *item);
 

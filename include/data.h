@@ -8,7 +8,6 @@
 #define msansome_data_h
 
 #include "linkedList.h"
-
 typedef enum object_type
 {
     INVALID = 0,
@@ -35,7 +34,7 @@ typedef struct object_store
 extern ObjectStore *g_structures;
 extern ObjectStore *g_clouds;
 
-List *g_structureList;
+List *g_meteors;
 
 extern int g_num_mobs;
 
@@ -52,34 +51,12 @@ extern void initWorld();
 extern ObjectStore *createObjectStore(int maxObj);
 
 /*
-* initStructureStore
-* Set g_structures to 0
-*/
-extern void initStructureStore();
-
-/*
-* initCloudStore
-* Set g_clouds to 0
-*/
-extern void initCloudStore();
-
-/*
 * createObject
 * Creates and allocates memory for a game Object
 */
 extern Object *createObject(object_type type, int render, void *ptr);
 
-/*
-* addStructure
-* Adds an object to g_structures
-*/
-extern void addStructure(Object *o);
-
-/*
-* addCloud
-* Adds an object to g_cloud
-*/
-extern void addCloud(Object *o);
+extern void addObject(ObjectStore *os, Object *o);
 
 /*
 * freeObjectStore

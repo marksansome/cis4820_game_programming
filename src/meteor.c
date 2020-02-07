@@ -11,6 +11,7 @@
 
 #include "config.h"
 #include "graphics.h"
+#include "utility.h"
 
 Meteor *createMeteor()
 {
@@ -27,41 +28,119 @@ Meteor *createMeteor()
     m->xLand = 0;
     m->yLand = 0;
     m->zLand = 0;
-    m->xStart = 0;
-    m->yStart = 0;
-    m->zStart = 0;
-    m->xDir = 0;
-    m->zDir = 0;
+    m->xDir = 1;
+    m->zDir = 1;
     m->isFalling = 1;
+    m->timeTracker = 0.0;
+    m->velocity = 0.0;
 
     return m;
 }
 
 void initMeteor(Meteor *m)
 {
-    m->x = (rand() % (WORLDX - (2 * 5) - 1)) + 5;
+    // calculate landing position on flat ground where meteor should hit
+    // this position does not account for generated structures in the world
+    m->xLand = (rand() % (WORLDX - (2 * METEOR_EDGE_BUFFER) - 1)) + METEOR_EDGE_BUFFER;
+    m->yLand = GROUND_DEPTH;
+    m->zLand = (rand() % (WORLDX - (2 * METEOR_EDGE_BUFFER) - 1)) + METEOR_EDGE_BUFFER;
 
-    // h->yCenter = GROUND_DEPTH;
-    // h->zCenter = (rand() % (WORLDZ - (2 * MAX_HILL_RADIUS) - 1)) + MAX_HILL_RADIUS;
+    // randomize the direction the starting block is
+    if (rand() % 2)
+    {
+        m->xDir *= -1;
+    }
+    if (rand() % 2)
+    {
+        m->zDir *= -1;
+    }
 
-    // b->z1 = (rand() % (WORLDZ - (2 * BASE_EDGE_LENGTH) - 1)) + BASE_EDGE_LENGTH;
+    // calcualte starting position by counting backwards from start
+    m->x = m->xLand;
+    m->y = METEOR_STARTING_Y;
+    m->z = m->zLand;
+    for (int i = m->yLand; i < METEOR_STARTING_Y; i++)
+    {
+        m->x -= m->xDir;
+        m->z -= m->zDir;
+    }
+
+    m->isFalling = 1;
+    m->velocity = floatRand(MIN_METEOR_SPEED, MAX_METEOR_SPEED);
 }
 
-// void generateBase(Base *b)
-// {
-//     // draw square size of base edge
-//     for (int y = b->y1; y <= b->y2; y++)
-//     {
-//         for (int x = b->x1; x <= b->x2; x++)
-//         {
-//             for (int z = b->z1; z >= b->z2; z--)
-//             {
-//                 world[x][y][z] = b->colour;
-//             }
-//         }
-//     }
+void moveMeteor(Meteor *m)
+{
+    if (m->isFalling)
+    {
+        removeMeteor(m);
 
-//     // debug: show square (x1,z1) (x2,z2)
-//     // world[b->x1][b->y2][b->z1] = 4;
-//     // world[b->x2][b->y2][b->z2] = 5;
-// }
+        m->x += m->xDir;
+        m->y -= 1;
+        m->z += m->zDir;
+
+        checkMeteorCollision(m);
+        generateMeteor(m);
+    }
+}
+
+void checkMeteorCollision(Meteor *m)
+{
+    //! @todo check if collison is with another meteor in the air
+    // get next position
+    int xNext = m->x + m->xDir;
+    int yNext = m->y - 1;
+    int zNext = m->z + m->zDir;
+
+    // check if the meteor is in the generated world yet
+    if (isInWorld(xNext, yNext, zNext))
+    {
+        if (yNext == CLOUD_LEVEL)
+        {
+            return;
+        }
+        if (world[xNext][yNext][zNext] != 0)
+        {
+            m->isFalling = 0;
+        }
+    }
+}
+
+void generateMeteor(Meteor *m)
+{
+    int meteorColours[4] = {METEOR, RED, ORANGE, YELLOW};
+
+    for (int i = 0; i < 4; i++)
+    {
+        int x = m->x - (m->xDir * i);
+        int y = m->y + i;
+        int z = m->z - (m->zDir * i);
+
+        // the meteor is not falling, only draw main body with no tail
+        if (i > 0 && !m->isFalling)
+        {
+            break;
+        }
+
+        if (isInWorld(x, y, z))
+        {
+            world[x][y][z] = getColour(meteorColours[i]);
+        }
+    }
+}
+
+void removeMeteor(Meteor *m)
+{
+
+    for (int i = 0; i < 4; i++)
+    {
+        int x = m->x - (m->xDir * i);
+        int y = m->y + i;
+        int z = m->z - (m->zDir * i);
+
+        if (isInWorld(x, y, z))
+        {
+            world[x][y][z] = 0;
+        }
+    }
+}

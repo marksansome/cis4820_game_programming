@@ -16,7 +16,7 @@
 ObjectStore *g_structures;
 ObjectStore *g_clouds;
 
-List *g_structureList;
+List *g_meteors;
 
 int g_num_mobs;
 
@@ -67,20 +67,12 @@ Object *createObject(object_type type, int render, void *ptr)
     return o;
 }
 
-void addStructure(Object *o)
+void addObject(ObjectStore *os, Object *o)
 {
     //! @todo add error checking here to see if added object excedes max object
     // limit
-    g_structures->object[g_structures->numObj] = o;
-    g_structures->numObj += 1;
-}
-
-void addCloud(Object *o)
-{
-    //! @todo add error checking here to see if added object excedes max object
-    // limit
-    g_clouds->object[g_clouds->numObj] = o;
-    g_clouds->numObj += 1;
+    os->object[os->numObj] = o;
+    os->numObj += 1;
 }
 
 void freeObjectStore()

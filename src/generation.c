@@ -17,6 +17,7 @@
 #include "base.h"
 #include "cloud.h"
 #include "hill.h"
+#include "meteor.h"
 #include "utility.h"
 #include "valley.h"
 
@@ -91,12 +92,12 @@ void createMainWorld()
     // red
     Base *bRed = createBase();
     initializeBase(bRed, 2, 15);
-    addStructure(createObject(BASE, 1, bRed));
+    addObject(g_structures, createObject(BASE, 1, bRed));
 
     // blue
     Base *bBlue = createBase();
     initializeBase(bBlue, 3, 75);
-    addStructure(createObject(BASE, 1, bBlue));
+    addObject(g_structures, createObject(BASE, 1, bBlue));
 
     for (int i = 0; i < MAX_TERRAIN; i++)
     {
@@ -108,7 +109,7 @@ void createMainWorld()
 
             if (!checkStructureCollision(-1, v->x1, v->z1, v->x2, v->z2))
             {
-                addStructure(createObject(VALLEY, 1, v));
+                addObject(g_structures, createObject(VALLEY, 1, v));
             }
         }
         else //hill
@@ -118,7 +119,7 @@ void createMainWorld()
 
             if (!checkStructureCollision(-1, h->x1, h->z1, h->x2, h->z2))
             {
-                addStructure(createObject(HILL, 1, h));
+                addObject(g_structures, createObject(HILL, 1, h));
             }
         }
     }
@@ -133,7 +134,6 @@ void createMainWorld()
             {
             case VALLEY:
             {
-
                 generateValley((Valley *)s->ptr);
                 break;
             }
@@ -161,8 +161,16 @@ void createMainWorld()
     {
         Cloud *c = createCloud();
         initializeCloud(c);
-        addCloud(createObject(CLOUD, 1, c));
+        addObject(g_clouds, createObject(CLOUD, 1, c));
         generateCloud(c);
+    }
+
+    // add starter meteors
+    for (int i = 0; i < STARTING_METEORS; i++)
+    {
+        Meteor *m = createMeteor();
+        initMeteor(m);
+        addItem(g_meteors, m);
     }
 
     // set player starting positon

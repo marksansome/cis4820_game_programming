@@ -25,6 +25,7 @@
 #include "cloud.h"
 #include "generation.h"
 #include "hill.h"
+#include "meteor.h"
 #include "projectile.h"
 #include "utility.h"
 #include "valley.h"
@@ -226,7 +227,7 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
    }
    else
    {
-      static double cloudTime, projTime = 0.0;
+      static double cloudTime, projTime, meteorTime = 0.0;
       struct timeval tv;
       gettimeofday(&tv, NULL);
 
@@ -253,6 +254,33 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
          projTime = curTime;
 
          moveProjectile();
+      }
+
+      // generate new meteors
+      if (curTime - meteorTime >= METEOR_SPAWN_TIME)
+      {
+         meteorTime = curTime;
+
+         for (int i = 0; i < METEOR_PER_SPAWN; i++)
+         {
+            Meteor *m = createMeteor();
+            initMeteor(m);
+            addItem(g_meteors, m);
+         }
+      }
+
+      // generate new meteors
+      for (int i = 0; i < getListSize(g_meteors); i++)
+      {
+         Meteor *m = getItemAtIndex(g_meteors, i);
+         if (curTime - m->timeTracker >= m->velocity)
+         {
+            m->timeTracker = curTime;
+            if (m->isFalling)
+            {
+               moveMeteor(m);
+            }
+         }
       }
    }
 }
@@ -308,7 +336,7 @@ int main(int argc, char **argv)
    g_structures = createObjectStore(MAX_OBJECTS);
    g_clouds = createObjectStore(MAX_CLOUDS);
    g_projectile = createProjectile();
-   g_structureList = createList();
+   g_meteors = createList();
 
    // create user defined colours
    createUserColours();

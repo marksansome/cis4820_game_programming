@@ -13,7 +13,11 @@ typedef enum colours
     EMPTY,
     GREEN,
     BROWN,
-    WHITE
+    WHITE,
+    METEOR,
+    YELLOW,
+    ORANGE,
+    RED
 } Colours;
 
 /**
@@ -45,4 +49,21 @@ extern int getColour(Colours colour);
  */
 extern double toRadians(float degree);
 
-#endif //__MSANSOME_UTILITY__
+/**
+ * checks to see if coordinates are within the world array
+ * @param x x position
+ * @param y y position
+ * @param z z position
+ * @return 1 = is in world, 0 = out of world
+ */
+extern int isInWorld(int x, int y, int z);
+
+/**
+ * Generates a random floating point number between min and max
+ * @param min minimum number produced
+ * @param max maximum number produced
+ * @return random number between min and max
+ */
+extern float floatRand(float min, float max);
+
+#endif // msansome_utility_h
