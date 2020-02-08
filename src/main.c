@@ -95,6 +95,9 @@ void collisionResponse()
 /* colour must be set before other functions are called	*/
 void draw2D()
 {
+   GLfloat black[] = {0.0, 0.0, 0.0, 0.5};
+   GLfloat white[] = {1, 1, 1, 1};
+   GLfloat green[] = {0.0, 0.5, 0.0, 1};
 
    if (testWorld)
    {
@@ -106,15 +109,117 @@ void draw2D()
          draw2Dline(0, 0, 500, 500, 15);
          draw2Dtriangle(0, 0, 200, 200, 0, 200);
 
-         GLfloat black[] = {0.0, 0.0, 0.0, 0.5};
          set2Dcolour(black);
          draw2Dbox(500, 380, 524, 388);
       }
    }
    else
    {
+      //! @todo add minimap
+      if (displayMap == 1)
+      {
+         int mapSize = ((screenWidth / MAP_SMALL_SCALE) / WORLDX) * WORLDX;
+         int blockSize = mapSize / WORLDX; // take the mapsize divided by the number of drawn blocks
+         int buffer = (mapSize / MAP_SMALL_BUFFER);
+         int mapOffsetW = screenWidth - buffer - mapSize;
+         int mapOffsetH = screenHeight - buffer - mapSize;
 
-      /* your code goes here */
+         // draw viewpoint
+         float vpX, vpY, vpZ = 0.0;
+         getViewPosition(&vpX, &vpY, &vpZ);
+         vpX *= -1.0;
+         vpZ *= -1.0;
+         set2Dcolour(white);
+         draw2Dbox(mapOffsetW + (blockSize * (int)vpX),
+                   mapOffsetH + (blockSize * (int)vpZ),
+                   mapOffsetW + (blockSize * (int)vpX) + blockSize,
+                   mapOffsetH + (blockSize * (int)vpZ) + blockSize);
+
+         // draw world
+         for (int y = WORLDY - 2; y >= 0; y--) // minus 2 to ensure we don't check out of array bounds
+         {
+            for (int x = 0; x < WORLDX - 1; x++)
+            {
+               for (int z = 0; z < WORLDZ - 1; z++)
+               {
+                  if (world[x][y][z] != 0 && y != CLOUD_LEVEL)
+                  {
+                     if (world[x][y + 1][z] == 0)
+                     {
+                        GLfloat ambRed, ambGreen, ambBlue, ambAlpha, difRed, difGreen, difBlue, difAlpha;
+                        getUserColour(world[x][y][z], &ambRed, &ambGreen, &ambBlue, &ambAlpha, &difRed, &difGreen, &difBlue, &difAlpha);
+                        float colour[4] = {ambRed, ambGreen, ambBlue, ambAlpha};
+                        set2Dcolour(colour);
+                        draw2Dbox(mapOffsetW + (blockSize * x),
+                                  mapOffsetH + (blockSize * z),
+                                  mapOffsetW + (blockSize * x) + blockSize,
+                                  mapOffsetH + (blockSize * z) + blockSize);
+                     }
+                  }
+               }
+            }
+         }
+
+         set2Dcolour(black);
+         draw2Dline(mapOffsetW - blockSize, mapOffsetH - blockSize, mapOffsetW + mapSize, mapOffsetH - blockSize, 5); // bottom
+         draw2Dline(mapOffsetW - blockSize, mapOffsetH - blockSize, mapOffsetW - blockSize, mapOffsetH + mapSize, 5); // left
+         draw2Dline(mapOffsetW + mapSize, mapOffsetH - blockSize, mapOffsetW + mapSize, mapOffsetH + mapSize, 5);     // right
+         draw2Dline(mapOffsetW - blockSize, mapOffsetH + mapSize, mapOffsetW + mapSize, mapOffsetH + mapSize, 5);     // top
+
+         //! @todo draw line around mapq
+      }
+      else if (displayMap == 2)
+      {
+         int mapSize = ((screenWidth / MAP_LARGE_SCALE) / WORLDX) * WORLDX;
+         int blockSize = mapSize / WORLDX; // take the mapsize divided by the number of drawn blocks
+         int buffer = (mapSize / MAP_LARGE_BUFFER);
+         // int mapOffsetW = screenWidth - (buffer * 2) - mapSize;
+         // int mapOffsetH = screenHeight - (buffer / 2) - mapSize;
+         int mapOffsetW = (screenWidth - mapSize) / 2;
+         int mapOffsetH = (screenHeight - mapSize) / 2;
+
+         // draw viewpoint
+         float vpX, vpY, vpZ = 0.0;
+         getViewPosition(&vpX, &vpY, &vpZ);
+         vpX *= -1.0;
+         vpZ *= -1.0;
+         set2Dcolour(white);
+         draw2Dbox(mapOffsetW + (blockSize * (int)vpX),
+                   mapOffsetH + (blockSize * (int)vpZ),
+                   mapOffsetW + (blockSize * (int)vpX) + blockSize,
+                   mapOffsetH + (blockSize * (int)vpZ) + blockSize);
+
+         // draw world
+         for (int y = WORLDY - 2; y >= 0; y--) // minus 2 to ensure we don't check out of array bounds
+         {
+            for (int x = 0; x < WORLDX - 1; x++)
+            {
+               for (int z = 0; z < WORLDZ - 1; z++)
+               {
+                  if (world[x][y][z] != 0 && y != CLOUD_LEVEL)
+                  {
+                     if (world[x][y + 1][z] == 0)
+                     {
+                        GLfloat ambRed, ambGreen, ambBlue, ambAlpha, difRed, difGreen, difBlue, difAlpha;
+                        getUserColour(world[x][y][z], &ambRed, &ambGreen, &ambBlue, &ambAlpha, &difRed, &difGreen, &difBlue, &difAlpha);
+                        float colour[4] = {ambRed, ambGreen, ambBlue, ambAlpha};
+                        set2Dcolour(colour);
+                        draw2Dbox(mapOffsetW + (blockSize * x),
+                                  mapOffsetH + (blockSize * z),
+                                  mapOffsetW + (blockSize * x) + blockSize,
+                                  mapOffsetH + (blockSize * z) + blockSize);
+                     }
+                  }
+               }
+            }
+         }
+
+         set2Dcolour(black);
+         draw2Dline(mapOffsetW - (blockSize / 3), mapOffsetH - (blockSize / 3), mapOffsetW + mapSize - (blockSize / 3), mapOffsetH - (blockSize / 3), 15);                     // bottom
+         draw2Dline(mapOffsetW - (blockSize / 3), mapOffsetH - (blockSize / 3), mapOffsetW - (blockSize / 3), mapOffsetH + mapSize - (blockSize / 3), 15);                     // left
+         draw2Dline(mapOffsetW + mapSize - (blockSize / 2), mapOffsetH - (blockSize / 3), mapOffsetW + mapSize - (blockSize / 2), mapOffsetH + mapSize - (blockSize / 3), 15); // right
+         draw2Dline(mapOffsetW - (blockSize / 3), mapOffsetH + mapSize - (blockSize / 2), mapOffsetW + mapSize - (blockSize / 3), mapOffsetH + mapSize - (blockSize / 2), 15); // top
+      }
    }
 }
 
@@ -227,7 +332,8 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
    }
    else
    {
-      static double cloudTime, projTime, meteorTime = 0.0;
+      static double cloudTime, projTime = 0.0;
+      static double meteorTime = METEOR_SPAWN_TIME;
       struct timeval tv;
       gettimeofday(&tv, NULL);
 

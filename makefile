@@ -39,6 +39,9 @@ testworld: $(EXE)
 a1_old:
 	gcc src/** -o a1 $(COMPILE_FLAGS) $(LINK_FLAGS)
 
+run: all
+	./$(EXE)
+
 clean :
 	-rm -f $(EXE)
 	-rm -f $(OBJS)

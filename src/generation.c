@@ -91,12 +91,12 @@ void createMainWorld()
     // add team bases
     // red
     Base *bRed = createBase();
-    initializeBase(bRed, 2, 15);
+    initializeBase(bRed, 35, 15);
     addObject(g_structures, createObject(BASE, 1, bRed));
 
     // blue
     Base *bBlue = createBase();
-    initializeBase(bBlue, 3, 75);
+    initializeBase(bBlue, 36, 75);
     addObject(g_structures, createObject(BASE, 1, bBlue));
 
     for (int i = 0; i < MAX_TERRAIN; i++)

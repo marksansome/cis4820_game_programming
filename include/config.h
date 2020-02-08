@@ -29,12 +29,18 @@
 
 // METEOR
 #define STARTING_METEORS 30
-#define METEOR_STARTING_Y 55
+#define METEOR_STARTING_Y 60
 #define METEOR_EDGE_BUFFER 5
 #define MAX_METEOR_SPEED 30.0
 #define MIN_METEOR_SPEED 100.0
 #define METEOR_SPAWN_TIME 10000.0 // time until next meteors spawn
-#define METEOR_PER_SPAWN 10       // number of meteors that spawn per spawn time
+#define METEOR_PER_SPAWN 0        // number of meteors that spawn per spawn time
+
+// MINI MAP
+#define MAP_SMALL_BUFFER 10 // buffer scale from screen edge
+#define MAP_LARGE_BUFFER 4
+#define MAP_SMALL_SCALE 8
+#define MAP_LARGE_SCALE 2
 
 // PROJECTILE
 #define PROJECTILE_SPEED 30.0 // milliseconds per movement
