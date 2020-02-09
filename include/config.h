@@ -7,6 +7,12 @@
 #ifndef msansome_config_h
 #define msansome_config_h
 
+// GAME
+#define SCREEN_WIDTH 2048
+#define SCREEN_HEIGHT 1536
+// #define SCREEN_WIDTH 1024
+// #define SCREEN_HEIGHT 768
+
 // BASE
 #define BASE_HEIGHT 3      // y height of base
 #define BASE_EDGE_LENGTH 5 // x and z length of the edge for the square base
@@ -30,7 +36,7 @@
 // METEOR
 #define STARTING_METEORS 20       // number of meteors that fall at start of game, this also includes METEOR_PER_SPAWN
 #define METEOR_STARTING_Y 60      // starting y position for all meteors
-#define METEOR_EDGE_BUFFER 5      // buffer distance from the world edge where meteors will not spawn
+#define METEOR_EDGE_BUFFER 2      // buffer distance from the world edge where meteors will not spawn
 #define MAX_METEOR_SPEED 30.0     // maximum meteor speed
 #define MIN_METEOR_SPEED 100.0    // minimum meteor speed
 #define METEOR_SPAWN_TIME 10000.0 // time until next meteors spawn

@@ -46,7 +46,7 @@ void mapDrawWorld(int mapWidthOffset, int mapHeightOffset, int blockSize)
                         // get block colour
                         GLfloat ambRed, ambGreen, ambBlue, ambAlpha, difRed, difGreen, difBlue, difAlpha;
                         getUserColour(world[x][y][z], &ambRed, &ambGreen, &ambBlue, &ambAlpha, &difRed, &difGreen, &difBlue, &difAlpha);
-                        float colour[4] = {ambRed, ambGreen, ambBlue, ambAlpha};
+                        float colour[4] = {ambRed, ambGreen, ambBlue, 1.0};
 
                         // draw block
                         set2Dcolour(colour);
