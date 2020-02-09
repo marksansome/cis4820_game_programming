@@ -4,7 +4,7 @@
 # frameworks for newer MACOS, where include files are moved 
 INCLUDE_FRAMEWORK = -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/
 
-EXE = a2
+EXE = a1
 CC = gcc
 LINK_FLAGS = -framework OpenGL -framework GLUT -lm
 COMPILE_FLAGS = -Iinclude $(INCLUDE_FRAMEWORK) -Wno-deprecated-declarations

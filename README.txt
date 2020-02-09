@@ -18,10 +18,13 @@ Building the Game
 To build the game run the following commands:
 make
 
-This will produce the games executable: a2
+This will produce the games executable: a1
 
 To run the game, run the generated executable:
-./a2
+./a1
+
+Although this is Assignment 2, the outline says that the executable should
+  be named "./a1" as such the name stays as a1, instead of a2
 
 Configuration
 -------------

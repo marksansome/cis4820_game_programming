@@ -36,6 +36,12 @@
 . 
 . Initially there should be 30 meteors that fall at the start of the
 . game.  Every 30 seconds another 10 meteors should fall.
+
+ADDED FROM CLASS NOTE
+  You do not need to create any numbers or letters on the maps.
+  The map only needs to show the boundaries of the world,
+  the location of the viewpoint and the meteors, and the bases.
+
 . 
 . 
 . 2. Launching a Projectile
