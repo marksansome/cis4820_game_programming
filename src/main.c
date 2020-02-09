@@ -25,6 +25,7 @@
 #include "cloud.h"
 #include "generation.h"
 #include "hill.h"
+#include "map.h"
 #include "meteor.h"
 #include "projectile.h"
 #include "utility.h"
@@ -96,124 +97,59 @@ void collisionResponse()
 void draw2D()
 {
    GLfloat black[] = {0.0, 0.0, 0.0, 0.5};
-   GLfloat white[] = {1, 1, 1, 1};
-   GLfloat green[] = {0.0, 0.5, 0.0, 1};
+   GLfloat green[] = {0.0, 0.5, 0.0, 0.5};
 
    if (testWorld)
    {
       /* draw some sample 2d shapes */
       if (displayMap == 1)
       {
-         GLfloat green[] = {0.0, 0.5, 0.0, 0.5};
          set2Dcolour(green);
          draw2Dline(0, 0, 500, 500, 15);
          draw2Dtriangle(0, 0, 200, 200, 0, 200);
-
          set2Dcolour(black);
          draw2Dbox(500, 380, 524, 388);
       }
    }
    else
    {
-      //! @todo add minimap
       if (displayMap == 1)
       {
-         int mapSize = ((screenWidth / MAP_SMALL_SCALE) / WORLDX) * WORLDX;
-         int blockSize = mapSize / WORLDX; // take the mapsize divided by the number of drawn blocks
-         int buffer = (mapSize / MAP_SMALL_BUFFER);
-         int mapOffsetW = screenWidth - buffer - mapSize;
-         int mapOffsetH = screenHeight - buffer - mapSize;
+         // calculate map position
+         int mapSize = ((screenWidth / MAP_SMALL_SCALE) / WORLDX) * WORLDX; // must ensure this is a multiple of 100
+         int blockSize = mapSize / WORLDX;                                  // take the mapsize divided by the number of drawn blocks
+         int buffer = (mapSize / MAP_SMALL_BUFFER);                         // used to set map position away from side of the screen
+         int mapOffsetW = screenWidth - buffer - mapSize;                   // map width offset, where to draw map
+         int mapOffsetH = screenHeight - buffer - mapSize;                  // map height offset, where to draw map
 
          // draw viewpoint
-         float vpX, vpY, vpZ = 0.0;
-         getViewPosition(&vpX, &vpY, &vpZ);
-         vpX *= -1.0;
-         vpZ *= -1.0;
-         set2Dcolour(white);
-         draw2Dbox(mapOffsetW + (blockSize * (int)vpX),
-                   mapOffsetH + (blockSize * (int)vpZ),
-                   mapOffsetW + (blockSize * (int)vpX) + blockSize,
-                   mapOffsetH + (blockSize * (int)vpZ) + blockSize);
+         mapDrawViewPosition(mapOffsetW, mapOffsetH, blockSize);
 
          // draw world
-         for (int y = WORLDY - 2; y >= 0; y--) // minus 2 to ensure we don't check out of array bounds
-         {
-            for (int x = 0; x < WORLDX - 1; x++)
-            {
-               for (int z = 0; z < WORLDZ - 1; z++)
-               {
-                  if (world[x][y][z] != 0 && y != CLOUD_LEVEL)
-                  {
-                     if (world[x][y + 1][z] == 0)
-                     {
-                        GLfloat ambRed, ambGreen, ambBlue, ambAlpha, difRed, difGreen, difBlue, difAlpha;
-                        getUserColour(world[x][y][z], &ambRed, &ambGreen, &ambBlue, &ambAlpha, &difRed, &difGreen, &difBlue, &difAlpha);
-                        float colour[4] = {ambRed, ambGreen, ambBlue, ambAlpha};
-                        set2Dcolour(colour);
-                        draw2Dbox(mapOffsetW + (blockSize * x),
-                                  mapOffsetH + (blockSize * z),
-                                  mapOffsetW + (blockSize * x) + blockSize,
-                                  mapOffsetH + (blockSize * z) + blockSize);
-                     }
-                  }
-               }
-            }
-         }
+         mapDrawWorld(mapOffsetW, mapOffsetH, blockSize);
 
+         // draw world border line
          set2Dcolour(black);
          draw2Dline(mapOffsetW - blockSize, mapOffsetH - blockSize, mapOffsetW + mapSize, mapOffsetH - blockSize, 5); // bottom
          draw2Dline(mapOffsetW - blockSize, mapOffsetH - blockSize, mapOffsetW - blockSize, mapOffsetH + mapSize, 5); // left
          draw2Dline(mapOffsetW + mapSize, mapOffsetH - blockSize, mapOffsetW + mapSize, mapOffsetH + mapSize, 5);     // right
          draw2Dline(mapOffsetW - blockSize, mapOffsetH + mapSize, mapOffsetW + mapSize, mapOffsetH + mapSize, 5);     // top
-
-         //! @todo draw line around mapq
       }
       else if (displayMap == 2)
       {
-         int mapSize = ((screenWidth / MAP_LARGE_SCALE) / WORLDX) * WORLDX;
-         int blockSize = mapSize / WORLDX; // take the mapsize divided by the number of drawn blocks
-         int buffer = (mapSize / MAP_LARGE_BUFFER);
-         // int mapOffsetW = screenWidth - (buffer * 2) - mapSize;
-         // int mapOffsetH = screenHeight - (buffer / 2) - mapSize;
-         int mapOffsetW = (screenWidth - mapSize) / 2;
-         int mapOffsetH = (screenHeight - mapSize) / 2;
+         // calculate map position
+         int mapSize = ((screenWidth / MAP_LARGE_SCALE) / WORLDX) * WORLDX; // must ensure this is a multiple of 100
+         int blockSize = mapSize / WORLDX;                                  // take the mapsize divided by the number of drawn blocks
+         int mapOffsetW = (screenWidth - mapSize) / 2;                      // map width offset, where to draw map
+         int mapOffsetH = (screenHeight - mapSize) / 2;                     // map height offset, where to draw map
 
          // draw viewpoint
-         float vpX, vpY, vpZ = 0.0;
-         getViewPosition(&vpX, &vpY, &vpZ);
-         vpX *= -1.0;
-         vpZ *= -1.0;
-         set2Dcolour(white);
-         draw2Dbox(mapOffsetW + (blockSize * (int)vpX),
-                   mapOffsetH + (blockSize * (int)vpZ),
-                   mapOffsetW + (blockSize * (int)vpX) + blockSize,
-                   mapOffsetH + (blockSize * (int)vpZ) + blockSize);
+         mapDrawViewPosition(mapOffsetW, mapOffsetH, blockSize);
 
          // draw world
-         for (int y = WORLDY - 2; y >= 0; y--) // minus 2 to ensure we don't check out of array bounds
-         {
-            for (int x = 0; x < WORLDX - 1; x++)
-            {
-               for (int z = 0; z < WORLDZ - 1; z++)
-               {
-                  if (world[x][y][z] != 0 && y != CLOUD_LEVEL)
-                  {
-                     if (world[x][y + 1][z] == 0)
-                     {
-                        GLfloat ambRed, ambGreen, ambBlue, ambAlpha, difRed, difGreen, difBlue, difAlpha;
-                        getUserColour(world[x][y][z], &ambRed, &ambGreen, &ambBlue, &ambAlpha, &difRed, &difGreen, &difBlue, &difAlpha);
-                        float colour[4] = {ambRed, ambGreen, ambBlue, ambAlpha};
-                        set2Dcolour(colour);
-                        draw2Dbox(mapOffsetW + (blockSize * x),
-                                  mapOffsetH + (blockSize * z),
-                                  mapOffsetW + (blockSize * x) + blockSize,
-                                  mapOffsetH + (blockSize * z) + blockSize);
-                     }
-                  }
-               }
-            }
-         }
+         mapDrawWorld(mapOffsetW, mapOffsetH, blockSize);
 
+         // draw world border line
          set2Dcolour(black);
          draw2Dline(mapOffsetW - (blockSize / 3), mapOffsetH - (blockSize / 3), mapOffsetW + mapSize - (blockSize / 3), mapOffsetH - (blockSize / 3), 15);                     // bottom
          draw2Dline(mapOffsetW - (blockSize / 3), mapOffsetH - (blockSize / 3), mapOffsetW - (blockSize / 3), mapOffsetH + mapSize - (blockSize / 3), 15);                     // left
@@ -332,8 +268,7 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
    }
    else
    {
-      static double cloudTime, projTime = 0.0;
-      static double meteorTime = METEOR_SPAWN_TIME;
+      static double cloudTime, projTime, meteorTime = 0.0;
       struct timeval tv;
       gettimeofday(&tv, NULL);
 
@@ -343,7 +278,6 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
       if (curTime - cloudTime >= CLOUD_SPEED)
       {
          cloudTime = curTime;
-
          for (int i = 0; i < g_clouds->numObj; i++)
          {
             Object *o = g_clouds->object[i];
@@ -358,7 +292,6 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
       if (curTime - projTime >= PROJECTILE_SPEED)
       {
          projTime = curTime;
-
          moveProjectile();
       }
 
@@ -375,7 +308,7 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
          }
       }
 
-      // generate new meteors
+      // move existing meteors
       for (int i = 0; i < getListSize(g_meteors); i++)
       {
          Meteor *m = getItemAtIndex(g_meteors, i);
@@ -398,29 +331,11 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
 /*  released */
 void mouse(int button, int state, int x, int y)
 {
-
+   // if button pressed, fire projectile
    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
    {
       fireProjectile();
    }
-
-   // if (button == GLUT_LEFT_BUTTON)
-   //    printf("left button - ");
-   // else if (button == GLUT_MIDDLE_BUTTON)
-   //    printf("middle button - ");
-   // else
-   //    printf("right button - ");
-
-   // if (state == GLUT_UP)
-   // {
-   //    printf("up - ");
-   // }
-   // else
-   // {
-   //    printf("down - ");
-   // }
-
-   // printf("%d %d\n", x, y);
 }
 
 int main(int argc, char **argv)

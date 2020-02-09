@@ -8,8 +8,8 @@
 #define msansome_config_h
 
 // BASE
-#define BASE_HEIGHT 3
-#define BASE_EDGE_LENGTH 5
+#define BASE_HEIGHT 3      // y height of base
+#define BASE_EDGE_LENGTH 5 // x and z length of the edge for the square base
 
 // CLOUD
 #define CLOUD_LEVEL 48     // y level clouds are generated
@@ -28,19 +28,18 @@
 #define MAX_HILL_RADIUS 12 // maximum radius of a hill
 
 // METEOR
-#define STARTING_METEORS 30
-#define METEOR_STARTING_Y 60
-#define METEOR_EDGE_BUFFER 5
-#define MAX_METEOR_SPEED 30.0
-#define MIN_METEOR_SPEED 100.0
+#define STARTING_METEORS 20       // number of meteors that fall at start of game, this also includes METEOR_PER_SPAWN
+#define METEOR_STARTING_Y 60      // starting y position for all meteors
+#define METEOR_EDGE_BUFFER 5      // buffer distance from the world edge where meteors will not spawn
+#define MAX_METEOR_SPEED 30.0     // maximum meteor speed
+#define MIN_METEOR_SPEED 100.0    // minimum meteor speed
 #define METEOR_SPAWN_TIME 10000.0 // time until next meteors spawn
-#define METEOR_PER_SPAWN 0        // number of meteors that spawn per spawn time
+#define METEOR_PER_SPAWN 10       // number of meteors that spawn per spawn time
 
 // MINI MAP
 #define MAP_SMALL_BUFFER 10 // buffer scale from screen edge
-#define MAP_LARGE_BUFFER 4
-#define MAP_SMALL_SCALE 8
-#define MAP_LARGE_SCALE 2
+#define MAP_SMALL_SCALE 8   // small map size scale
+#define MAP_LARGE_SCALE 2   // large map size scale
 
 // PROJECTILE
 #define PROJECTILE_SPEED 30.0 // milliseconds per movement
@@ -54,9 +53,9 @@
 #define MAX_VALLEY_RADIUS 12 // maximum radius of a valley
 
 // WORLD
-#define WORLDX 100
-#define WORLDY 50
-#define WORLDZ 100
-#define WORLD_CLOUD_GAP 3
+#define WORLDX 100        // x size of the map
+#define WORLDY 50         // y size of the map
+#define WORLDZ 100        // z size of the map
+#define WORLD_CLOUD_GAP 3 // distance from top of the world reserved for clouds
 
 #endif //msansome_config_h

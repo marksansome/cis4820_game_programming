@@ -19,6 +19,7 @@ SRC = \
 	src/graphics.c \
 	src/hill.c \
 	src/linkedList.c \
+	src/map.c \
 	src/meteor.c \
 	src/projectile.c \
 	src/utility.c \
