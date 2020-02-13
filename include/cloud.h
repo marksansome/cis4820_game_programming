@@ -10,9 +10,10 @@
 typedef struct cloud
 {
     int colour;
-    int x;
-    int y;
-    int z;
+    int xCenter;
+    int yCenter;
+    int zCenter;
+    int radius;
 } Cloud;
 
 extern Cloud *createCloud();
@@ -21,7 +22,9 @@ extern void initializeCloud(Cloud *);
 
 extern void generateCloud(Cloud *);
 
-extern int moveCloud(Cloud *c, int speed);
+extern void removeCloud(Cloud *);
+
+extern void moveCloud(Cloud *c);
 
 extern void freeCloud(Cloud *);
 

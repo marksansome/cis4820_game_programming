@@ -13,12 +13,11 @@
 #include "graphics.h"
 #include "linkedList.h"
 
-// ObjectStore *g_structures;
-// ObjectStore *g_clouds;
-
 List *g_structures;
 List *g_clouds;
 List *g_meteors;
+
+Projectile *g_projectile;
 
 int g_num_mobs;
 

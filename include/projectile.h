@@ -19,8 +19,6 @@ typedef struct projectile
     float zRot;
 } Projectile;
 
-extern Projectile *g_projectile;
-
 extern Projectile *createProjectile();
 
 extern void fireProjectile();

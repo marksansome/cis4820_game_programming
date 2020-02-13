@@ -131,7 +131,6 @@ void generateMeteor(Meteor *m)
 
 void removeMeteor(Meteor *m)
 {
-
     for (int i = 0; i < 4; i++)
     {
         int x = m->x - (m->xDir * i);

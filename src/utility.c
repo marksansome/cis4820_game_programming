@@ -27,10 +27,10 @@ void createUserColours()
     setUserColour(16, 0.42, 0.24, 0.00, 1.00, 0.21, 0.12, 0.00, 1.00);
     setUserColour(17, 0.44, 0.26, 0.00, 1.00, 0.22, 0.13, 0.00, 1.00);
     // white (cloud)
-    setUserColour(18, 0.62, 0.62, 0.62, 0.50, 0.31, 0.31, 0.31, 0.50);
-    setUserColour(19, 0.75, 0.75, 0.75, 0.50, 0.37, 0.37, 0.37, 0.50);
-    setUserColour(20, 0.87, 0.87, 0.87, 0.50, 0.43, 0.43, 0.43, 0.50);
-    setUserColour(21, 1.00, 1.00, 1.00, 0.50, 0.50, 0.50, 0.50, 0.50);
+    setUserColour(18, 0.94, 0.94, 0.94, 1.00, 0.47, 0.47, 0.47, 0.50);
+    setUserColour(19, 0.96, 0.96, 0.96, 1.00, 0.48, 0.48, 0.48, 0.50);
+    setUserColour(20, 0.98, 0.98, 0.98, 1.00, 0.49, 0.49, 0.49, 0.50);
+    setUserColour(21, 1.00, 1.00, 1.00, 1.00, 0.50, 0.50, 0.50, 0.50);
     // red
     setUserColour(22, 1.00, 0.00, 0.00, 0.50, 0.50, 0.00, 0.00, 0.50);
     setUserColour(23, 0.69, 0.14, 0.14, 0.50, 0.43, 0.07, 0.07, 0.50);
@@ -59,53 +59,6 @@ void createUserColours()
     setUserColour(36, 0.00, 0.00, 1.00, 1.00, 0.00, 0.00, 0.50, 1.00);
 }
 
-void getUser2DColours(int colour)
-{
-    // switch (colour){
-    //     case 9:
-    //     case 10:
-    //     case 11:
-    //     case
-    // }
-    // testWorld changing colour
-    setUserColour(9, 0.70, 0.30, 0.70, 1.00, 0.30, 0.15, 0.30, 1.00);
-    // dark green (grass)
-    setUserColour(10, 0.00, 0.38, 0.00, 1.00, 0.00, 0.19, 0.00, 1.00);
-    setUserColour(11, 0.00, 0.40, 0.00, 1.00, 0.00, 0.20, 0.00, 1.00);
-    setUserColour(12, 0.00, 0.42, 0.00, 1.00, 0.00, 0.21, 0.00, 1.00);
-    setUserColour(13, 0.00, 0.44, 0.00, 1.00, 0.00, 0.22, 0.00, 1.00);
-    // dark brown (dirt)
-    setUserColour(14, 0.38, 0.20, 0.00, 1.00, 0.19, 0.10, 0.00, 1.00);
-    setUserColour(15, 0.40, 0.22, 0.00, 1.00, 0.20, 0.11, 0.00, 1.00);
-    setUserColour(16, 0.42, 0.24, 0.00, 1.00, 0.21, 0.12, 0.00, 1.00);
-    setUserColour(17, 0.44, 0.26, 0.00, 1.00, 0.22, 0.13, 0.00, 1.00);
-    // white (cloud)
-    setUserColour(18, 0.62, 0.62, 0.62, 0.50, 0.31, 0.31, 0.31, 0.50);
-    setUserColour(19, 0.75, 0.75, 0.75, 0.50, 0.37, 0.37, 0.37, 0.50);
-    setUserColour(20, 0.87, 0.87, 0.87, 0.50, 0.43, 0.43, 0.43, 0.50);
-    setUserColour(21, 1.00, 1.00, 1.00, 0.50, 0.50, 0.50, 0.50, 0.50);
-    // red
-    setUserColour(22, 1.00, 0.00, 0.00, 0.50, 0.50, 0.00, 0.00, 0.50);
-    setUserColour(23, 0.69, 0.14, 0.14, 0.50, 0.43, 0.07, 0.07, 0.50);
-    setUserColour(24, 0.55, 0.10, 0.10, 0.50, 0.27, 0.05, 0.05, 0.50);
-    setUserColour(25, 0.50, 0.07, 0.07, 0.50, 0.25, 0.03, 0.03, 0.50);
-
-    // yellow
-    setUserColour(26, 1.00, 1.00, 0.00, 0.50, 0.50, 0.50, 0.00, 0.50);
-    setUserColour(27, 1.00, 0.88, 0.00, 0.50, 0.50, 0.44, 0.00, 0.50);
-    setUserColour(28, 1.00, 0.80, 0.00, 0.50, 0.50, 0.40, 0.00, 0.50);
-    setUserColour(29, 1.00, 0.72, 0.00, 0.50, 0.50, 0.36, 0.00, 0.50);
-
-    // orange
-    setUserColour(30, 1.00, 0.27, 0.00, 0.50, 0.50, 0.14, 0.00, 0.50);
-    setUserColour(31, 1.00, 0.45, 0.00, 0.50, 0.50, 0.22, 0.00, 0.50);
-    setUserColour(32, 1.00, 0.55, 0.00, 0.50, 0.50, 0.26, 0.00, 0.50);
-    setUserColour(33, 1.00, 0.64, 0.00, 0.50, 0.50, 0.31, 0.00, 0.50);
-
-    // dark grey (meteor)
-    setUserColour(34, 0.05, 0.16, 0.16, 1.00, 0.02, 0.09, 0.09, 1.00);
-}
-
 void drawCircle(int xCentre, int y, int zCentre, int r, Colours colour)
 {
     for (int z = -r; z < r; z++)
@@ -114,7 +67,10 @@ void drawCircle(int xCentre, int y, int zCentre, int r, Colours colour)
         {
             if (x * x + z * z < r * r)
             {
-                world[xCentre + x][y][zCentre + z] = getColour(colour);
+                if (isInWorld(xCentre + x, y, zCentre + z))
+                {
+                    world[xCentre + x][y][zCentre + z] = getColour(colour);
+                }
             }
         }
     }

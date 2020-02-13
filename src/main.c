@@ -307,12 +307,20 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
       if (curTime - cloudTime >= CLOUD_SPEED)
       {
          cloudTime = curTime;
+
+         // clean cloud level
+         for (int i = 0; i < WORLDX; i++)
+         {
+            for (int k = 0; k < WORLDZ; k++)
+            {
+               world[i][CLOUD_LEVEL][k] = 0;
+            }
+         }
+
          for (int i = 0; i < getListSize(g_clouds); i++)
          {
             Cloud *c = getItemAtIndex(g_clouds, i)->ptr;
-            int oldX = moveCloud(c, 1);
-            world[oldX][c->y][c->z] = getColour(EMPTY);
-            generateCloud(c);
+            moveCloud(c);
          }
       }
 

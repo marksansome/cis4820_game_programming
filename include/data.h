@@ -8,10 +8,13 @@
 #define msansome_data_h
 
 #include "linkedList.h"
+#include "projectile.h"
 
 extern List *g_structures;
 extern List *g_clouds;
 extern List *g_meteors;
+
+extern Projectile *g_projectile;
 
 extern int g_num_mobs;
 

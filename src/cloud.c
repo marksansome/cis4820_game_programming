@@ -22,9 +22,10 @@ Cloud *createCloud()
     }
 
     c->colour = 0;
-    c->x = 0;
-    c->y = 0;
-    c->z = 0;
+    c->radius = 0;
+    c->xCenter = 0;
+    c->yCenter = 0;
+    c->zCenter = 0;
 
     return c;
 }
@@ -32,28 +33,33 @@ Cloud *createCloud()
 void initializeCloud(Cloud *c)
 {
     c->colour = getColour(WHITE);
-    c->x = (rand() % (WORLDX - 1) + 1);
-    c->y = CLOUD_LEVEL;
-    c->z = (rand() % (WORLDZ - 1) + 1);
+    c->radius = (int)(rand() % (MAX_CLOUD_RADIUS - MIN_CLOUD_RADIUS + 1)) + MIN_CLOUD_RADIUS;
+    c->xCenter = (rand() % (WORLDX - (2 * MAX_CLOUD_RADIUS) - 1)) + MAX_CLOUD_RADIUS;
+    c->yCenter = CLOUD_LEVEL;
+    c->zCenter = (rand() % (WORLDZ - (2 * MAX_CLOUD_RADIUS) - 1)) + MAX_CLOUD_RADIUS;
 }
 
 void generateCloud(Cloud *c)
 {
-    world[c->x][c->y][c->z] = c->colour;
+    drawCircle(c->xCenter, c->yCenter, c->zCenter, c->radius, WHITE);
 }
 
-int moveCloud(Cloud *c, int speed)
+void removeCloud(Cloud *c)
 {
-    int oldX = c->x;
-    if ((c->x + 1) >= WORLDX - 1)
+    drawCircle(c->xCenter, c->yCenter, c->zCenter, c->radius, EMPTY);
+}
+
+void moveCloud(Cloud *c)
+{
+    // removeCloud(c);
+
+    c->xCenter += 1;
+
+    if ((c->xCenter) > WORLDX - 1)
     {
-        c->x = 0;
+        c->xCenter = 0;
     }
-    else
-    {
-        c->x += speed;
-    }
-    return oldX;
+    generateCloud(c);
 }
 
 void freeCloud(Cloud *c)

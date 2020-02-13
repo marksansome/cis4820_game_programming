@@ -19,7 +19,9 @@
 
 // CLOUD
 #define CLOUD_LEVEL 48     // y level clouds are generated
-#define MAX_CLOUDS 1750    // maximum number of clouds that is able to be created
+#define MAX_CLOUDS 30      // maximum number of clouds that is able to be created
+#define MIN_CLOUD_RADIUS 4 // minimum radius of a cloud
+#define MAX_CLOUD_RADIUS 8 // maximum radius of a cloud
 #define CLOUD_SPEED 300.00 // milliseconds per movement
 
 // GENERATION
