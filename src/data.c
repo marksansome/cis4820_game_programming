@@ -13,14 +13,16 @@
 #include "graphics.h"
 #include "linkedList.h"
 
-ObjectStore *g_structures;
-ObjectStore *g_clouds;
+// ObjectStore *g_structures;
+// ObjectStore *g_clouds;
 
+List *g_structures;
+List *g_clouds;
 List *g_meteors;
 
 int g_num_mobs;
 
-void initWorld()
+void initializeWorld()
 {
     /* initialize world to empty */
     for (int i = 0; i < WORLDX; i++)
@@ -33,50 +35,4 @@ void initWorld()
             }
         }
     }
-}
-
-ObjectStore *createObjectStore(int maxObj)
-{
-    ObjectStore *os = (ObjectStore *)malloc(sizeof(ObjectStore) + sizeof(Object[maxObj]));
-    if (os == NULL)
-    {
-        printf("Unable to allocate memory!\n");
-        exit(1);
-    }
-    os->numObj = 0;
-    for (int i = 0; i < maxObj; i++)
-    {
-        os->object[i] = NULL;
-    }
-
-    return os;
-}
-
-Object *createObject(object_type type, int render, void *ptr)
-{
-    Object *o = (Object *)malloc(sizeof(Object));
-    if (o == NULL)
-    {
-        printf("Unable to allocate memory!\n");
-        exit(1);
-    }
-    o->type = type;
-    o->render = render;
-    o->ptr = ptr;
-
-    return o;
-}
-
-void addObject(ObjectStore *os, Object *o)
-{
-    //! @todo add error checking here to see if added object excedes max object
-    // limit
-    os->object[os->numObj] = o;
-    os->numObj += 1;
-}
-
-void freeObjectStore()
-{
-    //! @todo handle freeing memory. Call each objects free
-    return;
 }

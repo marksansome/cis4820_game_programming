@@ -14,7 +14,7 @@ typedef enum colours
     GREEN,
     BROWN,
     WHITE,
-    METEOR,
+    DARK_GRAY,
     YELLOW,
     ORANGE,
     RED

@@ -139,7 +139,7 @@ int getColour(Colours colour)
         return browns[rand() % 4];
     case WHITE:
         return whites[rand() % 4];
-    case METEOR:
+    case DARK_GRAY:
         return 34;
     case YELLOW:
         return yellows[rand() % 4];

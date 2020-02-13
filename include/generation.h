@@ -7,6 +7,8 @@
 #ifndef msansome_generation_h
 #define msansome_generation_h
 
+#include "linkedList.h"
+
 /*
 * createTestWorld
 * Initalize the game world
@@ -51,7 +53,7 @@ extern int checkStructureCollision(int index, int x1, int z1, int x2, int z2);
 * In:
 * (x1,z1) (x2,z2) are updated with respective structures values
 */
-extern int getStructureSquare(int index, int *x1, int *z1, int *x2, int *z2);
+extern int getStructureSquare(Item *s, int *x1, int *z1, int *x2, int *z2);
 
 /*
 * getStructureXZR

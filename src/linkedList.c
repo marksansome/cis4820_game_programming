@@ -24,7 +24,7 @@ List *createList()
     return list;
 }
 
-void addItem(List *list, void *ptr)
+void addItem(List *list, void *ptr, item_type type)
 {
     Item *item = (Item *)malloc(sizeof(Item));
     if (item == NULL)
@@ -42,6 +42,7 @@ void addItem(List *list, void *ptr)
         list->last->next = item;
     }
 
+    item->type = type;
     item->ptr = ptr;
     list->last = item;
 }
@@ -61,7 +62,7 @@ void *popItem(List *list)
     return NULL;
 }
 
-void *getItemAtIndex(List *list, int index)
+Item *getItemAtIndex(List *list, int index)
 {
     Item *item = list->first;
     if (item == NULL)
@@ -73,7 +74,7 @@ void *getItemAtIndex(List *list, int index)
     {
         if (i == index)
         {
-            return item->ptr;
+            return item;
         }
         if (item == list->last)
         {

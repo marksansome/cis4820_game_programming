@@ -13,6 +13,7 @@
 #include "config.h"
 #include "data.h"
 #include "graphics.h"
+#include "linkedList.h"
 
 #include "base.h"
 #include "cloud.h"
@@ -92,12 +93,12 @@ void createMainWorld()
     // red
     Base *bRed = createBase();
     initializeBase(bRed, 35, 15);
-    addObject(g_structures, createObject(BASE, 1, bRed));
+    addItem(g_structures, bRed, BASE);
 
     // blue
     Base *bBlue = createBase();
     initializeBase(bBlue, 36, 75);
-    addObject(g_structures, createObject(BASE, 1, bBlue));
+    addItem(g_structures, bBlue, BASE);
 
     for (int i = 0; i < MAX_TERRAIN; i++)
     {
@@ -109,7 +110,7 @@ void createMainWorld()
 
             if (!checkStructureCollision(-1, v->x1, v->z1, v->x2, v->z2))
             {
-                addObject(g_structures, createObject(VALLEY, 1, v));
+                addItem(g_structures, v, VALLEY);
             }
         }
         else //hill
@@ -119,40 +120,37 @@ void createMainWorld()
 
             if (!checkStructureCollision(-1, h->x1, h->z1, h->x2, h->z2))
             {
-                addObject(g_structures, createObject(HILL, 1, h));
+                addItem(g_structures, h, HILL);
             }
         }
     }
 
     // place generated objects into world
-    for (int i = 0; i < g_structures->numObj; i++)
+    for (int i = 0; i < getListSize(g_structures); i++)
     {
-        if (g_structures->object[i]->render)
+        Item *s = getItemAtIndex(g_structures, i);
+        switch (s->type)
         {
-            Object *s = g_structures->object[i];
-            switch (s->type)
-            {
-            case VALLEY:
-            {
-                generateValley((Valley *)s->ptr);
-                break;
-            }
-            case HILL:
-            {
-                generateHill((Hill *)s->ptr);
-                break;
-            }
-            case BASE:
-            {
-                generateBase((Base *)s->ptr);
-                break;
-            }
-            default:
-            {
-                printf("ERROR: Invalid structure ID\n");
-                break;
-            }
-            }
+        case VALLEY:
+        {
+            generateValley((Valley *)s->ptr);
+            break;
+        }
+        case HILL:
+        {
+            generateHill((Hill *)s->ptr);
+            break;
+        }
+        case BASE:
+        {
+            generateBase((Base *)s->ptr);
+            break;
+        }
+        default:
+        {
+            printf("ERROR: Invalid structure ID\n");
+            break;
+        }
         }
     }
 
@@ -161,7 +159,7 @@ void createMainWorld()
     {
         Cloud *c = createCloud();
         initializeCloud(c);
-        addObject(g_clouds, createObject(CLOUD, 1, c));
+        addItem(g_clouds, c, CLOUD);
         generateCloud(c);
     }
 
@@ -169,8 +167,8 @@ void createMainWorld()
     for (int i = 0; i < STARTING_METEORS; i++)
     {
         Meteor *m = createMeteor();
-        initMeteor(m);
-        addItem(g_meteors, m);
+        initializeMeteor(m);
+        addItem(g_meteors, m, METEOR);
     }
 
     // set player starting positon
@@ -180,8 +178,9 @@ void createMainWorld()
 int checkStructureCollision(int index, int x1, int z1, int x2, int z2)
 {
     int isCollision = 0;
-    for (int i = 0; i < g_structures->numObj; i++)
+    for (int i = 0; i < getListSize(g_structures); i++)
     {
+        Item *s = getItemAtIndex(g_structures, i);
         if (isCollision)
         {
             break;
@@ -189,7 +188,7 @@ int checkStructureCollision(int index, int x1, int z1, int x2, int z2)
 
         // get next structures (x1, z1) (x2, z2)
         int x1b, z1b, x2b, z2b = 0;
-        getStructureSquare(i, &x1b, &z1b, &x2b, &z2b);
+        getStructureSquare(s, &x1b, &z1b, &x2b, &z2b);
 
         if (x1 <= x2b && x2 >= x1b && z1 >= z2b && z2 <= z1b)
         {
@@ -206,20 +205,19 @@ int checkStructureCollision(int index, int x1, int z1, int x2, int z2)
     return isCollision;
 }
 
-int getStructureSquare(int index, int *x1, int *z1, int *x2, int *z2)
+int getStructureSquare(Item *s, int *x1, int *z1, int *x2, int *z2)
 {
-    if (index >= g_structures->numObj)
+    if (s == NULL)
     {
-        printf("ERROR: Out Of Bounds. Trying to access g_structures outside of array\n");
+        printf("ERROR: Trying to access NULL item\n");
         return 1;
     }
 
-    Object *o = g_structures->object[index];
-    switch (o->type)
+    switch (s->type)
     {
     case VALLEY:
     {
-        Valley *v = o->ptr;
+        Valley *v = s->ptr;
         *x1 = v->x1;
         *z1 = v->z1;
         *x2 = v->x2;
@@ -228,7 +226,7 @@ int getStructureSquare(int index, int *x1, int *z1, int *x2, int *z2)
     }
     case HILL:
     {
-        Hill *h = o->ptr;
+        Hill *h = s->ptr;
         *x1 = h->x1;
         *z1 = h->z1;
         *x2 = h->x2;
@@ -237,7 +235,7 @@ int getStructureSquare(int index, int *x1, int *z1, int *x2, int *z2)
     }
     case BASE:
     {
-        Base *b = o->ptr;
+        Base *b = s->ptr;
         *x1 = b->x1;
         *z1 = b->z1;
         *x2 = b->x2;
@@ -247,8 +245,8 @@ int getStructureSquare(int index, int *x1, int *z1, int *x2, int *z2)
     default:
     {
         printf("ERROR: Invalid structure ID\n");
-        return (1);
+        return 1;
     }
     }
-    return (0);
+    return 0;
 }

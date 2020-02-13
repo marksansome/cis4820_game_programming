@@ -37,7 +37,7 @@ Meteor *createMeteor()
     return m;
 }
 
-void initMeteor(Meteor *m)
+void initializeMeteor(Meteor *m)
 {
     // calculate landing position on flat ground where meteor should hit
     // this position does not account for generated structures in the world
@@ -108,7 +108,7 @@ void checkMeteorCollision(Meteor *m)
 
 void generateMeteor(Meteor *m)
 {
-    int meteorColours[4] = {METEOR, RED, ORANGE, YELLOW};
+    int meteorColours[4] = {DARK_GRAY, RED, ORANGE, YELLOW};
 
     for (int i = 0; i < 4; i++)
     {

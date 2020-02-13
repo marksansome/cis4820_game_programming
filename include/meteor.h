@@ -28,7 +28,7 @@ extern Meteor *createMeteor();
  * Initalizes a meteor with starting values
  * @param m meteor to be initalized
  */
-extern void initMeteor(Meteor *m);
+extern void initializeMeteor(Meteor *m);
 
 /**
  * Moves a meteor to the next space

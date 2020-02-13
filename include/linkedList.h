@@ -7,8 +7,18 @@
 #ifndef msansome_linkedlist_h
 #define msansome_linkedlist_h
 
+typedef enum item_type
+{
+    INVALID = 0,
+    VALLEY,
+    HILL,
+    BASE,
+    CLOUD,
+    METEOR
+} item_type;
 typedef struct item
 {
+    item_type type;
     void *ptr;
     struct item *next;
 } Item;
@@ -29,8 +39,9 @@ List *createList();
  * Adds an item to the end of the list
  * @param list list to add to
  * @param item item to store in list
+ * @param type the type of the game item
  */
-void addItem(List *list, void *item);
+void addItem(List *list, void *item, item_type type);
 
 /**
  * Removes and returns the first item of the list
@@ -45,9 +56,9 @@ void *popItem(List *list);
  * Get an item from a specified index
  * @param list list to operate on
  * @param index which item to get
- * @return void pointer to item in list
+ * @return pointer to item in list
  */
-void *getItemAtIndex(List *list, int index);
+Item *getItemAtIndex(List *list, int index);
 
 /**
  * find the number of items in a list

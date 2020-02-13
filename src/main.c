@@ -48,13 +48,42 @@ extern void tree(float, float, float, float, float, float, int);
 	   will be the negative value of the array indices */
 void collisionResponse()
 {
-   float buffer = 0.1;
+   float buffer = 1.0;
    float x, y, z = 0.0;
 
    getViewPosition(&x, &y, &z);
    x = x * -1.0;
    y = y * -1.0;
    z = z * -1.0;
+
+   // float minX1 = floor(x);
+   // float minY1 = floor(y);
+   // float minZ1 = floor(z);
+   // float maxX1 = ceil(x);
+   // float maxY1 = ceil(y);
+   // float maxZ1 = ceil(z);
+
+   // float minX2 = x - buffer;
+   // float minY2 = y - buffer;
+   // float minZ2 = z - buffer;
+   // float maxX2 = x + buffer;
+   // float maxY2 = y + buffer;
+   // float maxZ2 = z + buffer;
+
+   // if (world[(int)floor(x)][(int)floor(y)][(int)floor(z)] != 0)
+   // {
+   //    if (maxX1 > minX2 &&
+   //        minX1 < maxX2 &&
+   //        maxY1 > minY2 &&
+   //        minY1 < maxY2 &&
+   //        maxZ1 > minZ2 &&
+   //        minZ1 < maxZ2)
+   //    {
+   //       float ox, oy, oz = 0.0;
+   //       getOldViewPosition(&ox, &oy, &oz);
+   //       setViewPosition(ox, oy, oz);
+   //    }
+   // }
 
    for (float i = x - buffer; i < x + (buffer * 2.0); i += buffer)
    {
@@ -278,10 +307,9 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
       if (curTime - cloudTime >= CLOUD_SPEED)
       {
          cloudTime = curTime;
-         for (int i = 0; i < g_clouds->numObj; i++)
+         for (int i = 0; i < getListSize(g_clouds); i++)
          {
-            Object *o = g_clouds->object[i];
-            Cloud *c = o->ptr;
+            Cloud *c = getItemAtIndex(g_clouds, i)->ptr;
             int oldX = moveCloud(c, 1);
             world[oldX][c->y][c->z] = getColour(EMPTY);
             generateCloud(c);
@@ -303,15 +331,15 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
          for (int i = 0; i < METEOR_PER_SPAWN; i++)
          {
             Meteor *m = createMeteor();
-            initMeteor(m);
-            addItem(g_meteors, m);
+            initializeMeteor(m);
+            addItem(g_meteors, m, METEOR);
          }
       }
 
       // move existing meteors
       for (int i = 0; i < getListSize(g_meteors); i++)
       {
-         Meteor *m = getItemAtIndex(g_meteors, i);
+         Meteor *m = getItemAtIndex(g_meteors, i)->ptr;
          if (curTime - m->timeTracker >= m->velocity)
          {
             m->timeTracker = curTime;
@@ -348,14 +376,14 @@ int main(int argc, char **argv)
    graphicsInit(&argc, argv);
 
    // initialize world to empty
-   initWorld();
+   initializeWorld();
 
    // initialize global tracking values
    g_num_mobs = 0;
 
    // initialize worlds game objects storage
-   g_structures = createObjectStore(MAX_OBJECTS);
-   g_clouds = createObjectStore(MAX_CLOUDS);
+   g_structures = createList();
+   g_clouds = createList();
    g_projectile = createProjectile();
    g_meteors = createList();
 
