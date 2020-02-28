@@ -51,8 +51,6 @@ void removeCloud(Cloud *c)
 
 void moveCloud(Cloud *c)
 {
-    // removeCloud(c);
-
     c->xCenter += 1;
 
     if ((c->xCenter) > WORLDX - 1)

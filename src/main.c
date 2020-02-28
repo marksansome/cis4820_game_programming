@@ -417,6 +417,7 @@ int main(int argc, char **argv)
    // freeObjectStore();
    free(g_structures);
    free(g_clouds);
+   free(g_meteors);
    free(g_projectile);
 
    return 0;

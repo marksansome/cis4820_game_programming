@@ -7,6 +7,8 @@
 #ifndef msansome_base_h
 #define msansome_base_h
 
+#include "utility.h"
+
 typedef struct base
 {
     int colour;
@@ -19,12 +21,30 @@ typedef struct base
     int z2;
 } Base;
 
+/**
+ * Allocates memory for a Base struct
+ * @return pointer to allocated Base
+ */
 extern Base *createBase();
 
-extern void initializeBase(Base *, int, int);
+/**
+ * Initializes values in a Base
+ * @param base pointer to allocated Base
+ * @param colour colour to draw Base
+ * @param position the x position of the Base center
+ */
+extern void initializeBase(Base *base, Colours colour, int position);
 
-extern void generateBase(Base *);
+/**
+ * Draws Base in the world array
+ * @param base pointer to allocated Base
+ */
+extern void generateBase(Base *base);
 
-extern void freeBase(Base *);
+/**
+ * Frees the memory for a Base
+ * @param base pointer to allocated Base
+ */
+extern void freeBase(Base *base);
 
 #endif //msansome_base_h

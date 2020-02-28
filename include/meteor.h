@@ -19,42 +19,42 @@ typedef struct meteor
 } Meteor;
 
 /**
- * Allocates memory and initalizes a meteor
- * @return new meteor
+ * Allocates memory for a Meteor
+ * @return pointer to allocated Meteor
  */
 extern Meteor *createMeteor();
 
 /**
- * Initalizes a meteor with starting values
- * @param m meteor to be initalized
+ * Initalizes a Meteor with starting values
+ * @param meteor pointer to Meteor to be initalized
  */
-extern void initializeMeteor(Meteor *m);
+extern void initializeMeteor(Meteor *meteor);
 
 /**
  * Moves a meteor to the next space
- * @param m meteor to be moved
+ * @param meteor meteor to be moved
  */
-void moveMeteor(Meteor *m);
+void moveMeteor(Meteor *meteor);
 
 /**
  * Checks that the meteor can move to the next block
  * If it cannot move, update isFalling to show that it will no longer move
- * @param m meteor to check
+ * @param meteor meteor to check
  */
-void checkMeteorCollision(Meteor *m);
+void checkMeteorCollision(Meteor *meteor);
 
 /**
  * Generates a meteor in the world
- * @param m meteor to be generated
+ * @param meteor meteor to be generated
  * @param withTail would you like to generate the meteor with fire tail
  * @param colour colour to generate the meteor block, 0 = remove
  */
-void generateMeteor(Meteor *m);
+void generateMeteor(Meteor *meteor);
 
 /**
  * Removes a meteor from the world
- * @param m meteor to be un-generated
+ * @param meteor meteor to be un-generated
  */
-void removeMeteor(Meteor *m);
+void removeMeteor(Meteor *meteor);
 
 #endif //msansome_meteor_h

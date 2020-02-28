@@ -20,12 +20,28 @@ typedef struct valley
     int z2;
 } Valley;
 
+/**
+ * Allocates memory for a Valley struct
+ * @return pointer to allocated Valley
+ */
 extern Valley *createValley();
 
-extern void initializeValley(Valley *);
+/**
+ * Initializes values in a Valley
+ * @param valley pointer to allocated Valley
+ */
+extern void initializeValley(Valley *valley);
 
-extern void generateValley(Valley *);
+/**
+ * Draws Valley in the world array
+ * @param valley pointer to allocated Valley
+ */
+extern void generateValley(Valley *valley);
 
-extern void freeValley(Valley *v);
+/**
+ * Frees the memory for a Valley
+ * @param valley pointer to allocated Valley
+ */
+extern void freeValley(Valley *valley);
 
 #endif //msansome_valley_h

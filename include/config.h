@@ -60,6 +60,11 @@
 #define MIN_VALLEY_RADIUS 6  // minimum radius of a valley
 #define MAX_VALLEY_RADIUS 12 // maximum radius of a valley
 
+// VEHICLE
+#define VEHICLE_EDGE_LENGTH 2
+#define VEHICLE_OFFSET 5
+#define NUM_TEAM_VEHICLES 5
+
 // WORLD
 #define WORLDX 100        // x size of the map
 #define WORLDY 50         // y size of the map

@@ -59,7 +59,7 @@ void createUserColours()
     setUserColour(36, 0.00, 0.00, 1.00, 1.00, 0.00, 0.00, 0.50, 1.00);
 }
 
-void drawCircle(int xCentre, int y, int zCentre, int r, Colours colour)
+void drawCircle(int xCenter, int y, int zCenter, int r, Colours colour)
 {
     for (int z = -r; z < r; z++)
     {
@@ -67,9 +67,24 @@ void drawCircle(int xCentre, int y, int zCentre, int r, Colours colour)
         {
             if (x * x + z * z < r * r)
             {
-                if (isInWorld(xCentre + x, y, zCentre + z))
+                if (isInWorld(xCenter + x, y, zCenter + z))
                 {
-                    world[xCentre + x][y][zCentre + z] = getColour(colour);
+                    world[xCenter + x][y][zCenter + z] = getColour(colour);
+                }
+                else
+                {
+                    int newX = xCenter + x;
+                    int newZ = zCenter + z;
+                    if ((xCenter + x) > WORLDX - 1)
+                    {
+                        newX -= WORLDX;
+                    }
+                    if ((zCenter + x) > WORLDZ - 1)
+                    {
+                        newZ -= WORLDZ;
+                    }
+
+                    world[newX][y][newZ] = getColour(colour);
                 }
             }
         }
@@ -103,6 +118,10 @@ int getColour(Colours colour)
         return oranges[rand() % 4];
     case RED:
         return reds[rand() % 4];
+    case RED_TEAM:
+        return 35;
+    case BLUE_TEAM:
+        return 36;
     default:
         printf("WARNING: random colour not found\n");
         return 0;

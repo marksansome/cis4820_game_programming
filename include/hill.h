@@ -20,12 +20,28 @@ typedef struct hill
     int z2;
 } Hill;
 
+/**
+ * Allocates memory for a Hill struct
+ * @return pointer to allocated Hill
+ */
 extern Hill *createHill();
 
-extern void initializeHill(Hill *);
+/**
+ * Initializes values in a Hill
+ * @param hill pointer to allocated Hill
+ */
+extern void initializeHill(Hill *hill);
 
-extern void generateHill(Hill *);
+/**
+ * Draws Hill in the world array
+ * @param hill pointer to allocated Hill
+ */
+extern void generateHill(Hill *hill);
 
-extern void freeHill(Hill *);
+/**
+ * Frees the memory for a Hill
+ * @param hill pointer to allocated Hill
+ */
+extern void freeHill(Hill *hill);
 
 #endif //msansome_hill_h

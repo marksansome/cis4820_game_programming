@@ -17,7 +17,9 @@ typedef enum colours
     DARK_GRAY,
     YELLOW,
     ORANGE,
-    RED
+    RED,
+    RED_TEAM,
+    BLUE_TEAM
 } Colours;
 
 /**

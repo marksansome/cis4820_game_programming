@@ -19,12 +19,25 @@ typedef struct projectile
     float zRot;
 } Projectile;
 
+/**
+ * Allocates memory for a Projectile struct
+ * @return pointer to allocated Projectile
+ */
 extern Projectile *createProjectile();
 
+/**
+ * Fire projectile from player
+ */
 extern void fireProjectile();
 
+/**
+ * Move projectile to next position based on rotation angles
+ */
 extern void moveProjectile();
 
+/**
+ * Check if projectile has collided with something
+ */
 extern void checkProjectileCollision();
 
 #endif //msansome_projectile_h

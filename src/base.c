@@ -10,6 +10,7 @@
 #include "base.h"
 #include "config.h"
 #include "graphics.h"
+#include "utility.h"
 
 Base *createBase()
 {
@@ -32,9 +33,9 @@ Base *createBase()
     return b;
 }
 
-void initializeBase(Base *b, int colour, int basePos)
+void initializeBase(Base *b, Colours colour, int basePos)
 {
-    b->colour = colour;
+    b->colour = getColour(colour);
     b->height = BASE_HEIGHT;
 
     b->x1 = basePos;
@@ -48,11 +49,11 @@ void initializeBase(Base *b, int colour, int basePos)
 void generateBase(Base *b)
 {
     // draw square size of base edge
-    for (int y = b->y1; y <= b->y2; y++)
+    for (int y = b->y1; y < b->y2; y++)
     {
-        for (int x = b->x1; x <= b->x2; x++)
+        for (int x = b->x1; x < b->x2; x++)
         {
-            for (int z = b->z1; z >= b->z2; z--)
+            for (int z = b->z1; z > b->z2; z--)
             {
                 world[x][y][z] = b->colour;
             }

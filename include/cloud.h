@@ -16,16 +16,40 @@ typedef struct cloud
     int radius;
 } Cloud;
 
+/**
+ * Allocates memory for a Cloud struct
+ * @return pointer to allocated Cloud
+ */
 extern Cloud *createCloud();
 
-extern void initializeCloud(Cloud *);
+/**
+ * Initializes values in a Cloud
+ * @param cloud pointer to allocated Cloud
+ */
+extern void initializeCloud(Cloud *cloud);
 
-extern void generateCloud(Cloud *);
+/**
+ * Draws Cloud in the world array
+ * @param cloud pointer to allocated Cloud
+ */
+extern void generateCloud(Cloud *cloud);
 
-extern void removeCloud(Cloud *);
+/**
+ * Redraws Cloud in the world array with colour 0 (empty)
+ * @param cloud pointer to allocated Cloud
+ */
+extern void removeCloud(Cloud *cloud);
 
-extern void moveCloud(Cloud *c);
+/**
+ * Moves Cloud by incrementing stored values and regenerating
+ * @param cloud pointer to allocated Cloud
+ */
+extern void moveCloud(Cloud *cloud);
 
-extern void freeCloud(Cloud *);
+/**
+ * Frees the memory for a Cloud
+ * @param cloud pointer to allocated Cloud
+ */
+extern void freeCloud(Cloud *cloud);
 
 #endif //msansome_cloud_h

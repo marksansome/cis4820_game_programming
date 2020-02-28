@@ -92,12 +92,12 @@ void createMainWorld()
     // add team bases
     // red
     Base *bRed = createBase();
-    initializeBase(bRed, 35, 15);
+    initializeBase(bRed, RED_TEAM, 15);
     addItem(g_structures, bRed, BASE);
 
     // blue
     Base *bBlue = createBase();
-    initializeBase(bBlue, 36, 75);
+    initializeBase(bBlue, BLUE_TEAM, 75);
     addItem(g_structures, bBlue, BASE);
 
     for (int i = 0; i < MAX_TERRAIN; i++)
@@ -108,7 +108,7 @@ void createMainWorld()
             Valley *v = createValley();
             initializeValley(v);
 
-            if (!checkStructureCollision(-1, v->x1, v->z1, v->x2, v->z2))
+            if (!checkStructureCollision(v->x1, v->z1, v->x2, v->z2))
             {
                 addItem(g_structures, v, VALLEY);
             }
@@ -118,7 +118,7 @@ void createMainWorld()
             Hill *h = createHill();
             initializeHill(h);
 
-            if (!checkStructureCollision(-1, h->x1, h->z1, h->x2, h->z2))
+            if (!checkStructureCollision(h->x1, h->z1, h->x2, h->z2))
             {
                 addItem(g_structures, h, HILL);
             }
@@ -175,7 +175,7 @@ void createMainWorld()
     setViewPosition(-50, -20, -50);
 }
 
-int checkStructureCollision(int index, int x1, int z1, int x2, int z2)
+int checkStructureCollision(int x1, int z1, int x2, int z2)
 {
     int isCollision = 0;
     for (int i = 0; i < getListSize(g_structures); i++)
@@ -196,10 +196,10 @@ int checkStructureCollision(int index, int x1, int z1, int x2, int z2)
         }
 
         // collision is with itself, ignore
-        if (i == index)
-        {
-            isCollision = 0;
-        }
+        // if (i == index)
+        // {
+        //     isCollision = 0;
+        // }
     }
 
     return isCollision;
