@@ -22,8 +22,10 @@ SRC = \
 	src/map.c \
 	src/meteor.c \
 	src/projectile.c \
+	src/team.c \
 	src/utility.c \
 	src/valley.c \
+	src/vehicle.c \
 	src/visible.c
 
 all: clean $(EXE)

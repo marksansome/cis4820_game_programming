@@ -9,6 +9,7 @@
 
 #include "config.h"
 #include "graphics.h"
+#include "utility.h"
 #include "vehicle.h"
 
 Vehicle *createVehicle()
@@ -30,12 +31,12 @@ Vehicle *createVehicle()
     return v;
 }
 
-void initializeVehicle(Vehicle *v, int colour, int vehiclePos)
+void initializeVehicle(Vehicle *v, Colours colour, int vehicleOffset)
 {
-    v->colour = colour;
+    v->colour = getColour(colour);
 
     v->y = GROUND_DEPTH;
-    v->x1 = vehiclePos;
+    v->x1 = vehicleOffset;
     v->z1 = (rand() % (WORLDZ - (2 * VEHICLE_EDGE_LENGTH) - 1)) + VEHICLE_EDGE_LENGTH;
     v->x2 = v->x1 + VEHICLE_EDGE_LENGTH;
     v->z2 = v->z1 - VEHICLE_EDGE_LENGTH;

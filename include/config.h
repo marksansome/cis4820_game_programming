@@ -52,6 +52,12 @@
 // PROJECTILE
 #define PROJECTILE_SPEED 30.0 // milliseconds per movement
 
+// TEAM
+#define MIN_RED_TEAM_OFFSET 10  // minimum distance from map edge to spawn team structures (base, vehicle)
+#define MAX_RED_TEAM_OFFSET 20  // maximum distance from map edge to spawn team structures (base, vehicle)
+#define MIN_BLUE_TEAM_OFFSET 70 // minimum distance from map edge to spawn team structures (base, vehicle)
+#define MAX_BLUE_TEAM_OFFSET 80 // maximum distance from map edge to spawn team structures (base, vehicle)
+
 // UTILITY
 
 // VALLEY

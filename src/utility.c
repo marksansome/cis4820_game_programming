@@ -118,9 +118,9 @@ int getColour(Colours colour)
         return oranges[rand() % 4];
     case RED:
         return reds[rand() % 4];
-    case RED_TEAM:
+    case RED_TEAM_COLOUR:
         return 35;
-    case BLUE_TEAM:
+    case BLUE_TEAM_COLOUR:
         return 36;
     default:
         printf("WARNING: random colour not found\n");
@@ -142,6 +142,12 @@ int isInWorld(int x, int y, int z)
         return 0;
     }
     return 1;
+}
+
+int intRand(int min, int max)
+{
+    float scale = rand() / (float)RAND_MAX; // [0, 1.0]
+    return min + scale * (max - min);       // [min, max]
 }
 
 float floatRand(float min, float max)

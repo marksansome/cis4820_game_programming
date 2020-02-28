@@ -18,8 +18,8 @@ typedef enum colours
     YELLOW,
     ORANGE,
     RED,
-    RED_TEAM,
-    BLUE_TEAM
+    RED_TEAM_COLOUR,
+    BLUE_TEAM_COLOUR
 } Colours;
 
 /**
@@ -59,6 +59,14 @@ extern double toRadians(float degree);
  * @return 1 = is in world, 0 = out of world
  */
 extern int isInWorld(int x, int y, int z);
+
+/**
+ * Generates a random number between min and max
+ * @param min minimum number produced
+ * @param max maximum number produced
+ * @return random number between min and max
+ */
+extern int intRand(int min, int max);
 
 /**
  * Generates a random floating point number between min and max

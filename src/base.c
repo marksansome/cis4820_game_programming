@@ -40,7 +40,7 @@ void initializeBase(Base *b, Colours colour, int basePos)
 
     b->x1 = basePos;
     b->y1 = GROUND_DEPTH;
-    b->z1 = (rand() % (WORLDZ - (2 * BASE_EDGE_LENGTH) - 1)) + BASE_EDGE_LENGTH;
+    b->z1 = intRand((WORLDZ - (2 * BASE_EDGE_LENGTH) - 1), BASE_EDGE_LENGTH);
     b->x2 = b->x1 + BASE_EDGE_LENGTH;
     b->y2 = b->y1 + b->height;
     b->z2 = b->z1 - BASE_EDGE_LENGTH;

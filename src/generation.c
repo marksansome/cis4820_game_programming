@@ -19,8 +19,10 @@
 #include "cloud.h"
 #include "hill.h"
 #include "meteor.h"
+#include "team.h"
 #include "utility.h"
 #include "valley.h"
+#include "vehicle.h"
 
 void createTestWorld()
 {
@@ -92,12 +94,12 @@ void createMainWorld()
     // add team bases
     // red
     Base *bRed = createBase();
-    initializeBase(bRed, RED_TEAM, 15);
+    initializeBase(bRed, RED_TEAM_COLOUR, getTeamOffset(RED_TEAM));
     addItem(g_structures, bRed, BASE);
 
     // blue
     Base *bBlue = createBase();
-    initializeBase(bBlue, BLUE_TEAM, 75);
+    initializeBase(bBlue, BLUE_TEAM_COLOUR, getTeamOffset(BLUE_TEAM));
     addItem(g_structures, bBlue, BASE);
 
     for (int i = 0; i < MAX_TERRAIN; i++)
@@ -152,6 +154,26 @@ void createMainWorld()
             break;
         }
         }
+    }
+
+    // generate vehicles
+    // red team
+    for (int i = 0; i < NUM_TEAM_VEHICLES; i++)
+    {
+        Vehicle *v = createVehicle();
+        initializeVehicle(v, RED_TEAM_COLOUR, getTeamOffset(RED_TEAM));
+
+        //! @todo add this to its own vehicle list
+        addItem(g_structures, v, VEHICLE);
+    }
+    // blue team
+    for (int i = 0; i < NUM_TEAM_VEHICLES; i++)
+    {
+        Vehicle *v = createVehicle();
+        initializeVehicle(v, BLUE_TEAM_COLOUR, getTeamOffset(BLUE_TEAM));
+
+        //! @todo add this to its own vehicle list
+        addItem(g_structures, v, VEHICLE);
     }
 
     // generate clouds

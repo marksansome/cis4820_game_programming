@@ -7,6 +7,8 @@
 #ifndef msansome_vehicle_h
 #define msansome_vehicle_h
 
+#include "utility.h"
+
 typedef struct vehicle
 {
     int colour;
@@ -26,8 +28,10 @@ extern Vehicle *createVehicle();
 /**
  * Initializes values in a Vehicle
  * @param vehicle pointer to allocated Vehicle
+ * @param colour colour to draw Vehicle
+ * @param position the x position of the Vehicle x1
  */
-extern void initializeVehicle(Vehicle *vehicle);
+extern void initializeVehicle(Vehicle *vehicle, Colours colour, int position);
 
 /**
  * Draws Vehicle in the world array
