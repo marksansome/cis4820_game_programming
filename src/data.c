@@ -13,11 +13,14 @@
 #include "graphics.h"
 #include "linkedList.h"
 
+Team *g_red_team;
+Team *g_blue_team;
 List *g_structures;
 List *g_clouds;
 List *g_meteors;
+List *g_falling_meteors;
 
-Projectile *g_projectile;
+Projectile *g_player_projectile;
 
 int g_num_mobs;
 

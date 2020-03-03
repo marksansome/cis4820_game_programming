@@ -9,6 +9,19 @@
 
 #include "linkedList.h"
 #include "projectile.h"
+#include "team.h"
+
+/**
+ * Red team data
+ * store all information related to the team
+ */
+extern Team *g_red_team;
+
+/**
+ * Blue team data
+ * store all information related to the team
+ */
+extern Team *g_blue_team;
 
 /**
  * List to store structures (Base, Hill, Valley)
@@ -22,14 +35,19 @@ extern List *g_structures;
 extern List *g_clouds;
 
 /**
- * List to store Meteors and keep track of their position
+ * List to store Meteors that have landed and keep track of their position
  */
 extern List *g_meteors;
 
 /**
+ * List to store Meteors that a falling and keep track of their position
+ */
+extern List *g_falling_meteors;
+
+/**
  * Storage for the user projectile and position
  */
-extern Projectile *g_projectile;
+extern Projectile *g_player_projectile;
 
 /**
  * Tracking of the total number of mobs created in the world

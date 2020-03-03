@@ -8,9 +8,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "base.h"
 #include "config.h"
 #include "graphics.h"
+#include "hill.h"
+#include "linkedList.h"
 #include "utility.h"
+#include "valley.h"
+#include "vehicle.h"
 
 void createUserColours()
 {
@@ -154,4 +159,108 @@ float floatRand(float min, float max)
 {
     float scale = rand() / (float)RAND_MAX; // [0, 1.0]
     return min + scale * (max - min);       // [min, max]
+}
+
+int getTopPosition(int x1, int z1, int x2, int z2)
+{
+    int topY = -1;
+
+    for (int x = x1; x < x2; x++)
+    {
+        for (int z = z1; z < z2; z++)
+        {
+            // for (int y = CLOUD_LEVEL - 1; y > 0; y--)
+            for (int y = 0; y < (CLOUD_LEVEL - 1); y++)
+            {
+                if (world[x][y][z] == 0 && world[x][y + 1][z] == 0)
+                {
+                    if (y > topY)
+                    {
+                        topY = y;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    return topY;
+}
+
+int checkCollision(List *l, int x1, int z1, int x2, int z2)
+{
+    int isCollision = 0;
+    for (int i = 0; i < getListSize(l); i++)
+    {
+        Item *s = getItemAtIndex(l, i);
+        if (isCollision)
+        {
+            break;
+        }
+
+        // get next structures (x1, z1) (x2, z2)
+        int x1b, z1b, x2b, z2b = 0;
+        getItemSquare(s, &x1b, &z1b, &x2b, &z2b);
+
+        if (x1 <= x2b && x2 >= x1b && z1 >= z2b && z2 <= z1b)
+        {
+            isCollision = 1;
+        }
+    }
+
+    return isCollision;
+}
+
+void getItemSquare(Item *s, int *x1, int *z1, int *x2, int *z2)
+{
+    if (s == NULL)
+    {
+        printf("ERROR: Trying to access NULL item\n");
+        exit(1);
+    }
+
+    switch (s->type)
+    {
+    case VALLEY:
+    {
+        Valley *v = s->ptr;
+        *x1 = v->x1;
+        *z1 = v->z1;
+        *x2 = v->x2;
+        *z2 = v->z2;
+        break;
+    }
+    case HILL:
+    {
+        Hill *h = s->ptr;
+        *x1 = h->x1;
+        *z1 = h->z1;
+        *x2 = h->x2;
+        *z2 = h->z2;
+        break;
+    }
+    case BASE:
+    {
+        Base *b = s->ptr;
+        *x1 = b->x1;
+        *z1 = b->z1;
+        *x2 = b->x2;
+        *z2 = b->z2;
+        break;
+    }
+    case VEHICLE:
+    {
+        Vehicle *v = s->ptr;
+        *x1 = v->x1;
+        *z1 = v->z1;
+        *x2 = v->x2;
+        *z2 = v->z2;
+        break;
+    }
+    default:
+    {
+        printf("ERROR: Invalid ID when checking item square\n");
+        exit(1);
+    }
+    }
 }

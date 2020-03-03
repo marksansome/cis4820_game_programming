@@ -24,9 +24,9 @@ void mapDrawViewPosition(int mapWidthOffset, int mapHeightOffset, int blockSize)
     // draw viewpoint
     set2Dcolour(white);
     draw2Dbox(mapWidthOffset + (blockSize * (int)vpX),
-              mapHeightOffset + (blockSize * (int)vpZ),
+              mapHeightOffset - (blockSize * (int)vpZ),
               mapWidthOffset + (blockSize * (int)vpX) + blockSize,
-              mapHeightOffset + (blockSize * (int)vpZ) + blockSize);
+              mapHeightOffset - (blockSize * (int)vpZ) + blockSize);
 }
 
 void mapDrawWorld(int mapWidthOffset, int mapHeightOffset, int blockSize)
@@ -51,9 +51,9 @@ void mapDrawWorld(int mapWidthOffset, int mapHeightOffset, int blockSize)
                         // draw block
                         set2Dcolour(colour);
                         draw2Dbox(mapWidthOffset + (blockSize * x),
-                                  mapHeightOffset + (blockSize * z),
+                                  mapHeightOffset - (blockSize * z),
                                   mapWidthOffset + (blockSize * x) + blockSize,
-                                  mapHeightOffset + (blockSize * z) + blockSize);
+                                  mapHeightOffset - (blockSize * z) + blockSize);
                     }
                 }
             }

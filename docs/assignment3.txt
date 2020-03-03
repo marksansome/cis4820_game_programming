@@ -62,13 +62,13 @@ returning to the base.
 
 The state machine for this AI is:
 
-                                         | INPUT
-CURRENT STATE            | detect meteor | don't' detect meteor | have meteor     | close to meteor
+                        | INPUT
+CURRENT STATE           | detect meteor | don't' detect meteor | have meteor      | close to meteor
 -----------------------------------------------------------------------------------------------
-searching                        | move towards  |   searching                 | return to base  | loading
-moving towards             | move towards  |   searching                 | return to base   | loading
-loading meteor               | loading             |   loading                    | return to base   | loading
-return to base                | return to base  |   return to base         | return to base   | return to base
+searching               | move towards  |   searching          | return to base   | loading
+moving towards          | move towards  |   searching          | return to base   | loading
+loading meteor          | loading       |   loading            | return to base   | loading
+return to base          | return to base|   return to base     | return to base   | return to base
 
 The inputs to the state machine are:
    detect meteor - the vehicle is within ten spaces of the meteor

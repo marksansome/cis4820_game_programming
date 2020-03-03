@@ -33,7 +33,7 @@ extern Base *createBase();
  * @param colour colour to draw Base
  * @param position the x position of the Base center
  */
-extern void initializeBase(Base *base, Colours colour, int position);
+extern void initializeBase(Base *base, int colour, int position);
 
 /**
  * Draws Base in the world array

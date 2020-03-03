@@ -33,14 +33,14 @@ Base *createBase()
     return b;
 }
 
-void initializeBase(Base *b, Colours colour, int basePos)
+void initializeBase(Base *b, int colour, int basePos)
 {
-    b->colour = getColour(colour);
+    b->colour = colour;
     b->height = BASE_HEIGHT;
 
     b->x1 = basePos;
     b->y1 = GROUND_DEPTH;
-    b->z1 = intRand((WORLDZ - (2 * BASE_EDGE_LENGTH) - 1), BASE_EDGE_LENGTH);
+    b->z1 = intRand((WORLDZ - (2 * BASE_EDGE_LENGTH) - 1 - BASE_STORAGE_Z_OFFSET), BASE_EDGE_LENGTH + BASE_STORAGE_Z_OFFSET);
     b->x2 = b->x1 + BASE_EDGE_LENGTH;
     b->y2 = b->y1 + b->height;
     b->z2 = b->z1 - BASE_EDGE_LENGTH;
@@ -61,8 +61,8 @@ void generateBase(Base *b)
     }
 
     // debug: show square (x1,z1) (x2,z2)
-    // world[b->x1][b->y2][b->z1] = 4;
-    // world[b->x2][b->y2][b->z2] = 5;
+    // world[b->x1][b->y1][b->z1] = 7;
+    // world[b->x2][b->y2][b->z2] = 8;
 }
 
 void freeBase(Base *b)

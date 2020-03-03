@@ -93,14 +93,15 @@ void createMainWorld()
 
     // add team bases
     // red
-    Base *bRed = createBase();
-    initializeBase(bRed, RED_TEAM_COLOUR, getTeamOffset(RED_TEAM));
-    addItem(g_structures, bRed, BASE);
+    Base *rBase = createBase();
+    initializeBase(rBase, g_red_team->colour, getTeamOffset(g_red_team->type));
+    addItem(g_structures, rBase, BASE);
+    g_red_team->base = rBase;
 
-    // blue
-    Base *bBlue = createBase();
-    initializeBase(bBlue, BLUE_TEAM_COLOUR, getTeamOffset(BLUE_TEAM));
-    addItem(g_structures, bBlue, BASE);
+    Base *bBase = createBase();
+    initializeBase(bBase, g_blue_team->colour, getTeamOffset(g_blue_team->type));
+    addItem(g_structures, bBase, BASE);
+    g_blue_team->base = bBase;
 
     for (int i = 0; i < MAX_TERRAIN; i++)
     {
@@ -110,7 +111,7 @@ void createMainWorld()
             Valley *v = createValley();
             initializeValley(v);
 
-            if (!checkStructureCollision(v->x1, v->z1, v->x2, v->z2))
+            if (!checkCollision(g_structures, v->x1, v->z1, v->x2, v->z2))
             {
                 addItem(g_structures, v, VALLEY);
             }
@@ -120,7 +121,7 @@ void createMainWorld()
             Hill *h = createHill();
             initializeHill(h);
 
-            if (!checkStructureCollision(h->x1, h->z1, h->x2, h->z2))
+            if (!checkCollision(g_structures, h->x1, h->z1, h->x2, h->z2))
             {
                 addItem(g_structures, h, HILL);
             }
@@ -150,31 +151,15 @@ void createMainWorld()
         }
         default:
         {
-            printf("ERROR: Invalid structure ID\n");
+            printf("WARNING: Invalid structure ID\n");
             break;
         }
         }
     }
 
-    // generate vehicles
-    // red team
-    for (int i = 0; i < NUM_TEAM_VEHICLES; i++)
-    {
-        Vehicle *v = createVehicle();
-        initializeVehicle(v, RED_TEAM_COLOUR, getTeamOffset(RED_TEAM));
-
-        //! @todo add this to its own vehicle list
-        addItem(g_structures, v, VEHICLE);
-    }
-    // blue team
-    for (int i = 0; i < NUM_TEAM_VEHICLES; i++)
-    {
-        Vehicle *v = createVehicle();
-        initializeVehicle(v, BLUE_TEAM_COLOUR, getTeamOffset(BLUE_TEAM));
-
-        //! @todo add this to its own vehicle list
-        addItem(g_structures, v, VEHICLE);
-    }
+    // add team starting objects
+    initializeTeamStartingObjects(g_red_team);
+    initializeTeamStartingObjects(g_blue_team);
 
     // generate clouds
     for (int i = 0; i < MAX_CLOUDS; i++)
@@ -195,80 +180,4 @@ void createMainWorld()
 
     // set player starting positon
     setViewPosition(-50, -20, -50);
-}
-
-int checkStructureCollision(int x1, int z1, int x2, int z2)
-{
-    int isCollision = 0;
-    for (int i = 0; i < getListSize(g_structures); i++)
-    {
-        Item *s = getItemAtIndex(g_structures, i);
-        if (isCollision)
-        {
-            break;
-        }
-
-        // get next structures (x1, z1) (x2, z2)
-        int x1b, z1b, x2b, z2b = 0;
-        getStructureSquare(s, &x1b, &z1b, &x2b, &z2b);
-
-        if (x1 <= x2b && x2 >= x1b && z1 >= z2b && z2 <= z1b)
-        {
-            isCollision = 1;
-        }
-
-        // collision is with itself, ignore
-        // if (i == index)
-        // {
-        //     isCollision = 0;
-        // }
-    }
-
-    return isCollision;
-}
-
-int getStructureSquare(Item *s, int *x1, int *z1, int *x2, int *z2)
-{
-    if (s == NULL)
-    {
-        printf("ERROR: Trying to access NULL item\n");
-        return 1;
-    }
-
-    switch (s->type)
-    {
-    case VALLEY:
-    {
-        Valley *v = s->ptr;
-        *x1 = v->x1;
-        *z1 = v->z1;
-        *x2 = v->x2;
-        *z2 = v->z2;
-        break;
-    }
-    case HILL:
-    {
-        Hill *h = s->ptr;
-        *x1 = h->x1;
-        *z1 = h->z1;
-        *x2 = h->x2;
-        *z2 = h->z2;
-        break;
-    }
-    case BASE:
-    {
-        Base *b = s->ptr;
-        *x1 = b->x1;
-        *z1 = b->z1;
-        *x2 = b->x2;
-        *z2 = b->z2;
-        break;
-    }
-    default:
-    {
-        printf("ERROR: Invalid structure ID\n");
-        return 1;
-    }
-    }
-    return 0;
 }

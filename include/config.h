@@ -14,8 +14,9 @@
 // #define SCREEN_HEIGHT 768
 
 // BASE
-#define BASE_HEIGHT 3      // y height of base
-#define BASE_EDGE_LENGTH 5 // x and z length of the edge for the square base
+#define BASE_HEIGHT 3            // y height of base
+#define BASE_EDGE_LENGTH 5       // x and z length of the edge for the square base
+#define BASE_STORAGE_Z_OFFSET 20 // z offset to account for adding vehicles and meteor cube
 
 // CLOUD
 #define CLOUD_LEVEL 48     // y level clouds are generated
@@ -39,9 +40,9 @@
 #define STARTING_METEORS 20       // number of meteors that fall at start of game, this also includes METEOR_PER_SPAWN
 #define METEOR_STARTING_Y 60      // starting y position for all meteors
 #define METEOR_EDGE_BUFFER 2      // buffer distance from the world edge where meteors will not spawn
-#define MAX_METEOR_SPEED 30.0     // maximum meteor speed
-#define MIN_METEOR_SPEED 100.0    // minimum meteor speed
-#define METEOR_SPAWN_TIME 10000.0 // time until next meteors spawn
+#define MAX_METEOR_SPEED 30.0     // maximum meteor speed, in milliseconds
+#define MIN_METEOR_SPEED 100.0    // minimum meteor speed, in milliseconds
+#define METEOR_SPAWN_TIME 10000.0 // time until next meteors spawn, in milliseconds
 #define METEOR_PER_SPAWN 10       // number of meteors that spawn per spawn time
 
 // MINI MAP
@@ -53,12 +54,14 @@
 #define PROJECTILE_SPEED 30.0 // milliseconds per movement
 
 // TEAM
-#define MIN_RED_TEAM_OFFSET 10  // minimum distance from map edge to spawn team structures (base, vehicle)
-#define MAX_RED_TEAM_OFFSET 20  // maximum distance from map edge to spawn team structures (base, vehicle)
-#define MIN_BLUE_TEAM_OFFSET 70 // minimum distance from map edge to spawn team structures (base, vehicle)
-#define MAX_BLUE_TEAM_OFFSET 80 // maximum distance from map edge to spawn team structures (base, vehicle)
+#define MIN_RED_TEAM_X_OFFSET 5   // minimum distance from map edge to spawn team structures (base, vehicle)
+#define MAX_RED_TEAM_X_OFFSET 10  // maximum distance from map edge to spawn team structures (base, vehicle)
+#define MIN_BLUE_TEAM_X_OFFSET 85 // minimum distance from map edge to spawn team structures (base, vehicle)
+#define MAX_BLUE_TEAM_X_OFFSET 90 // maximum distance from map edge to spawn team structures (base, vehicle)
+#define MAX_TEAM_Z_OFFSET 10      // maximum distance from map edge to spawn team structures (base, vehicle)
 
 // UTILITY
+#define MAX_ATTEMPTS_TO_PLACE_OBJECT 10
 
 // VALLEY
 #define MIN_VALLEY_DEPTH 2   // minimum height of a valley
@@ -67,9 +70,10 @@
 #define MAX_VALLEY_RADIUS 12 // maximum radius of a valley
 
 // VEHICLE
-#define VEHICLE_EDGE_LENGTH 2
-#define VEHICLE_OFFSET 5
-#define NUM_TEAM_VEHICLES 5
+#define TRUCK_EDGE_LENGTH 2   // edge length of a truck
+#define VEHICLE_OFFSET 3      // distance between each vehicle
+#define NUM_STARTING_TRUCKS 5 // number of starting truck vehicles per team
+#define TRUCK_SPEED 300.0     // milliseconds per movement
 
 // WORLD
 #define WORLDX 100        // x size of the map

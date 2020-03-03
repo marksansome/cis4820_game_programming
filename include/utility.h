@@ -7,6 +7,8 @@
 #ifndef msansome_utility_h
 #define msansome_utility_h
 
+#include "linkedList.h"
+
 typedef enum colours
 {
     INVALID_COLOUR = 0,
@@ -75,5 +77,37 @@ extern int intRand(int min, int max);
  * @return random number between min and max
  */
 extern float floatRand(float min, float max);
+
+/**
+ * Gets the next empty y value that fits a the square specifed (x1,z1) (x2,z2)
+ * @param x1 position of starting x
+ * @param z1 position of starting z
+ * @param x2 position of ending x
+ * @param z2 position of ending z
+ * @return top empty y position, -1 if no possible position
+ */
+extern int getTopPosition(int x1, int z1, int x2, int z2);
+
+/**
+ * Checks if the square defined by (x1,z1) (x2,z2) collides
+ * with any other item in a given List
+ * @param list list to check collision
+ * @param x1 position of starting x
+ * @param z1 position of starting z
+ * @param x2 position of ending x
+ * @param z2 position of ending z
+ * @return 1 = collision, 0 = no collision
+ */
+extern int checkCollision(List *list, int x1, int z1, int x2, int z2);
+
+/**
+ * Gets the (x1,z1) (x2,z2) of an item
+ * @param item item to get (x1,z1) (x2,z2)
+ * @param x1 position of starting x, updated with item value
+ * @param z1 position of starting z, updated with item value
+ * @param x2 position of ending x, updated with item value
+ * @param z2 position of ending z, updated with item value
+ */
+extern void getItemSquare(Item *item, int *x1, int *z1, int *x2, int *z2);
 
 #endif // msansome_utility_h

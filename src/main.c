@@ -28,8 +28,10 @@
 #include "map.h"
 #include "meteor.h"
 #include "projectile.h"
+#include "team.h"
 #include "utility.h"
 #include "valley.h"
+#include "vehicle.h"
 
 /* frustum corner coordinates, used for visibility determination  */
 extern float corners[4][3];
@@ -55,35 +57,6 @@ void collisionResponse()
    x = x * -1.0;
    y = y * -1.0;
    z = z * -1.0;
-
-   // float minX1 = floor(x);
-   // float minY1 = floor(y);
-   // float minZ1 = floor(z);
-   // float maxX1 = ceil(x);
-   // float maxY1 = ceil(y);
-   // float maxZ1 = ceil(z);
-
-   // float minX2 = x - buffer;
-   // float minY2 = y - buffer;
-   // float minZ2 = z - buffer;
-   // float maxX2 = x + buffer;
-   // float maxY2 = y + buffer;
-   // float maxZ2 = z + buffer;
-
-   // if (world[(int)floor(x)][(int)floor(y)][(int)floor(z)] != 0)
-   // {
-   //    if (maxX1 > minX2 &&
-   //        minX1 < maxX2 &&
-   //        maxY1 > minY2 &&
-   //        minY1 < maxY2 &&
-   //        maxZ1 > minZ2 &&
-   //        minZ1 < maxZ2)
-   //    {
-   //       float ox, oy, oz = 0.0;
-   //       getOldViewPosition(&ox, &oy, &oz);
-   //       setViewPosition(ox, oy, oz);
-   //    }
-   // }
 
    for (float i = x - buffer; i < x + (buffer * 2.0); i += buffer)
    {
@@ -149,7 +122,7 @@ void draw2D()
          int blockSize = mapSize / WORLDX;                                  // take the mapsize divided by the number of drawn blocks
          int buffer = (mapSize / MAP_SMALL_BUFFER);                         // used to set map position away from side of the screen
          int mapOffsetW = screenWidth - buffer - mapSize;                   // map width offset, where to draw map
-         int mapOffsetH = screenHeight - buffer - mapSize;                  // map height offset, where to draw map
+         int mapOffsetH = screenHeight - buffer;                            // map height offset, where to draw map
 
          // draw viewpoint
          mapDrawViewPosition(mapOffsetW, mapOffsetH, blockSize);
@@ -159,10 +132,10 @@ void draw2D()
 
          // draw world border line
          set2Dcolour(black);
-         draw2Dline(mapOffsetW - blockSize, mapOffsetH - blockSize, mapOffsetW + mapSize, mapOffsetH - blockSize, 5); // bottom
-         draw2Dline(mapOffsetW - blockSize, mapOffsetH - blockSize, mapOffsetW - blockSize, mapOffsetH + mapSize, 5); // left
-         draw2Dline(mapOffsetW + mapSize, mapOffsetH - blockSize, mapOffsetW + mapSize, mapOffsetH + mapSize, 5);     // right
-         draw2Dline(mapOffsetW - blockSize, mapOffsetH + mapSize, mapOffsetW + mapSize, mapOffsetH + mapSize, 5);     // top
+         draw2Dline(mapOffsetW - blockSize, mapOffsetH + blockSize - mapSize, mapOffsetW + mapSize, mapOffsetH + blockSize - mapSize, 5); // bottom
+         draw2Dline(mapOffsetW - blockSize, mapOffsetH + blockSize, mapOffsetW - blockSize, mapOffsetH - mapSize + blockSize, 5);         // left
+         draw2Dline(mapOffsetW + mapSize, mapOffsetH + blockSize, mapOffsetW + mapSize, mapOffsetH - mapSize + blockSize, 5);             // right
+         draw2Dline(mapOffsetW - blockSize, mapOffsetH + blockSize, mapOffsetW + mapSize, mapOffsetH + blockSize, 5);                     // top
       }
       else if (displayMap == 2)
       {
@@ -173,10 +146,10 @@ void draw2D()
          int mapOffsetH = (screenHeight - mapSize) / 2;                     // map height offset, where to draw map
 
          // draw viewpoint
-         mapDrawViewPosition(mapOffsetW, mapOffsetH, blockSize);
+         mapDrawViewPosition(mapOffsetW, mapOffsetH + (mapSize - (2 * blockSize)), blockSize);
 
          // draw world
-         mapDrawWorld(mapOffsetW, mapOffsetH, blockSize);
+         mapDrawWorld(mapOffsetW, mapOffsetH + (mapSize - (2 * blockSize)), blockSize);
 
          // draw world border line
          set2Dcolour(black);
@@ -357,6 +330,28 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
             }
          }
       }
+
+      // move red teams vehicles
+      for (int i = 0; i < getListSize(g_red_team->vehicles); i++)
+      {
+         Vehicle *v = getItemAtIndex(g_red_team->vehicles, i)->ptr;
+         if (curTime - v->timeTracker >= v->speed)
+         {
+            v->timeTracker = curTime;
+            moveVehicle(v);
+         }
+      }
+
+      // move blue teams vehicles
+      for (int i = 0; i < getListSize(g_blue_team->vehicles); i++)
+      {
+         Vehicle *v = getItemAtIndex(g_blue_team->vehicles, i)->ptr;
+         if (curTime - v->timeTracker >= v->speed)
+         {
+            v->timeTracker = curTime;
+            moveVehicle(v);
+         }
+      }
    }
 }
 
@@ -389,14 +384,23 @@ int main(int argc, char **argv)
    // initialize global tracking values
    g_num_mobs = 0;
 
-   // initialize worlds game objects storage
-   g_structures = createList();
-   g_clouds = createList();
-   g_projectile = createProjectile();
-   g_meteors = createList();
+   // create player projectile
+   g_player_projectile = createProjectile();
 
    // create user defined colours
    createUserColours();
+
+   // create worlds game objects storage
+   g_structures = createList();
+   g_clouds = createList();
+   g_meteors = createList();
+   g_falling_meteors = createList();
+
+   // create team object storage
+   g_red_team = createTeam();
+   initializeTeam(g_red_team, RED_TEAM);
+   g_blue_team = createTeam();
+   initializeTeam(g_blue_team, BLUE_TEAM);
 
    if (testWorld == 1)
    {
@@ -418,7 +422,10 @@ int main(int argc, char **argv)
    free(g_structures);
    free(g_clouds);
    free(g_meteors);
-   free(g_projectile);
+   free(g_falling_meteors);
+   free(g_red_team);
+   free(g_blue_team);
+   free(g_player_projectile);
 
    return 0;
 }
