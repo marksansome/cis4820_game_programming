@@ -12,6 +12,7 @@
 #define SCREEN_HEIGHT 1536
 // #define SCREEN_WIDTH 1024
 // #define SCREEN_HEIGHT 768
+#define WIN_SCORE 27 // number of meteors needed to win the game
 
 // BASE
 #define BASE_HEIGHT 3            // y height of base
@@ -39,7 +40,7 @@
 // METEOR
 #define STARTING_METEORS 20       // number of meteors that fall at start of game, this also includes METEOR_PER_SPAWN
 #define METEOR_STARTING_Y 60      // starting y position for all meteors
-#define METEOR_EDGE_BUFFER 2      // buffer distance from the world edge where meteors will not spawn
+#define METEOR_EDGE_BUFFER 4      // buffer distance from the world edge where meteors will not spawn
 #define MAX_METEOR_SPEED 30.0     // maximum meteor speed, in milliseconds
 #define MIN_METEOR_SPEED 100.0    // minimum meteor speed, in milliseconds
 #define METEOR_SPAWN_TIME 10000.0 // time until next meteors spawn, in milliseconds
@@ -70,10 +71,14 @@
 #define MAX_VALLEY_RADIUS 12 // maximum radius of a valley
 
 // VEHICLE
-#define TRUCK_EDGE_LENGTH 2   // edge length of a truck
-#define VEHICLE_OFFSET 3      // distance between each vehicle
-#define NUM_STARTING_TRUCKS 5 // number of starting truck vehicles per team
-#define TRUCK_SPEED 300.0     // milliseconds per movement
+#define VEHICLE_OFFSET 3         // distance between each vehicle
+#define VEHICLE_METEOR_RADIUS 10 // search radius for meteors
+#define NUM_STARTING_TRUCKS 5    // number of starting truck vehicles per team
+#define TRUCK_EDGE_LENGTH 3      // edge length of a truck
+#define TRUCK_HEIGHT 2           // height of a truck
+#define TRUCK_HEALTH 2           // amount of damage the truck can take
+#define TRUCK_BLOCK_COUNT 10     // number of blocks that make up a truck (not including meteor)
+#define TRUCK_SPEED 300.0        // milliseconds per movement
 
 // WORLD
 #define WORLDX 100        // x size of the map

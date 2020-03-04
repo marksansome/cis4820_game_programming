@@ -111,7 +111,7 @@ void createMainWorld()
             Valley *v = createValley();
             initializeValley(v);
 
-            if (!checkCollision(g_structures, v->x1, v->z1, v->x2, v->z2))
+            if (!checkCollision(g_structures, -1, v->x1, v->z1, v->x2, v->z2))
             {
                 addItem(g_structures, v, VALLEY);
             }
@@ -121,7 +121,7 @@ void createMainWorld()
             Hill *h = createHill();
             initializeHill(h);
 
-            if (!checkCollision(g_structures, h->x1, h->z1, h->x2, h->z2))
+            if (!checkCollision(g_structures, -1, h->x1, h->z1, h->x2, h->z2))
             {
                 addItem(g_structures, h, HILL);
             }
@@ -175,7 +175,7 @@ void createMainWorld()
     {
         Meteor *m = createMeteor();
         initializeMeteor(m);
-        addItem(g_meteors, m, METEOR);
+        addItem(g_falling_meteors, m, METEOR);
     }
 
     // set player starting positon

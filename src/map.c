@@ -34,9 +34,9 @@ void mapDrawWorld(int mapWidthOffset, int mapHeightOffset, int blockSize)
     // loop through world array and draw blocks
     for (int y = WORLDY - 2; y >= 0; y--) // minus 2 to ensure we don't check out of array bounds
     {
-        for (int x = 0; x < WORLDX - 1; x++)
+        for (int x = 0; x < WORLDX; x++)
         {
-            for (int z = 0; z < WORLDZ - 1; z++)
+            for (int z = 0; z < WORLDZ; z++)
             {
                 if (world[x][y][z] != 0 && y != CLOUD_LEVEL) // don't draw clouds
                 {

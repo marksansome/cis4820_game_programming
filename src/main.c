@@ -77,8 +77,8 @@ void collisionResponse()
    // check VP collision with world border
    if (!testWorld)
    {
-      if (x >= (WORLDX - 1.15) || x <= 0.15 ||
-          z >= (WORLDZ - 1.15) || z <= 0.15 ||
+      if (x >= (WORLDX - 0.15) || x <= 0.15 ||
+          z >= (WORLDZ - 0.15) || z <= 0.15 ||
           y >= (WORLDY - WORLD_CLOUD_GAP - 0.15) || y <= 0.15)
       {
          float ox, oy, oz = 0.0;
@@ -132,10 +132,10 @@ void draw2D()
 
          // draw world border line
          set2Dcolour(black);
-         draw2Dline(mapOffsetW - blockSize, mapOffsetH + blockSize - mapSize, mapOffsetW + mapSize, mapOffsetH + blockSize - mapSize, 5); // bottom
-         draw2Dline(mapOffsetW - blockSize, mapOffsetH + blockSize, mapOffsetW - blockSize, mapOffsetH - mapSize + blockSize, 5);         // left
-         draw2Dline(mapOffsetW + mapSize, mapOffsetH + blockSize, mapOffsetW + mapSize, mapOffsetH - mapSize + blockSize, 5);             // right
-         draw2Dline(mapOffsetW - blockSize, mapOffsetH + blockSize, mapOffsetW + mapSize, mapOffsetH + blockSize, 5);                     // top
+         draw2Dline(mapOffsetW - blockSize, mapOffsetH - mapSize, mapOffsetW + mapSize + blockSize, mapOffsetH - mapSize, 5);                   // bottom
+         draw2Dline(mapOffsetW - blockSize, mapOffsetH + (2 * blockSize), mapOffsetW - blockSize, mapOffsetH - mapSize, 5);                     // left
+         draw2Dline(mapOffsetW + mapSize + blockSize, mapOffsetH + (2 * blockSize), mapOffsetW + mapSize + blockSize, mapOffsetH - mapSize, 5); // right
+         draw2Dline(mapOffsetW - blockSize, mapOffsetH + (2 * blockSize), mapOffsetW + mapSize + blockSize, mapOffsetH + (2 * blockSize), 5);   // top
       }
       else if (displayMap == 2)
       {
@@ -153,10 +153,10 @@ void draw2D()
 
          // draw world border line
          set2Dcolour(black);
-         draw2Dline(mapOffsetW - (blockSize / 3), mapOffsetH - (blockSize / 3), mapOffsetW + mapSize - (blockSize / 3), mapOffsetH - (blockSize / 3), 15);                     // bottom
-         draw2Dline(mapOffsetW - (blockSize / 3), mapOffsetH - (blockSize / 3), mapOffsetW - (blockSize / 3), mapOffsetH + mapSize - (blockSize / 3), 15);                     // left
-         draw2Dline(mapOffsetW + mapSize - (blockSize / 2), mapOffsetH - (blockSize / 3), mapOffsetW + mapSize - (blockSize / 2), mapOffsetH + mapSize - (blockSize / 3), 15); // right
-         draw2Dline(mapOffsetW - (blockSize / 3), mapOffsetH + mapSize - (blockSize / 2), mapOffsetW + mapSize - (blockSize / 3), mapOffsetH + mapSize - (blockSize / 2), 15); // top
+         draw2Dline(mapOffsetW - (blockSize / 3), mapOffsetH - blockSize - (blockSize / 2), mapOffsetW + mapSize + (blockSize / 2), mapOffsetH - blockSize - (blockSize / 2), 15);         // bottom
+         draw2Dline(mapOffsetW - (blockSize / 3), mapOffsetH - blockSize - (blockSize / 2), mapOffsetW - (blockSize / 3), mapOffsetH + mapSize - (blockSize / 2), 15);                     // left
+         draw2Dline(mapOffsetW + mapSize + (blockSize / 3), mapOffsetH - blockSize - (blockSize / 2), mapOffsetW + mapSize + (blockSize / 3), mapOffsetH + mapSize - (blockSize / 2), 15); // right
+         draw2Dline(mapOffsetW - (blockSize / 3), mapOffsetH + mapSize - (blockSize / 1.5), mapOffsetW + mapSize + (blockSize / 2), mapOffsetH + mapSize - (blockSize / 1.5), 15);         // top
       }
    }
 }
@@ -313,14 +313,14 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
          {
             Meteor *m = createMeteor();
             initializeMeteor(m);
-            addItem(g_meteors, m, METEOR);
+            addItem(g_falling_meteors, m, METEOR);
          }
       }
 
       // move existing meteors
-      for (int i = 0; i < getListSize(g_meteors); i++)
+      for (int i = 0; i < getListSize(g_falling_meteors); i++)
       {
-         Meteor *m = getItemAtIndex(g_meteors, i)->ptr;
+         Meteor *m = getItemAtIndex(g_falling_meteors, i)->ptr;
          if (curTime - m->timeTracker >= m->velocity)
          {
             m->timeTracker = curTime;
@@ -328,30 +328,97 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
             {
                moveMeteor(m);
             }
+            else
+            {
+               // move meteor to g_meteors
+               Meteor *ret = removeItemAtIndex(g_falling_meteors, i)->ptr;
+               addItem(g_meteors, ret, METEOR);
+            }
          }
       }
 
-      // move red teams vehicles
-      for (int i = 0; i < getListSize(g_red_team->vehicles); i++)
+      // to make it more fair, we randomly select which team is updated first
+      if (rand() % 2)
       {
-         Vehicle *v = getItemAtIndex(g_red_team->vehicles, i)->ptr;
-         if (curTime - v->timeTracker >= v->speed)
+         // move red teams vehicles
+         for (int i = 0; i < getListSize(g_red_team->vehicles); i++)
          {
-            v->timeTracker = curTime;
-            moveVehicle(v);
+            Vehicle *v = getItemAtIndex(g_red_team->vehicles, i)->ptr;
+            if (curTime - v->timeTracker >= v->speed)
+            {
+               v->timeTracker = curTime;
+               moveVehicle(v, g_red_team, g_meteors);
+            }
+         }
+      }
+      else
+      {
+         // move blue teams vehicles
+         for (int i = 0; i < getListSize(g_blue_team->vehicles); i++)
+         {
+            Vehicle *v = getItemAtIndex(g_blue_team->vehicles, i)->ptr;
+            if (curTime - v->timeTracker >= v->speed)
+            {
+               v->timeTracker = curTime;
+               moveVehicle(v, g_blue_team, g_meteors);
+               if (v->health <= 0)
+               {
+                  Vehicle *rem = removeItemAtIndex(g_blue_team->vehicles, i)->ptr;
+                  generateVehicle(rem, BLUE_TEAM, 1);
+
+                  //! @todo create explosion!
+                  // just generate a new valley
+                  printf("Generating new vehcile\n");
+
+                  if (v->isCarryingMeteor)
+                  {
+                     printf("Dropping meteor\n");
+                     Meteor *m = rem->targetMeteor;
+                     m->isCollected = 0;
+                     m->isFalling = 1;
+                     m->x = rem->x1;
+                     m->y = rem->y;
+                     m->z = rem->z1;
+                     addItem(g_falling_meteors, m, METEOR);
+                  }
+
+                  Vehicle *new = createVehicle();
+                  initializeVehicle(new, rem->type, g_blue_team);
+                  generateVehicle(new, BLUE_TEAM, 0);
+                  addItem(g_blue_team->vehicles, new, VEHICLE);
+
+                  free(rem);
+               }
+               // if vehicle health is <= 0, destroy
+               // remove vehicle from list
+               // recreate vehicle, add it to list
+               // create explosion
+            }
          }
       }
 
-      // move blue teams vehicles
-      for (int i = 0; i < getListSize(g_blue_team->vehicles); i++)
+      //! @todo draw teams meteor cube
+
+      // check teams win conditions
+      if (getListSize(g_red_team->meteors) >= WIN_SCORE)
       {
-         Vehicle *v = getItemAtIndex(g_blue_team->vehicles, i)->ptr;
-         if (curTime - v->timeTracker >= v->speed)
-         {
-            v->timeTracker = curTime;
-            moveVehicle(v);
-         }
+         printf("**********************************\n");
+         printf("         RED team has won!        \n");
+         printf("**********************************\n");
+         //! @todo free memory
+         exit(0);
       }
+      if (getListSize(g_blue_team->meteors) >= WIN_SCORE)
+      {
+         printf("**********************************\n");
+         printf("        BLUE team has won!        \n");
+         printf("**********************************\n");
+         //! @todo free memory
+         exit(0);
+      }
+      // debug
+      // printf("red score %d\n", getListSize(g_red_team->meteors));
+      // printf("blue score %d\n", getListSize(g_blue_team->meteors));
    }
 }
 

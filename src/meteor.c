@@ -11,6 +11,7 @@
 
 #include "config.h"
 #include "graphics.h"
+#include "linkedList.h"
 #include "utility.h"
 
 Meteor *createMeteor()
@@ -31,6 +32,7 @@ Meteor *createMeteor()
     m->xDir = 1;
     m->zDir = 1;
     m->isFalling = 1;
+    m->isCollected = 0;
     m->timeTracker = 0.0;
     m->velocity = 0.0;
 
@@ -127,6 +129,19 @@ void generateMeteor(Meteor *m)
             world[x][y][z] = getColour(meteorColours[i]);
         }
     }
+}
+
+Meteor *removeMeteorFromList(Meteor *m, List *l)
+{
+    for (int i = 0; i < getListSize(l); i++)
+    {
+        Meteor *checkM = getItemAtIndex(l, i)->ptr;
+        if (m == checkM)
+        {
+            return removeItemAtIndex(l, i)->ptr;
+        }
+    }
+    return NULL;
 }
 
 void removeMeteor(Meteor *m)

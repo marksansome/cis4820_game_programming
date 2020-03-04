@@ -34,7 +34,7 @@ typedef struct list
  * Allocates memory for List
  * @return pointer to allocated List
  */
-List *createList();
+extern List *createList();
 
 /**
  * Adds an item to the end of the list
@@ -42,14 +42,14 @@ List *createList();
  * @param item item to store in list
  * @param type the type of the game item
  */
-void addItem(List *list, void *item, item_type type);
+extern void addItem(List *list, void *item, item_type type);
 
 /**
  * Removes and returns the first item of the list
  * @param list list to remove from
  * @return first item in list
  */
-void *popItem(List *list);
+extern void *popItem(List *list);
 
 // void removeItemAtIndex(List *list, int index);
 
@@ -59,19 +59,27 @@ void *popItem(List *list);
  * @param index which item to get
  * @return pointer to item in list
  */
-Item *getItemAtIndex(List *list, int index);
+extern Item *getItemAtIndex(List *list, int index);
 
 /**
  * find the number of items in a list
  * @param list list to operate on
  * @return number of items in list
  */
-int getListSize(List *list);
+extern int getListSize(List *list);
+
+/**
+ * Remove an item from a specified index
+ * @param list list to operate on
+ * @param index which item to remove
+ * @return pointer to removed item from list
+ */
+extern Item *removeItemAtIndex(List *list, int index);
 
 /**
  * Free memory of list and all items
  * @param list list to operate on
  */
-void freeList(List *list);
+extern void freeList(List *list);
 
 #endif //msansome_linkedlist_h

@@ -7,6 +7,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 #include "base.h"
 #include "config.h"
@@ -36,32 +37,29 @@ void createUserColours()
     setUserColour(19, 0.96, 0.96, 0.96, 1.00, 0.48, 0.48, 0.48, 0.50);
     setUserColour(20, 0.98, 0.98, 0.98, 1.00, 0.49, 0.49, 0.49, 0.50);
     setUserColour(21, 1.00, 1.00, 1.00, 1.00, 0.50, 0.50, 0.50, 0.50);
-    // red
+    // red (meteor tail)
     setUserColour(22, 1.00, 0.00, 0.00, 0.50, 0.50, 0.00, 0.00, 0.50);
     setUserColour(23, 0.69, 0.14, 0.14, 0.50, 0.43, 0.07, 0.07, 0.50);
     setUserColour(24, 0.55, 0.10, 0.10, 0.50, 0.27, 0.05, 0.05, 0.50);
     setUserColour(25, 0.50, 0.07, 0.07, 0.50, 0.25, 0.03, 0.03, 0.50);
-
-    // yellow
+    // yellow (meteor tail)
     setUserColour(26, 1.00, 1.00, 0.00, 0.50, 0.50, 0.50, 0.00, 0.50);
     setUserColour(27, 1.00, 0.88, 0.00, 0.50, 0.50, 0.44, 0.00, 0.50);
     setUserColour(28, 1.00, 0.80, 0.00, 0.50, 0.50, 0.40, 0.00, 0.50);
     setUserColour(29, 1.00, 0.72, 0.00, 0.50, 0.50, 0.36, 0.00, 0.50);
-
-    // orange
+    // orange (meteor tail)
     setUserColour(30, 1.00, 0.27, 0.00, 0.50, 0.50, 0.14, 0.00, 0.50);
     setUserColour(31, 1.00, 0.45, 0.00, 0.50, 0.50, 0.22, 0.00, 0.50);
     setUserColour(32, 1.00, 0.55, 0.00, 0.50, 0.50, 0.26, 0.00, 0.50);
     setUserColour(33, 1.00, 0.64, 0.00, 0.50, 0.50, 0.31, 0.00, 0.50);
-
     // dark grey (meteor)
     setUserColour(34, 0.05, 0.16, 0.16, 1.00, 0.02, 0.09, 0.09, 1.00);
-
-    // red (base)
-    setUserColour(35, 1.00, 0.00, 0.00, 1.00, 0.50, 0.00, 0.00, 1.00);
-
-    // blue (base)
-    setUserColour(36, 0.00, 0.00, 1.00, 1.00, 0.00, 0.00, 0.50, 1.00);
+    // red (team)
+    setUserColour(35, 0.70, 0.15, 0.15, 1.00, 0.35, 0.07, 0.07, 1.00);
+    // blue (team)
+    setUserColour(36, 0.15, 0.15, 0.70, 1.00, 0.07, 0.07, 0.35, 1.00);
+    // black (vehicle tire)
+    setUserColour(37, 0.01, 0.01, 0.01, 1.00, 0.00, 0.00, 0.00, 1.00);
 }
 
 void drawCircle(int xCenter, int y, int zCenter, int r, Colours colour)
@@ -127,8 +125,10 @@ int getColour(Colours colour)
         return 35;
     case BLUE_TEAM_COLOUR:
         return 36;
+    case VEHICLE_TIRE_COLOUR:
+        return 37;
     default:
-        printf("WARNING: random colour not found\n");
+        printf("WARNING: Colour not found\n");
         return 0;
     }
 }
@@ -187,7 +187,7 @@ int getTopPosition(int x1, int z1, int x2, int z2)
     return topY;
 }
 
-int checkCollision(List *l, int x1, int z1, int x2, int z2)
+int checkCollision(List *l, int index, int x1, int z1, int x2, int z2)
 {
     int isCollision = 0;
     for (int i = 0; i < getListSize(l); i++)
@@ -205,6 +205,12 @@ int checkCollision(List *l, int x1, int z1, int x2, int z2)
         if (x1 <= x2b && x2 >= x1b && z1 >= z2b && z2 <= z1b)
         {
             isCollision = 1;
+        }
+
+        // ignore collision if its with itself
+        if (index == i)
+        {
+            isCollision = 0;
         }
     }
 

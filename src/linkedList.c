@@ -104,6 +104,71 @@ int getListSize(List *list)
     return count;
 }
 
+Item *removeItemAtIndex(List *list, int index)
+{
+    Item *prev;
+    Item *curr;
+    Item *after;
+    Item *item;
+    Item *ret;
+
+    item = list->first;
+
+    int listSize = getListSize(list);
+
+    if (listSize == 1)
+    {
+        ret = item;
+        list->first = NULL;
+        list->last = NULL;
+    }
+    else if (index == 0)
+    {
+        after = item->next;
+        ret = item;
+        list->first = after;
+    }
+    else if (index == listSize - 1)
+    {
+        for (int i = 1; i <= listSize; i++)
+        {
+            if (i == listSize - 1)
+            {
+                prev = item;
+            }
+            else if (i == listSize)
+            {
+                curr = item;
+            }
+            item = item->next;
+        }
+        ret = curr;
+        list->last = prev;
+    }
+    else
+    {
+        for (int i = 0; i <= index + 1; i++)
+        {
+            if (i == index - 1)
+            {
+                prev = item;
+            }
+            else if (i == index)
+            {
+                curr = item;
+            }
+            else if (i == index + 1)
+            {
+                after = item;
+            }
+            item = item->next;
+        }
+        ret = curr;
+        prev->next = after;
+    }
+    return ret;
+}
+
 void freeList(List *list)
 {
     Item *item = list->first;

@@ -70,7 +70,7 @@ void initializeTeamStartingObjects(Team *t)
         initializeVehicle(v, TRUCK_VEHICLE, t);
 
         addItem(t->vehicles, v, VEHICLE);
-        generateVehicle(v);
+        generateVehicle(v, t->type, 0);
     }
 
     // towers

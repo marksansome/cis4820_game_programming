@@ -21,7 +21,8 @@ typedef enum colours
     ORANGE,
     RED,
     RED_TEAM_COLOUR,
-    BLUE_TEAM_COLOUR
+    BLUE_TEAM_COLOUR,
+    VEHICLE_TIRE_COLOUR
 } Colours;
 
 /**
@@ -92,13 +93,14 @@ extern int getTopPosition(int x1, int z1, int x2, int z2);
  * Checks if the square defined by (x1,z1) (x2,z2) collides
  * with any other item in a given List
  * @param list list to check collision
+ * @param index index of item being checked, use -1 if item has not be added yet
  * @param x1 position of starting x
  * @param z1 position of starting z
  * @param x2 position of ending x
  * @param z2 position of ending z
  * @return 1 = collision, 0 = no collision
  */
-extern int checkCollision(List *list, int x1, int z1, int x2, int z2);
+extern int checkCollision(List *list, int index, int x1, int z1, int x2, int z2);
 
 /**
  * Gets the (x1,z1) (x2,z2) of an item
