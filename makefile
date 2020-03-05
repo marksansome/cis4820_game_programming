@@ -23,6 +23,7 @@ SRC = \
 	src/meteor.c \
 	src/projectile.c \
 	src/team.c \
+	src/tower.c \
 	src/utility.c \
 	src/valley.c \
 	src/vehicle.c \

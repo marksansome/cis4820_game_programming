@@ -91,7 +91,7 @@ extern void incrementVehicle(Vehicle *v);
  * Checks a Vehicle's empty spaces to determine damage
  * @param vehicle Vehicle to be moved
  */
-extern void updateVehicleDamage(Vehicle *v);
+extern void updateVehicleDamage(Vehicle *v, int index, Team *t);
 
 /**
  * Removes a Vehicle from the world

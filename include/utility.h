@@ -112,4 +112,12 @@ extern int checkCollision(List *list, int index, int x1, int z1, int x2, int z2)
  */
 extern void getItemSquare(Item *item, int *x1, int *z1, int *x2, int *z2);
 
+/**
+ * Checks if a projectiles collision is on a vehicle, update vehicle health
+ * @param x x position projectile hit
+ * @param y y position projectile hit
+ * @param z z position projectile hit
+ */
+extern void globalVehicleCheckProjectile(int x, int y, int z);
+
 #endif // msansome_utility_h

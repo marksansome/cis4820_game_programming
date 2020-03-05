@@ -125,6 +125,7 @@ void generateVehicle(Vehicle *v, team_type teamType, int isEmpty)
         vehicleColour = v->colour;
         meteorColour = getColour(DARK_GRAY);
     }
+
     switch (v->type)
     {
     case TRUCK_VEHICLE:
@@ -193,10 +194,6 @@ void generateVehicle(Vehicle *v, team_type teamType, int isEmpty)
 
 void moveVehicle(Vehicle *v, Team *t, List *meteors)
 {
-    updateVehicleDamage(v);
-
-    //! @todo handle vehicle cleanup and explosion
-
     switch (v->state)
     {
     case SEARCHING_VEHICLE_STATE:
@@ -329,7 +326,7 @@ void setSearchingState(Vehicle *v, Team *t)
 
 void incrementVehicle(Vehicle *v)
 {
-    //! @todo need to add collision detection here
+    //! @note: need to add collision detection here
     // the miss in collision happens when the vehicle tries to move up
     // but the next car is there?
     if (v->xTarget < v->x1)
@@ -355,8 +352,12 @@ void incrementVehicle(Vehicle *v)
     v->y = getTopPosition(v->x1, v->z1, v->x2, v->z2);
 }
 
-void updateVehicleDamage(Vehicle *v)
+void updateVehicleDamage(Vehicle *v, int index, Team *t)
 {
+    //! @todo THIS IS GOING TO NEED WORK.
+    // maybe move this into projectiles? to update the vehicle if hit
+    // FRUSTRATION!
+
     // check the number of blocks in vehicle
     // if count is less than expected, damage
     int blockCount = 0;
@@ -393,9 +394,12 @@ void updateVehicleDamage(Vehicle *v)
 
     if (blockCount < expectedCount)
     {
-        v->health -= 1;
-        printf("vehicle took damage\n");
-        world[v->x1][v->y + 5][v->z1] = getColour(YELLOW);
+        if (!checkCollision(t->vehicles, index, v->x1, v->z1, v->x2, v->z2))
+        {
+            v->health -= 1;
+            printf("vehicle took damage\n");
+            world[v->x1][v->y + 5][v->z1] = getColour(YELLOW);
+        }
     }
 }
 
@@ -407,16 +411,16 @@ void removeVehicle(Vehicle *v)
      * it will be removes in this.
      */
     // remove square size of vehicle edge to remove
-    // for (int y = v->y; y < v->y + v->height; y++)
-    // {
-    //     for (int x = v->x1; x < v->x2; x++)
-    //     {
-    //         for (int z = v->z1; z < v->z2; z++)
-    //         {
-    //             world[x][y][z] = 0;
-    //         }
-    //     }
-    // }
+    for (int y = v->y; y < v->y + v->height; y++)
+    {
+        for (int x = v->x1; x < v->x2; x++)
+        {
+            for (int z = v->z1; z < v->z2; z++)
+            {
+                world[x][y][z] = 0;
+            }
+        }
+    }
 }
 
 // for (int x = x1; x < x2; x++)

@@ -11,6 +11,7 @@
 
 #include "base.h"
 #include "config.h"
+#include "data.h"
 #include "graphics.h"
 #include "hill.h"
 #include "linkedList.h"
@@ -268,5 +269,46 @@ void getItemSquare(Item *s, int *x1, int *z1, int *x2, int *z2)
         printf("ERROR: Invalid ID when checking item square\n");
         exit(1);
     }
+    }
+}
+
+void globalVehicleCheckProjectile(int xHit, int yHit, int zHit)
+{
+    // red team
+    for (int i = 0; i < getListSize(g_red_team->vehicles); i++)
+    {
+        Vehicle *v = getItemAtIndex(g_red_team->vehicles, i)->ptr;
+        for (int y = v->y; y < v->y + v->height; y++)
+        {
+            for (int x = v->x1; x < v->x2; x++)
+            {
+                for (int z = v->z1; z < v->z2; z++)
+                {
+                    if (x == xHit && y == yHit && z == zHit)
+                    {
+                        v->health -= 1;
+                    }
+                }
+            }
+        }
+    }
+
+    // blue team
+    for (int i = 0; i < getListSize(g_blue_team->vehicles); i++)
+    {
+        Vehicle *v = getItemAtIndex(g_blue_team->vehicles, i)->ptr;
+        for (int y = v->y; y < v->y + v->height; y++)
+        {
+            for (int x = v->x1; x < v->x2; x++)
+            {
+                for (int z = v->z1; z < v->z2; z++)
+                {
+                    if (x == xHit && y == yHit && z == zHit)
+                    {
+                        v->health -= 1;
+                    }
+                }
+            }
+        }
     }
 }

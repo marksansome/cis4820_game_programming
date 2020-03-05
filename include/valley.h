@@ -33,6 +33,12 @@ extern Valley *createValley();
 extern void initializeValley(Valley *valley);
 
 /**
+ * Custom initializes values for a Valley, used to create sized explosions
+ * @param valley pointer to allocated Valley
+ */
+extern void customInitializeValley(Valley *v, int radius, int depth, int xCenter, int yCenter, int zCenter);
+
+/**
  * Draws Valley in the world array
  * @param valley pointer to allocated Valley
  */

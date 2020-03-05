@@ -61,6 +61,13 @@ extern void initializeTeamStartingObjects(Team *t);
 extern int checkTeamCollision(Team *team, int y, int x1, int z1, int x2, int z2);
 
 /**
+ * Places the meteors collected for the team in
+ * a stack next to the team base
+ * @param team team to draw meteors
+ */
+extern void drawMeteorCube(Team *t);
+
+/**
  * Gets a random offset in teams spawn zone
  * @param team team type (RED, BLUE)
  * @return x position in world array for structure

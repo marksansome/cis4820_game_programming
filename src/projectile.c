@@ -14,8 +14,6 @@
 #include "graphics.h"
 #include "utility.h"
 
-// Projectile *g_player_projectile;
-
 Projectile *createProjectile()
 {
     Projectile *p = (Projectile *)malloc(sizeof(Projectile));
@@ -44,64 +42,66 @@ Projectile *createProjectile()
     return p;
 }
 
-void fireProjectile()
+void setProjectileToViewPosition(Projectile *p)
 {
-    if (!g_player_projectile->inMotion)
+    // get players position for starting point
+    getViewPosition(&p->x, &p->y, &p->z);
+    getViewOrientation(&p->xRot, &p->yRot, &p->zRot);
+    p->x *= -1.0;
+    p->y *= -1.0;
+    p->z *= -1.0;
+    p->x -= 0.5;
+    p->y -= 0.5;
+    p->z -= 0.5;
+}
+
+void fireProjectile(Projectile *p)
+{
+    if (!p->inMotion)
     {
-        // get players position for starting point
-        getViewPosition(&g_player_projectile->x, &g_player_projectile->y, &g_player_projectile->z);
-        getViewOrientation(&g_player_projectile->xRot, &g_player_projectile->yRot, &g_player_projectile->zRot);
-
-        g_player_projectile->x *= -1.0;
-        g_player_projectile->y *= -1.0;
-        g_player_projectile->z *= -1.0;
-
-        g_player_projectile->x -= 0.5;
-        g_player_projectile->y -= 0.5;
-        g_player_projectile->z -= 0.5;
-
-        setMobPosition(g_player_projectile->mobId, g_player_projectile->x, g_player_projectile->y, g_player_projectile->z, g_player_projectile->zRot);
-        showMob(g_player_projectile->mobId);
-        g_player_projectile->inMotion = 1;
+        setMobPosition(p->mobId, p->x, p->y, p->z, p->zRot);
+        showMob(p->mobId);
+        p->inMotion = 1;
     }
 }
 
-void moveProjectile()
+void moveProjectile(Projectile *p)
 {
-    if (g_player_projectile->inMotion)
+    if (p->inMotion)
     {
-        float unitMultiplier = 1.0 - fabs(pow(sin(toRadians(g_player_projectile->xRot)), 3));
+        float unitMultiplier = 1.0 - fabs(pow(sin(toRadians(p->xRot)), 3));
 
-        g_player_projectile->x += (sin(toRadians(g_player_projectile->yRot)) * cos(toRadians(g_player_projectile->xRot)) * unitMultiplier);
-        g_player_projectile->y -= (sin(toRadians(g_player_projectile->xRot)));
-        g_player_projectile->z -= (cos(toRadians(g_player_projectile->yRot)) * cos(toRadians(g_player_projectile->xRot)) * unitMultiplier);
+        p->x += (sin(toRadians(p->yRot)) * cos(toRadians(p->xRot)) * unitMultiplier);
+        p->y -= (sin(toRadians(p->xRot)));
+        p->z -= (cos(toRadians(p->yRot)) * cos(toRadians(p->xRot)) * unitMultiplier);
 
-        checkProjectileCollision();
+        checkProjectileCollision(p);
         // calculate new position
-        if (g_player_projectile->inMotion)
+        if (p->inMotion)
         {
-            setMobPosition(g_player_projectile->mobId, g_player_projectile->x, g_player_projectile->y, g_player_projectile->z, -g_player_projectile->yRot + 180.0);
+            setMobPosition(p->mobId, p->x, p->y, p->z, -p->yRot + 180.0);
         }
     }
 }
 
-void checkProjectileCollision()
+void checkProjectileCollision(Projectile *p)
 {
     int isCollision = 0;
 
-    for (float i = g_player_projectile->x - 0.1; i < g_player_projectile->x + (0.5 * 2.0); i += 0.1)
+    for (float i = p->x - 0.1; i < p->x + (0.5 * 2.0); i += 0.1)
     {
-        for (float j = g_player_projectile->z - 0.1; j < g_player_projectile->z + (0.5 * 2.0); j += 0.1)
+        for (float j = p->z - 0.1; j < p->z + (0.5 * 2.0); j += 0.1)
         {
-            for (float k = g_player_projectile->y - 0.1; k < g_player_projectile->y + (0.5 * 2.0); k += 0.1)
+            for (float k = p->y - 0.1; k < p->y + (0.5 * 2.0); k += 0.1)
             {
                 if (world[(int)i][(int)k][(int)j] != 0)
                 {
-                    hideMob(g_player_projectile->mobId);
-                    g_player_projectile->inMotion = 0;
+                    hideMob(p->mobId);
+                    p->inMotion = 0;
                     if (!isCollision)
                     {
                         world[(int)i][(int)k][(int)j] = 0;
+                        globalVehicleCheckProjectile(i, k, j);
                         isCollision = 1;
                     }
                 }
@@ -109,11 +109,11 @@ void checkProjectileCollision()
         }
     }
 
-    if (g_player_projectile->x >= (WORLDX - 1.15) || g_player_projectile->x <= 0.15 ||
-        g_player_projectile->z >= (WORLDZ - 1.15) || g_player_projectile->z <= 0.15 ||
-        g_player_projectile->y >= (WORLDY - WORLD_CLOUD_GAP - 0.15) || g_player_projectile->y <= 0.15)
+    if (p->x >= (WORLDX - 1.15) || p->x <= 0.15 ||
+        p->z >= (WORLDZ - 1.15) || p->z <= 0.15 ||
+        p->y >= (WORLDY - WORLD_CLOUD_GAP - 0.15) || p->y <= 0.15)
     {
-        hideMob(g_player_projectile->mobId);
-        g_player_projectile->inMotion = 0;
+        hideMob(p->mobId);
+        p->inMotion = 0;
     }
 }

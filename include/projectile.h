@@ -26,18 +26,27 @@ typedef struct projectile
 extern Projectile *createProjectile();
 
 /**
- * Fire projectile from player
+ * Sets projectile to players view point
+ * @param projectile projectile to update
  */
-extern void fireProjectile();
+extern void setProjectileToViewPosition(Projectile *p);
+
+/**
+ * Fire projectile from player
+ * @param projectile projectile to fire
+ */
+extern void fireProjectile(Projectile *projectile);
 
 /**
  * Move projectile to next position based on rotation angles
+ * @param projectile projectile to move
  */
-extern void moveProjectile();
+extern void moveProjectile(Projectile *projectile);
 
 /**
  * Check if projectile has collided with something
+ * @param projectile projectile to check
  */
-extern void checkProjectileCollision();
+extern void checkProjectileCollision(Projectile *projectile);
 
 #endif //msansome_projectile_h

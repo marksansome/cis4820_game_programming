@@ -48,6 +48,20 @@ void initializeValley(Valley *v)
     v->z2 = v->zCenter - v->radius;
 }
 
+void customInitializeValley(Valley *v, int radius, int depth, int xCenter, int yCenter, int zCenter)
+{
+    v->radius = radius;
+    v->depth = depth;
+    v->xCenter = xCenter;
+    v->yCenter = yCenter;
+    v->zCenter = zCenter;
+
+    v->x1 = v->xCenter - v->radius;
+    v->z1 = v->zCenter + v->radius;
+    v->x2 = v->xCenter + v->radius;
+    v->z2 = v->zCenter - v->radius;
+}
+
 void generateValley(Valley *v)
 {
     for (int i = 0; i < v->depth; i++)
