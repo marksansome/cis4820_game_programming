@@ -134,6 +134,11 @@ int getColour(Colours colour)
     }
 }
 
+double toDegrees(float radians)
+{
+    return radians * (180.0 / M_PI);
+}
+
 double toRadians(float degree)
 {
     return degree / 180.0 * M_PI;

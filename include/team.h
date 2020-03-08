@@ -48,6 +48,16 @@ extern void initializeTeam(Team *team, team_type type);
 extern void initializeTeamStartingObjects(Team *t);
 
 /**
+ * Updates a teams objects (towers, vehicles, etc.)
+ * @param team pointer to allocated team to update
+ * @param currentTime current time, tracking game run time
+ * @param vehicleTargets list of vehicles for towers to target eg. enemy team vehicles
+ * @param meteorCheck list of meteors for a vehicle to check
+ * @param meteorAdd list to add meteors to if a vehicle drops one
+ */
+extern void updateTeam(Team *t, double currentTime, List *vehicleTargets, List *meteorCheck, List *meteorAdd);
+
+/**
  * Checks if the square defined by (x1,z1) (x2,z2)
  * is on top of the teams other objects
  * @param team team to check against

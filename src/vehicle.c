@@ -326,6 +326,9 @@ void setSearchingState(Vehicle *v, Team *t)
 
 void incrementVehicle(Vehicle *v)
 {
+    // debug:
+    // return;
+
     //! @note: need to add collision detection here
     // the miss in collision happens when the vehicle tries to move up
     // but the next car is there?

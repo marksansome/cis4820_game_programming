@@ -7,12 +7,14 @@
 #ifndef msansome_tower_h
 #define msansome_tower_h
 
+#include "projectile.h"
 #include "utility.h"
 
 typedef struct tower
 {
     int colour;
     int height;
+    Projectile *projectile; // projectile for tower to fire
     int y;
     int x1;
     int z1;
@@ -33,6 +35,13 @@ extern Tower *createTower();
  * @param position the x position of the Tower
  */
 extern void initializeTower(Tower *tower, int colour, int position);
+
+/**
+ * Update a towers projectile
+ * @param tower pointer to allocated Tower
+ * @param vehicleTargets list of vehicles to use as projectile targets
+ */
+extern void updateTowerProjectile(Tower *tower, List *vehicleTargets);
 
 /**
  * Draws Tower in the world array

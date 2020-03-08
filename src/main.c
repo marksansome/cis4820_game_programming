@@ -270,7 +270,7 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
    }
    else
    {
-      static double cloudTime, projTime, meteorTime = 0.0;
+      static double cloudTime, meteorTime = 0.0;
       struct timeval tv;
       gettimeofday(&tv, NULL);
 
@@ -297,10 +297,10 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
          }
       }
 
-      // projectile movement and collision
-      if (curTime - projTime >= PROJECTILE_SPEED)
+      // player projectile movement and collision
+      if (curTime - g_player_projectile->timeTracker >= PROJECTILE_SPEED)
       {
-         projTime = curTime;
+         g_player_projectile->timeTracker = curTime;
          moveProjectile(g_player_projectile);
       }
 
@@ -340,105 +340,16 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
       // to make it more fair, we randomly select which team is updated first
       if (rand() % 2)
       {
-         // move red teams vehicles
-         for (int i = 0; i < getListSize(g_red_team->vehicles); i++)
-         {
-            Vehicle *v = getItemAtIndex(g_red_team->vehicles, i)->ptr;
-            if (curTime - v->timeTracker >= v->speed)
-            {
-               v->timeTracker = curTime;
-               // updateVehicleDamage(v, i, g_red_team);
-               moveVehicle(v, g_red_team, g_meteors);
-               // vehicle health is updated with checking projectile collision
-               if (v->health <= 0)
-               {
-                  // remove destroyed vehicle
-                  Vehicle *rem = removeItemAtIndex(g_red_team->vehicles, i)->ptr;
-                  generateVehicle(rem, RED_TEAM, 1);
-
-                  // create explosion
-                  int explosionSize = 5;
-                  Valley *explosion = createValley();
-                  customInitializeValley(explosion, explosionSize, explosionSize, v->x1, v->y, v->z1 + 1);
-                  generateValley(explosion);
-                  free(explosion);
-
-                  // drop meteor if carrying one
-                  if (v->isCarryingMeteor)
-                  {
-                     Meteor *m = rem->targetMeteor;
-                     m->isCollected = 0;
-                     m->isFalling = 1;
-                     m->x = rem->x1;
-                     m->y = rem->y;
-                     m->z = rem->z1;
-                     addItem(g_falling_meteors, m, METEOR);
-                  }
-
-                  // create the new vehicle
-                  Vehicle *new = createVehicle();
-                  initializeVehicle(new, rem->type, g_red_team);
-                  generateVehicle(new, RED_TEAM, 0);
-                  addItem(g_red_team->vehicles, new, VEHICLE);
-
-                  // free the old vehicle
-                  free(rem);
-               }
-            }
-         }
+         updateTeam(g_red_team, curTime, g_blue_team->vehicles, g_meteors, g_falling_meteors);
+         // debug:
+         // updateTeam(g_red_team, curTime, g_red_team->vehicles, g_meteors, g_falling_meteors);
       }
       else
       {
-         // move blue teams vehicles
-         for (int i = 0; i < getListSize(g_blue_team->vehicles); i++)
-         {
-            Vehicle *v = getItemAtIndex(g_blue_team->vehicles, i)->ptr;
-            if (curTime - v->timeTracker >= v->speed)
-            {
-               v->timeTracker = curTime;
-               // updateVehicleDamage(v, i, g_blue_team);
-               moveVehicle(v, g_blue_team, g_meteors);
-               if (v->health <= 0)
-               {
-                  // remove destroyed vehicle
-                  Vehicle *rem = removeItemAtIndex(g_blue_team->vehicles, i)->ptr;
-                  generateVehicle(rem, BLUE_TEAM, 1);
-
-                  // create explosion
-                  int explosionSize = 5;
-                  Valley *explosion = createValley();
-                  customInitializeValley(explosion, explosionSize, explosionSize, v->x1, v->y, v->z1 + 1);
-                  generateValley(explosion);
-                  free(explosion);
-
-                  // drop meteor if carrying one
-                  if (v->isCarryingMeteor)
-                  {
-                     Meteor *m = rem->targetMeteor;
-                     m->isCollected = 0;
-                     m->isFalling = 1;
-                     m->x = rem->x1;
-                     m->y = rem->y;
-                     m->z = rem->z1;
-                     addItem(g_falling_meteors, m, METEOR);
-                  }
-
-                  // create the new vehicle
-                  Vehicle *new = createVehicle();
-                  initializeVehicle(new, rem->type, g_blue_team);
-                  generateVehicle(new, BLUE_TEAM, 0);
-                  addItem(g_blue_team->vehicles, new, VEHICLE);
-
-                  // free the old vehicle
-                  free(rem);
-               }
-            }
-         }
+         updateTeam(g_blue_team, curTime, g_red_team->vehicles, g_meteors, g_falling_meteors);
+         // debug:
+         // updateTeam(g_blue_team, curTime, g_blue_team->vehicles, g_meteors, g_falling_meteors);
       }
-
-      //! @todo draw teams meteor cube
-      drawMeteorCube(g_red_team);
-      drawMeteorCube(g_blue_team);
 
       // check teams win conditions
       if (getListSize(g_red_team->meteors) >= WIN_SCORE)
@@ -473,7 +384,10 @@ void mouse(int button, int state, int x, int y)
    // if button pressed, fire projectile
    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
    {
-      setProjectileToViewPosition(g_player_projectile);
+      if (!g_player_projectile->inMotion)
+      {
+         setProjectileToViewPosition(g_player_projectile);
+      }
       fireProjectile(g_player_projectile);
    }
 }

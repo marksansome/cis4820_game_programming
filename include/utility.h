@@ -48,6 +48,13 @@ extern void drawCircle(int x, int y, int z, int r, Colours colour);
 extern int getColour(Colours colour);
 
 /**
+ * converts radians to degrees
+ * @param radians
+ * @return degrees
+ */
+extern double toDegrees(float radians);
+
+/**
  * converts degrees to radians
  * @param degree
  * @return radians

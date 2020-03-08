@@ -11,7 +11,9 @@
 #include "config.h"
 #include "graphics.h"
 #include "team.h"
+#include "tower.h"
 #include "utility.h"
+#include "valley.h"
 #include "vehicle.h"
 
 Team *createTeam()
@@ -74,6 +76,93 @@ void initializeTeamStartingObjects(Team *t)
     }
 
     // towers
+    for (int i = 0; i < NUM_STARTING_TOWERS; i++)
+    {
+        int towerOffset = getTeamOffset(t->type);
+
+        switch (t->type)
+        {
+        case RED_TEAM:
+        {
+            towerOffset = t->base->x2;
+            towerOffset += TOWER_TO_BASE_OFFSET;
+            break;
+        }
+        case BLUE_TEAM:
+        {
+            towerOffset = t->base->x1;
+            towerOffset -= TOWER_TO_BASE_OFFSET;
+            break;
+        }
+        default:
+            printf("ERROR: Invalid team type\n");
+            exit(1);
+        }
+
+        Tower *tow = createTower();
+        initializeTower(tow, t->colour, towerOffset);
+
+        addItem(t->towers, tow, TOWER);
+        generateTower(tow);
+    }
+}
+
+void updateTeam(Team *t, double currentTime, List *vehicleTargets, List *meteorCheck, List *meteorAdd)
+{
+    // move tower projectiles
+    for (int i = 0; i < getListSize(t->towers); i++)
+    {
+        updateTowerProjectile(getItemAtIndex(t->towers, i)->ptr, vehicleTargets);
+    }
+
+    // move teams vehicles
+    for (int i = 0; i < getListSize(t->vehicles); i++)
+    {
+        Vehicle *v = getItemAtIndex(t->vehicles, i)->ptr;
+        if (currentTime - v->timeTracker >= v->speed)
+        {
+            v->timeTracker = currentTime;
+            moveVehicle(v, t, meteorCheck);
+            // vehicle health is updated with checking projectile collision
+            if (v->health <= 0)
+            {
+                // remove destroyed vehicle
+                Vehicle *rem = removeItemAtIndex(t->vehicles, i)->ptr;
+                generateVehicle(rem, t->type, 1);
+
+                // create explosion
+                int explosionSize = 5;
+                Valley *explosion = createValley();
+                customInitializeValley(explosion, explosionSize, explosionSize, v->x1, v->y, v->z1 + 1);
+                generateValley(explosion);
+                free(explosion);
+
+                // drop meteor if carrying one
+                if (v->isCarryingMeteor)
+                {
+                    Meteor *m = rem->targetMeteor;
+                    m->isCollected = 0;
+                    m->isFalling = 1;
+                    m->x = rem->x1;
+                    m->y = rem->y;
+                    m->z = rem->z1;
+                    addItem(meteorAdd, m, METEOR);
+                }
+
+                // create the new vehicle
+                Vehicle *new = createVehicle();
+                initializeVehicle(new, rem->type, t);
+                generateVehicle(new, t->type, 0);
+                addItem(t->vehicles, new, VEHICLE);
+
+                // free the old vehicle
+                free(rem);
+            }
+        }
+    }
+
+    // draw teams meteor cube
+    drawMeteorCube(t);
 }
 
 int checkTeamCollision(Team *t, int y, int x1, int z1, int x2, int z2)

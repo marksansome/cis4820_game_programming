@@ -15,7 +15,8 @@ typedef enum item_type
     BASE,
     CLOUD,
     METEOR,
-    VEHICLE
+    VEHICLE,
+    TOWER
 } item_type;
 typedef struct item
 {

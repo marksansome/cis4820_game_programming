@@ -64,9 +64,10 @@
 #define NUM_STARTING_TRUCKS 5     // number of starting truck vehicles per team
 
 // TOWER
-#define TOWER_HEIGHT 4         // height of the tower
-#define TOWER_EDGE_LENGTH 1    // edge length of a tower
-#define TOWER_SEARCH_RADIUS 10 // radius to search for enemy vehicles
+#define TOWER_TO_BASE_OFFSET 10 // distance in front of base to place starting towers
+#define TOWER_HEIGHT 4          // height of the tower
+#define TOWER_EDGE_LENGTH 2     // edge length of a tower
+#define TOWER_SEARCH_RADIUS 10  // radius to search for enemy vehicles
 
 // UTILITY
 #define MAX_ATTEMPTS_TO_PLACE_OBJECT 10

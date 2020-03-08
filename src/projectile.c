@@ -38,6 +38,11 @@ Projectile *createProjectile()
     p->xRot = 0.0;
     p->yRot = 0.0;
     p->zRot = 0.0;
+    p->xDir = 0.0;
+    p->yDir = 0.0;
+    p->zDir = 0.0;
+    p->timeTracker = 0.0;
+    p->velocity = PROJECTILE_SPEED;
 
     return p;
 }
@@ -53,6 +58,47 @@ void setProjectileToViewPosition(Projectile *p)
     p->x -= 0.5;
     p->y -= 0.5;
     p->z -= 0.5;
+
+    p->xDir = (sin(toRadians(p->yRot)));
+    p->yDir = (sin(toRadians(p->xRot))) * -1.0;
+    p->zDir = (cos(toRadians(p->yRot))) * -1.0;
+}
+
+void setProjectilePosition(Projectile *p, float x, float y, float z)
+{
+    p->x = x;
+    p->y = y;
+    p->z = z;
+    setMobPosition(p->mobId, p->x, p->y, p->z, -p->yRot + 180.0);
+}
+
+void setProjectileTarget(Projectile *p, int x, int y, int z)
+{
+    float xDif = (float)x - (float)p->x;
+    float yDif = (float)y - (float)p->y;
+    float zDif = (float)z - (float)p->z;
+    float maxDir = 0.0;
+
+    if (fabs(xDif) > maxDir)
+    {
+        maxDir = fabs(xDif);
+    }
+    if (fabs(yDif) > maxDir)
+    {
+        maxDir = fabs(yDif);
+    }
+    if (fabs(xDif) > maxDir)
+    {
+        maxDir = fabs(zDif);
+    }
+
+    p->xDir = xDif / maxDir;
+    p->yDir = yDif / maxDir;
+    p->zDir = zDif / maxDir;
+
+    // p->xRot = toDegrees(atan(((float)p->y - (float)y) / ((float)p->x - (float)x)));
+    // p->yRot = toDegrees(atan(((float)x - (float)p->x) / ((float)p->z - (float)z)));
+    p->zRot = toDegrees(atan(((float)p->y - (float)y) / ((float)p->x - (float)x)));
 }
 
 void fireProjectile(Projectile *p)
@@ -69,11 +115,9 @@ void moveProjectile(Projectile *p)
 {
     if (p->inMotion)
     {
-        float unitMultiplier = 1.0 - fabs(pow(sin(toRadians(p->xRot)), 3));
-
-        p->x += (sin(toRadians(p->yRot)) * cos(toRadians(p->xRot)) * unitMultiplier);
-        p->y -= (sin(toRadians(p->xRot)));
-        p->z -= (cos(toRadians(p->yRot)) * cos(toRadians(p->xRot)) * unitMultiplier);
+        p->x += p->xDir;
+        p->y += p->yDir;
+        p->z += p->zDir;
 
         checkProjectileCollision(p);
         // calculate new position
