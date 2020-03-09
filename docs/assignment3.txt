@@ -1,6 +1,7 @@
 Assignment 3 - Enemy AI and Animation
 -------------------------------------
 Due. March 6, 2020
+The deadline for assignment 3 has been extended to Friday, March 13. There is no extended deadline past this date.
 
 Add animated opponents to the game which move and pick up fallen meteors.
 

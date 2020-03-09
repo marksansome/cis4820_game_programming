@@ -1,0 +1,108 @@
+
+Assignment 4 - Game Control and Opponent AI 
+-------------------------------------------
+Due. March 20, 2020
+
+Add controls to the player can build towers and trucks when they wish.
+Include opponent AI for the other player.
+
+
+1. Creating Towers and Trucks on Command
+----------------------------------------
+Use the tower and truck creation code from assignment 3. Add the
+ability to create trucks and towers by the user instead of automatically
+creating five of them at the start of the game.
+
+Trucks will still appear near the player's base when they are created.
+When created they will immediately start searching for meteors.
+Each player will start the game with one truck.
+
+When the player presses the t key a truck should be created. When they press
+the y key a tower should be created. You can look at the keyboard() function to
+see how keyboard input occurs.
+
+The towers should be placeable by the player. When they press the y key they should
+see a marker that indicates the position on the ground where the tower will be created.
+By moving the mouse they should see this position move across the world. When they press
+the y key a second time it will build the tower at the location of the marker.
+As in assignment 3, the towers should shoot at enemy vehicles and towers.
+
+If you cannot get the mouse to work correctly to place the tower then a reasonable
+fallback is to use keyboard input to control the positioning of the marker and tower.
+This solution wont get full marks but it will get some marks for positioning the towers.
+If you choose this option then mention it in the readme.txt file.
+
+Towers can only be built if they are within 10 units of another tower or the player's base.
+You don't need to do anything if a tower is destroyed and that action leaves other towers which
+are more than 10 units from a base (you only need to test the distance when the tower is built).
+
+
+2. Count and Display Collected Meteors
+--------------------------------------
+As meteors are collected the number of them should be displayed on the screen using a 2D display.
+In assignment 3 you needed to build a 3x3 block which illustrated the collected meteors for each
+player.  Draw three small 2D square made of 3x3 squares which represent the number of meteors collected.
+Place the 2d images along the side or bottom of the screen. This will show the player how many meteors
+they have collected and how many more they need to win the game.
+
+If either the player or the AI collect 27 meteors then print a message indicating that they have won
+the game.
+
+When the player builds a truck or a tower is will cost them some meteors. Decrease the number of meteors
+a player has when they build a truck or tower. Trucks cost one meteor, towers cost two meteors.
+
+
+3. Opponent AI
+--------------
+
+Write the AI to run the other player. The opponent should control the building of trucks and towers.
+Design a strategy for the player and write the code to run that AI. 
+
+Strategies could be things like:
+	-build a lot of trucks
+	-build a balance of trucks and towers
+	-defend the base with some towers and then build trucks
+Other strategies are fine but the strategy cannot be to allow the one starting
+truck to collect meteors and do nothing else.
+
+It isn't important if the strategy is particularly successful or if it reacts to
+what the human player is doing.
+
+Describe the strategy in the readme.txt file.
+
+
+Coding Practices
+----------------
+Write the code using standard stylistic practices. Use functions, 
+reasonable variable names, and consistent indentation.
+If the code is difficult for the TA to understand then you
+will lose marks.
+
+As usual, keep backups of your work using source control software.
+
+
+Starting Code
+-------------
+The starting code is available on the Courselink site.
+You can untar the file using tar xf filename.
+
+
+Submitting the Assignment
+-------------------------
+NOTE: The assignment executable is named a1. Other files can be
+named with any reasonable filenames.
+
+Submit the assignment using Courselink. Submit the files needed to
+build and run your program. Do not submit compiled code. Bundle the code in a tar file.
+
+Include a makefile that will compile the executable. Name the executable a1.
+ 
+The TA will unpack your code and type "make". They will then try to
+run an executable named "./a1".  If the make command or executing a1
+does not work then you will lose a substantial number of marks.
+
+It is always a good idea to unpack and test the file you are submitting
+to be sure that what you submit actually compiles and runs. 
+
+
+
