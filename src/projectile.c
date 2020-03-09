@@ -70,6 +70,7 @@ void setProjectilePosition(Projectile *p, float x, float y, float z)
     p->y = y;
     p->z = z;
     setMobPosition(p->mobId, p->x, p->y, p->z, -p->yRot + 180.0);
+    showMob(p->mobId);
 }
 
 void setProjectileTarget(Projectile *p, int x, int y, int z)

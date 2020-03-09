@@ -112,7 +112,12 @@ void updateTeam(Team *t, double currentTime, List *vehicleTargets, List *meteorC
     // move tower projectiles
     for (int i = 0; i < getListSize(t->towers); i++)
     {
-        updateTowerProjectile(getItemAtIndex(t->towers, i)->ptr, vehicleTargets);
+        Tower *tower = getItemAtIndex(t->towers, i)->ptr;
+        if (currentTime - tower->projectile->timeTracker >= tower->projectile->velocity)
+        {
+            tower->projectile->timeTracker = currentTime;
+            updateTowerProjectile(tower, vehicleTargets);
+        }
     }
 
     // move teams vehicles
