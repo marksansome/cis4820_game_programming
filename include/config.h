@@ -68,7 +68,6 @@
 #define TOWER_HEIGHT 4          // height of the tower
 #define TOWER_EDGE_LENGTH 2     // edge length of a tower
 #define TOWER_SEARCH_RADIUS 10  // radius to search for enemy vehicles
-#define TOWER_PROJ_SPEED_MULT 2 // multiplier to change projectile speed, larger = slower
 
 // UTILITY
 #define MAX_ATTEMPTS_TO_PLACE_OBJECT 10

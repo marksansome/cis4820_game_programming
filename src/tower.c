@@ -49,7 +49,6 @@ void initializeTower(Tower *t, int colour, int towerPos)
     t->y = getTopPosition(t->x1, t->z1, t->x2, t->z2);
 
     t->projectile = createProjectile();
-    t->projectile->velocity *= TOWER_PROJ_SPEED_MULT;
     setProjectilePosition(t->projectile, (float)t->x1 + ((float)TOWER_EDGE_LENGTH / 4.0), (float)(t->y + t->height) + 0.5, (float)t->z1 + ((float)TOWER_EDGE_LENGTH / 4.0));
 }
 

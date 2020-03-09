@@ -88,7 +88,7 @@ void setProjectileTarget(Projectile *p, int x, int y, int z)
     {
         maxDir = fabs(yDif);
     }
-    if (fabs(xDif) > maxDir)
+    if (fabs(zDif) > maxDir)
     {
         maxDir = fabs(zDif);
     }
