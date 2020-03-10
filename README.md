@@ -3,7 +3,6 @@
 Name:      Mark Sansome
 Student #: 0916066
 
-
 ## Assignment 1 - Building a Three Dimensional World
 
 Due. January 24, 2020
@@ -20,14 +19,9 @@ Due. March 6, 2020
 
 Due. March 20, 2020
 
-## Assignment 4 - Game Control and Opponent AI
-
-Due. March 20, 2020
-
 ## Assignment 5 - Alternative to the Final Exam
 
 Due. March 27, 2020
-
 
 ## Building the Game
 
@@ -52,7 +46,7 @@ All game parameters can be found in 'include/config.h'
     the air. This causes the meteor to stop and look like it it floating.
 
 - If a meteor is detroyed, it can still be collected as the internal reference
-    is not removed. 
+    is not removed.
 
 - Towers can spawn on top of each other
 
