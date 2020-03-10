@@ -1,6 +1,7 @@
 # CIS4820 Game Programming - University of Guelph - Winter 2020
 
 Name:      Mark Sansome
+
 Student #: 0916066
 
 ## Assignment 1 - Building a Three Dimensional World
@@ -43,7 +44,7 @@ All game parameters can be found in 'include/config.h'
 ## Limitations
 
 - Although rare, it is possible for meteors to collide with other meteors in
-    the air. This causes the meteor to stop and look like it it floating.
+    the air. This causes the meteor to stop and look like it's floating.
 
 - If a meteor is detroyed, it can still be collected as the internal reference
     is not removed.
