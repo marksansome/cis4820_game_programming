@@ -32,11 +32,11 @@ Pick a reasonable elevation for the helicopter to fly.
 The cost to build vehicles and tower, and the range they can shoot other objects,
 and the number of times they can be shot before being destroyed  is:
 
-                 Cost  Range  Health
-Tower           2      10        3
-Truck            1      0          2
-Tanks            3      10        4
-Helicopter    2      15        1
+            Cost  Range  Health
+Tower        2     10     3
+Truck        1     0      2
+Tanks        3     10     4
+Helicopter   2     15     1
 
 The tower, tank, and helicopter all shoot at enemies that are within range.
 They will shoot at other towers, trucks, tanks, helicopters, and at the
