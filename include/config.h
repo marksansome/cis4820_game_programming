@@ -60,8 +60,8 @@
 #define MIN_BLUE_TEAM_X_OFFSET 85 // minimum distance from map edge to spawn team structures (base, vehicle)
 #define MAX_BLUE_TEAM_X_OFFSET 90 // maximum distance from map edge to spawn team structures (base, vehicle)
 #define MAX_TEAM_Z_OFFSET 10      // maximum distance from map edge to spawn team structures (base, vehicle)
-#define NUM_STARTING_TOWERS 5     // number of starting towers per team
-#define NUM_STARTING_TRUCKS 5     // number of starting truck vehicles per team
+#define NUM_STARTING_TOWERS 1     // number of starting towers per team
+#define NUM_STARTING_TRUCKS 1     // number of starting truck vehicles per team
 
 // TOWER
 #define TOWER_TO_BASE_OFFSET 20 // distance in front of base to place starting towers
