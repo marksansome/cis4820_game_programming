@@ -61,6 +61,10 @@ void createUserColours()
     setUserColour(36, 0.15, 0.15, 0.70, 1.00, 0.07, 0.07, 0.35, 1.00);
     // black (vehicle tire)
     setUserColour(37, 0.01, 0.01, 0.01, 1.00, 0.00, 0.00, 0.00, 1.00);
+    // green (tower placer, available)
+    setUserColour(38, 0.00, 0.75, 0.00, 1.00, 0.00, 0.38, 0.00, 1.00);
+    // yellow (tower placer, unavailable)
+    setUserColour(39, 1.00, 0.64, 0.00, 1.00, 0.50, 0.31, 0.00, 1.00);
 }
 
 void drawCircle(int xCenter, int y, int zCenter, int r, Colours colour)
@@ -128,6 +132,10 @@ int getColour(Colours colour)
         return 36;
     case VEHICLE_TIRE_COLOUR:
         return 37;
+    case TOWER_SUCCESS_COLOUR:
+        return 38;
+    case TOWER_FAILURE_COLOUR:
+        return 39;
     default:
         printf("WARNING: Colour not found\n");
         return 0;

@@ -22,7 +22,9 @@ typedef enum colours
     RED,
     RED_TEAM_COLOUR,
     BLUE_TEAM_COLOUR,
-    VEHICLE_TIRE_COLOUR
+    VEHICLE_TIRE_COLOUR,
+    TOWER_SUCCESS_COLOUR,
+    TOWER_FAILURE_COLOUR
 } Colours;
 
 /**

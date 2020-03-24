@@ -4,12 +4,12 @@
  * 0916066
 */
 
-#ifndef msansome_vehicle_h
-#define msansome_vehicle_h
-
 #include "meteor.h"
 #include "team.h"
 #include "utility.h"
+
+#ifndef msansome_vehicle_h
+#define msansome_vehicle_h
 
 typedef enum vehicle_type
 {

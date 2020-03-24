@@ -87,6 +87,10 @@ short tubeVisible[TUBE_COUNT];
 
 /* flag indicating the user wants the cube in front of them removed */
 int space = 0;
+/* flag indicates the user wants to spawn a truck */
+int spawnTruck = 0;
+/* flag indicates teh user wants to spawn a tower */
+int spawnTower = 0;
 /* flag indicates if map is to be printed */
 int displayMap = 1;
 /* flag indicating a fixed viewpoint - not updated by mouse/keyboard */
@@ -836,6 +840,14 @@ void keyboard(unsigned char key, int x, int y)
       break;
    case ' ': // toggle space flag
       space = 1;
+      break;
+   case 't': // place truck
+      spawnTruck = 1;
+      break;
+   case 'y': // place tower
+      spawnTower++;
+      if (spawnTower > 2)
+         spawnTower = 0;
       break;
    case 'm': // toggle map display, 0=none, 1=small, 2=large
       displayMap++;

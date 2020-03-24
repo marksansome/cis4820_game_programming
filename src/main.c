@@ -29,6 +29,7 @@
 #include "meteor.h"
 #include "projectile.h"
 #include "team.h"
+#include "tower.h"
 #include "utility.h"
 #include "valley.h"
 #include "vehicle.h"
@@ -100,6 +101,8 @@ void draw2D()
 {
    GLfloat black[] = {0.0, 0.0, 0.0, 0.5};
    GLfloat green[] = {0.0, 0.5, 0.0, 0.5};
+   GLfloat gray[] = {0.05, 0.16, 0.16, 0.5};
+   GLfloat red[] = {0.7, 0.15, 0.15, 0.95};
 
    if (testWorld)
    {
@@ -115,6 +118,72 @@ void draw2D()
    }
    else
    {
+
+      // draw meteor score boxs
+      int cubeCount = getListSize(g_red_team->meteors);
+      int xOffset, yOffset, zOffset = 0;
+      int meteorSize = screenWidth / METEOR_SCORE_SCALE;
+      int scoreBuffer = meteorSize * 3;
+
+      // draw meteor count
+      for (int i = 1; i <= WIN_SCORE; i++)
+      {
+         // reset values
+         xOffset = 0;
+         yOffset = 0;
+         zOffset = 0;
+
+         // calculate offset for block position
+         if ((i % 9) > 3 && (i % 9) <= 6)
+         {
+            xOffset = 1;
+         }
+         else if ((i % 9) > 6 && (i % 9) <= 8)
+         {
+            xOffset = 2;
+         }
+         else if (i % 9 == 0)
+         {
+            xOffset = 2;
+         }
+         else
+         {
+            xOffset = 0;
+         }
+
+         if (i > 9 && i <= 18)
+         {
+            yOffset = 1;
+         }
+         else if (i > 18)
+         {
+            yOffset = 2;
+         }
+         else
+         {
+            yOffset = 0;
+         }
+
+         zOffset = i % 3;
+
+         // if the cube will be removed or placed
+         if (i <= cubeCount)
+         {
+            set2Dcolour(red);
+         }
+         else
+         {
+            set2Dcolour(gray);
+         }
+
+         // draw cube
+         draw2Dbox(scoreBuffer + (meteorSize * xOffset) + (yOffset * meteorSize * 4) + (2 * xOffset),
+                   scoreBuffer - (meteorSize * zOffset) - (2 * zOffset),
+                   scoreBuffer + (meteorSize * xOffset) + meteorSize + (yOffset * meteorSize * 4) + (2 * xOffset),
+                   scoreBuffer - (meteorSize * zOffset) + meteorSize - (2 * zOffset));
+      }
+
+      // draw maps
       if (displayMap == 1)
       {
          // calculate map position
@@ -270,11 +339,14 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
    }
    else
    {
+      // used to track time between updates
       static double cloudTime, meteorTime = 0.0;
       struct timeval tv;
       gettimeofday(&tv, NULL);
-
       double curTime = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000;
+
+      // used to track the last position where a tower place marker was used
+      static int xTowPlacer, yTowPlacer, zTowPlacer = 0;
 
       // cloud movement
       if (curTime - cloudTime >= CLOUD_SPEED)
@@ -337,18 +409,255 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
          }
       }
 
+      // remove last tower place marker from world
+      if (world[xTowPlacer][yTowPlacer][zTowPlacer] == getColour(TOWER_SUCCESS_COLOUR) ||
+          world[xTowPlacer][yTowPlacer][zTowPlacer] == getColour(TOWER_FAILURE_COLOUR))
+      {
+         world[xTowPlacer][yTowPlacer][zTowPlacer] = getColour(EMPTY);
+      }
+
+      // user input, wants to spawn truck
+      if (spawnTruck)
+      {
+         //! @todo spawning of actual object should be handled in respective files
+         // can they afford the truck
+         if (getListSize(g_red_team->meteors) >= TRUCK_BUILD_COST)
+         {
+            Vehicle *v = createVehicle();
+            initializeVehicle(v, TRUCK_VEHICLE, g_red_team);
+            addItem(g_red_team->vehicles, v, VEHICLE);
+
+            //! @todo this should be moved into the team code
+            for (i = 0; i < TRUCK_BUILD_COST; i++)
+            {
+               Meteor *m = removeItemAtIndex(g_red_team->meteors, i)->ptr;
+               // free(m);
+            }
+         }
+         else
+         {
+            printf("RED TEAM: Insufficient resources to purchase TRUCK\n");
+         }
+         spawnTruck = 0;
+      }
+
+      // user input, wants to spawn towers
+      if (spawnTower > 0)
+      {
+         // draw mouse position on ground
+         // get players position for starting point
+         int isCollision = 0;
+         int okayToPlace = 0;
+         float xRotVP, yRotVP, zRotVP = 0.0;
+         float xDir, yDir, zDir = 0.0;
+         float xCur, yCur, zCur = 0.0;
+
+         getViewPosition(&xCur, &yCur, &zCur);
+         getViewOrientation(&xRotVP, &yRotVP, &zRotVP);
+         xCur *= -1.0;
+         yCur *= -1.0;
+         zCur *= -1.0;
+         xCur -= 0.5;
+         yCur -= 0.5;
+         zCur -= 0.5;
+
+         xDir = sin(toRadians(yRotVP)) * cos(toRadians(xRotVP));
+         yDir = sin(toRadians(xRotVP)) * -1.0;
+         zDir = cos(toRadians(yRotVP)) * cos(toRadians(xRotVP)) * -1.0;
+
+         // loop until we find the collision point
+         while (!isCollision)
+         {
+            okayToPlace = 0;
+
+            xCur += xDir;
+            yCur += yDir;
+            zCur += zDir;
+
+            if (xCur >= (WORLDX - 1.15) || xCur <= 0.15 ||
+                zCur >= (WORLDZ - 1.15) || zCur <= 0.15 ||
+                yCur >= (WORLDY - WORLD_CLOUD_GAP - 0.15) || yCur <= 0.15)
+            {
+               isCollision = 1;
+               break;
+            }
+
+            for (float i = xCur - 0.1; i < xCur + (0.5 * 2.0); i += 0.1)
+            {
+               for (float j = zCur - 0.1; j < zCur + (0.5 * 2.0); j += 0.1)
+               {
+                  for (float k = yCur - 0.1; k < yCur + (0.5 * 2.0); k += 0.1)
+                  {
+                     if (world[(int)i][(int)k][(int)j] != 0 && !isCollision)
+                     {
+                        // show place marker for tower position
+                        int top = getTopPosition((int)i, (int)j, (int)i + 1, (int)j + 1);
+
+                        // detect if placable from other tower
+                        for (int f = 0; f < getListSize(g_red_team->towers); f++)
+                        {
+                           Tower *t = getItemAtIndex(g_red_team->towers, f)->ptr;
+                           if ((abs(t->x1 - (int)i) <= TOWER_PLACE_RADIUS) &&
+                               (abs(t->z1 - (int)j) <= TOWER_PLACE_RADIUS))
+                           {
+                              okayToPlace = 1;
+                              break;
+                           }
+                        }
+
+                        // detect if placable from base
+                        if ((abs(g_red_team->base->x1 + (BASE_EDGE_LENGTH / 2) - (int)i) <= TOWER_PLACE_RADIUS + (BASE_EDGE_LENGTH / 2)) &&
+                            (abs(g_red_team->base->z1 - (BASE_EDGE_LENGTH / 2) - (int)j) <= TOWER_PLACE_RADIUS + (BASE_EDGE_LENGTH / 2)))
+                        {
+                           okayToPlace = 1;
+                        }
+
+                        // show place marker
+                        if (okayToPlace)
+                        {
+                           world[(int)i][top][(int)j] = getColour(TOWER_SUCCESS_COLOUR);
+                        }
+                        else
+                        {
+                           world[(int)i][top][(int)j] = getColour(TOWER_FAILURE_COLOUR);
+                        }
+
+                        // record place markers position
+                        xTowPlacer = (int)i;
+                        yTowPlacer = top;
+                        zTowPlacer = (int)j;
+                        isCollision = 1;
+                     }
+                  }
+               }
+            }
+         }
+
+         if (spawnTower == 2 && okayToPlace == 1)
+         {
+            //! @todo spawning of actual object should be handled in respective files
+            // can they afford the tower
+            if (getListSize(g_red_team->meteors) >= TOWER_BUILD_COST)
+            {
+               // set offset for red team (see team initalization for blue team offset)
+               int towerOffset = g_red_team->base->x2;
+               towerOffset += TOWER_TO_BASE_OFFSET;
+
+               Tower *tow = createTower();
+               initializeTower(tow, g_red_team->colour, towerOffset);
+               tow->x1 = xTowPlacer;
+               tow->y = yTowPlacer;
+               tow->z1 = zTowPlacer;
+               tow->x2 = tow->x1 + TOWER_EDGE_LENGTH;
+               tow->z2 = tow->z1 + TOWER_EDGE_LENGTH;
+               addItem(g_red_team->towers, tow, TOWER);
+               generateTower(tow);
+
+               //! @todo this should be moved into the team code
+               for (i = 0; i < TOWER_BUILD_COST; i++)
+               {
+                  Meteor *m = removeItemAtIndex(g_red_team->meteors, i)->ptr;
+                  // free(m);
+               }
+            }
+            else
+            {
+               printf("RED TEAM: Insufficient resources to purchase TOWER\n");
+            }
+            spawnTower = 0;
+         }
+      }
+
       // to make it more fair, we randomly select which team is updated first
       if (rand() % 2)
       {
          updateTeam(g_red_team, curTime, g_blue_team->vehicles, g_meteors, g_falling_meteors);
-         // debug:
-         // updateTeam(g_red_team, curTime, g_red_team->vehicles, g_meteors, g_falling_meteors);
       }
       else
       {
+         // if team meteor count is greater than 3
+         //    generate random number between 0 and 1
+         //    if the number is between 0 and 0.75
+         //       if there are less than 10 team trucks spawned
+         //          spawn truck
+         //    if the number is between 0.75 and 1.0 spawn tower
+         //       if there are less than 5 team towers spawned
+         //          spawn tower
+         //             position is drawn in a straight line across the map
+         //             (random z position, but max x position from last tower)
+
+         // Enemy team "AI"
+         if (getListSize(g_blue_team->meteors) >= AI_START_METEORS)
+         {
+            float choice = rand() / (float)RAND_MAX;
+            if (choice >= 0.75) // spawn tower
+            {
+               if (getListSize(g_blue_team->towers) < AI_MAX_TOWERS)
+               {
+                  if (getListSize(g_blue_team->meteors) >= TOWER_BUILD_COST)
+                  {
+                     int xLast, zLast = 0;
+                     if (getListSize(g_blue_team->towers) > 0) // there are towers
+                     {
+                        Tower *last = g_blue_team->towers->last->ptr;
+                        xLast = last->x1;
+                        zLast = last->z1;
+                     }
+                     else
+                     {
+                        xLast = g_blue_team->base->x1;
+                        zLast = g_blue_team->base->z1;
+                     }
+
+                     Tower *tow = createTower();
+                     initializeTower(tow, g_blue_team->colour, 0);
+                     tow->x1 = xLast - TOWER_PLACE_RADIUS;
+                     tow->z1 = intRand(zLast - TOWER_PLACE_RADIUS, zLast + TOWER_PLACE_RADIUS);
+                     tow->x2 = tow->x1 + TOWER_EDGE_LENGTH;
+                     tow->z2 = tow->z1 + TOWER_EDGE_LENGTH;
+                     tow->y = getTopPosition(tow->x1, tow->z1, tow->x2, tow->z2);
+                     addItem(g_blue_team->towers, tow, TOWER);
+                     generateTower(tow);
+
+                     //! @todo this should be moved into the team code
+                     for (i = 0; i < TOWER_BUILD_COST; i++)
+                     {
+                        Meteor *m = removeItemAtIndex(g_blue_team->meteors, i)->ptr;
+                        // free(m);
+                     }
+                  }
+                  else
+                  {
+                     printf("BLUE TEAM: Insufficient resources to purchase TOWER\n");
+                  }
+               }
+            }
+            else // spawn truck
+            {
+               if (getListSize(g_blue_team->vehicles) < AI_MAX_VEHICLES)
+               {
+                  if (getListSize(g_blue_team->meteors) >= TRUCK_BUILD_COST)
+                  {
+                     Vehicle *v = createVehicle();
+                     initializeVehicle(v, TRUCK_VEHICLE, g_blue_team);
+                     addItem(g_blue_team->vehicles, v, VEHICLE);
+
+                     //! @todo this should be moved into the team code
+                     for (i = 0; i < TRUCK_BUILD_COST; i++)
+                     {
+                        Meteor *m = removeItemAtIndex(g_blue_team->meteors, i)->ptr;
+                        // free(m);
+                     }
+                  }
+                  else
+                  {
+                     printf("BLUE TEAM: Insufficient resources to purchase TRUCK\n");
+                  }
+               }
+            }
+         }
+
          updateTeam(g_blue_team, curTime, g_red_team->vehicles, g_meteors, g_falling_meteors);
-         // debug:
-         // updateTeam(g_blue_team, curTime, g_blue_team->vehicles, g_meteors, g_falling_meteors);
       }
 
       // check teams win conditions
@@ -357,7 +666,6 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
          printf("**********************************\n");
          printf("         RED team has won!        \n");
          printf("**********************************\n");
-         //! @todo free memory
          exit(0);
       }
       if (getListSize(g_blue_team->meteors) >= WIN_SCORE)
@@ -365,12 +673,10 @@ createTube(2, -xx, -yy, -zz, -xx-((x-xx)*25.0), -yy-((y-yy)*25.0), -zz-((z-zz)*2
          printf("**********************************\n");
          printf("        BLUE team has won!        \n");
          printf("**********************************\n");
-         //! @todo free memory
          exit(0);
       }
-      // debug
-      // printf("red score %d\n", getListSize(g_red_team->meteors));
-      // printf("blue score %d\n", getListSize(g_blue_team->meteors));
+
+      //! @todo free memory
    }
 }
 

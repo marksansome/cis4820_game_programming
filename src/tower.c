@@ -49,7 +49,8 @@ void initializeTower(Tower *t, int colour, int towerPos)
     t->y = getTopPosition(t->x1, t->z1, t->x2, t->z2);
 
     t->projectile = createProjectile();
-    setProjectilePosition(t->projectile, (float)t->x1 + ((float)TOWER_EDGE_LENGTH / 4.0), (float)(t->y + t->height) + 0.5, (float)t->z1 + ((float)TOWER_EDGE_LENGTH / 4.0));
+    setProjectilePosition(t->projectile, (float)t->x1, (float)(t->y + t->height) + 1.0, (float)t->z1);
+    showMob(t->projectile->mobId);
 }
 
 void updateTowerProjectile(Tower *t, List *vehicleTargets)
@@ -57,7 +58,7 @@ void updateTowerProjectile(Tower *t, List *vehicleTargets)
     // if not in motion, find new target
     if (!t->projectile->inMotion)
     {
-        setProjectilePosition(t->projectile, (float)t->x1 + ((float)TOWER_EDGE_LENGTH / 4.0), (float)(t->y + t->height) + 0.5, (float)t->z1 + ((float)TOWER_EDGE_LENGTH / 4.0));
+        setProjectilePosition(t->projectile, (float)t->x1, (float)(t->y + t->height) + 1.0, (float)t->z1);
         for (int i = 0; i < getListSize(vehicleTargets); i++)
         {
             Vehicle *v = getItemAtIndex(vehicleTargets, i)->ptr;
@@ -65,7 +66,7 @@ void updateTowerProjectile(Tower *t, List *vehicleTargets)
                 (abs(v->z1 - t->z1) <= TOWER_SEARCH_RADIUS))
             {
                 // vehicle in range, target
-                setProjectileTarget(t->projectile, v->x1 + 1, v->y + (v->height / 2), v->z1 + 1);
+                setProjectileTarget(t->projectile, (float)v->x1 + 1, v->y + (v->height / 2), (float)v->z1 + 1);
                 fireProjectile(t->projectile);
                 break;
             }
@@ -88,8 +89,6 @@ void generateTower(Tower *t)
             }
         }
     }
-
-    showMob(t->projectile->mobId);
 
     // debug show square (x1,z1) (x2,z2)
     // world[b->x1][b->y1][b->z1] = 7;

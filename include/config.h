@@ -14,6 +14,11 @@
 // #define SCREEN_HEIGHT 768
 #define WIN_SCORE 27 // number of meteors needed to win the game
 
+// AI
+#define AI_START_METEORS 3 // number of meteors needed before AI starts buying towers/vehicles
+#define AI_MAX_TOWERS 6    // maximum number of towers the AI will buy
+#define AI_MAX_VEHICLES 10 // maximum number of trucks the AI will buy
+
 // BASE
 #define BASE_HEIGHT 3            // y height of base
 #define BASE_EDGE_LENGTH 5       // x and z length of the edge for the square base
@@ -46,13 +51,18 @@
 #define METEOR_SPAWN_TIME 10000.0 // time until next meteors spawn, in milliseconds
 #define METEOR_PER_SPAWN 10       // number of meteors that spawn per spawn time
 
+// METEOR SCORE
+#define METEOR_SCORE_BUFFER 20 // buffer scale from screen edge for meteor score
+#define METEOR_SCORE_SCALE 100 // meteor score size scale
+#define METEOR_SCORE_SPACE 5   // meteor score size scale
+
 // MINI MAP
 #define MAP_SMALL_BUFFER 10 // buffer scale from screen edge
 #define MAP_SMALL_SCALE 8   // small map size scale
 #define MAP_LARGE_SCALE 2   // large map size scale
 
 // PROJECTILE
-#define PROJECTILE_SPEED 30.0 // milliseconds per movement
+#define PROJECTILE_SPEED 20.0 // milliseconds per movement
 
 // TEAM
 #define MIN_RED_TEAM_X_OFFSET 5   // minimum distance from map edge to spawn team structures (base, vehicle)
@@ -60,14 +70,16 @@
 #define MIN_BLUE_TEAM_X_OFFSET 85 // minimum distance from map edge to spawn team structures (base, vehicle)
 #define MAX_BLUE_TEAM_X_OFFSET 90 // maximum distance from map edge to spawn team structures (base, vehicle)
 #define MAX_TEAM_Z_OFFSET 10      // maximum distance from map edge to spawn team structures (base, vehicle)
-#define NUM_STARTING_TOWERS 1     // number of starting towers per team
+#define NUM_STARTING_TOWERS 0     // number of starting towers per team
 #define NUM_STARTING_TRUCKS 1     // number of starting truck vehicles per team
 
 // TOWER
 #define TOWER_TO_BASE_OFFSET 20 // distance in front of base to place starting towers
 #define TOWER_HEIGHT 4          // height of the tower
-#define TOWER_EDGE_LENGTH 2     // edge length of a tower
+#define TOWER_EDGE_LENGTH 1     // edge length of a tower
 #define TOWER_SEARCH_RADIUS 10  // radius to search for enemy vehicles
+#define TOWER_PLACE_RADIUS 10   // radius to place for team towers
+#define TOWER_BUILD_COST 2      // cost, in meteors, to build a tower
 
 // UTILITY
 #define MAX_ATTEMPTS_TO_PLACE_OBJECT 10
@@ -85,7 +97,8 @@
 #define TRUCK_HEIGHT 2           // height of a truck
 #define TRUCK_HEALTH 2           // amount of damage the truck can take
 #define TRUCK_BLOCK_COUNT 10     // number of blocks that make up a truck (not including meteor)
-#define TRUCK_SPEED 300.0        // milliseconds per movement
+#define TRUCK_SPEED 200.0        // milliseconds per movement
+#define TRUCK_BUILD_COST 1       // cost, in meteors, to build a truck
 
 // WORLD
 #define WORLDX 100        // x size of the map

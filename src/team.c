@@ -70,7 +70,6 @@ void initializeTeamStartingObjects(Team *t)
     {
         Vehicle *v = createVehicle();
         initializeVehicle(v, TRUCK_VEHICLE, t);
-
         addItem(t->vehicles, v, VEHICLE);
         generateVehicle(v, t->type, 0);
     }
@@ -78,7 +77,7 @@ void initializeTeamStartingObjects(Team *t)
     // towers
     for (int i = 0; i < NUM_STARTING_TOWERS; i++)
     {
-        int towerOffset = getTeamOffset(t->type);
+        int towerOffset = 0;
 
         switch (t->type)
         {
@@ -101,7 +100,6 @@ void initializeTeamStartingObjects(Team *t)
 
         Tower *tow = createTower();
         initializeTower(tow, t->colour, towerOffset);
-
         addItem(t->towers, tow, TOWER);
         generateTower(tow);
     }
@@ -109,10 +107,11 @@ void initializeTeamStartingObjects(Team *t)
 
 void updateTeam(Team *t, double currentTime, List *vehicleTargets, List *meteorCheck, List *meteorAdd)
 {
-    // move tower projectiles
+    // update towers and projectiles
     for (int i = 0; i < getListSize(t->towers); i++)
     {
         Tower *tower = getItemAtIndex(t->towers, i)->ptr;
+        generateTower(tower);
         if (currentTime - tower->projectile->timeTracker >= tower->projectile->velocity)
         {
             tower->projectile->timeTracker = currentTime;
@@ -191,14 +190,19 @@ int checkTeamCollision(Team *t, int y, int x1, int z1, int x2, int z2)
 void drawMeteorCube(Team *t)
 {
     int cubeCount = getListSize(t->meteors);
-    int xOffset, yOffset, zOffset = 0;
+    int xOffset, yOffset, zOffset, x, y, z = 0;
 
-    for (int i = 1; i <= cubeCount; i++)
+    for (int i = 1; i <= WIN_SCORE; i++)
     {
+        // reset values
         xOffset = 0;
         yOffset = 0;
         zOffset = 0;
+        x = 0;
+        y = 0;
+        z = 0;
 
+        // calculate offset for block position
         if (i > 9 && i <= 18)
         {
             yOffset = 1;
@@ -231,21 +235,39 @@ void drawMeteorCube(Team *t)
 
         zOffset = i % 3;
 
+        // calculate final block position based on team positions
         switch (t->type)
         {
         case RED_TEAM:
         {
-            world[t->base->x1 - xOffset - 2][t->base->y1 + yOffset][t->base->z1 - 1 - zOffset] = getColour(DARK_GRAY);
+            x = t->base->x1 - xOffset - 2;
+            y = t->base->y1 + yOffset;
+            z = t->base->z1 - 1 - zOffset;
             break;
         }
         case BLUE_TEAM:
         {
-            world[t->base->x2 + 1 + xOffset][t->base->y1 + yOffset][t->base->z1 - 3 + zOffset] = getColour(DARK_GRAY);
+            x = t->base->x2 + 1 + xOffset;
+            y = t->base->y1 + yOffset;
+            z = t->base->z1 - 3 + zOffset;
             break;
         }
         default:
             printf("WARNING: Invalid team type\n");
             break;
+        }
+
+        // if the cube will be removed or placed
+        if (i <= cubeCount)
+        {
+            world[x][y][z] = getColour(DARK_GRAY);
+        }
+        else
+        {
+            if (world[x][y][z] == getColour(DARK_GRAY))
+            {
+                world[x][y][z] = getColour(EMPTY);
+            }
         }
     }
 }

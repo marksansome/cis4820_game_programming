@@ -22,11 +22,6 @@ Due. March 6, 2020
 ------------------------------------------------------------------------------
 ## Assignment 4 - Game Control and Opponent AI
 
-Due. March 20, 2020
-
-------------------------------------------------------------------------------
-## Assignment 5 - Alternative to the Final Exam
-
 Due. March 27, 2020
 
 ------------------------------------------------------------------------------
@@ -42,6 +37,26 @@ To run the game, run the generated executable:
 
 Note: Although this is Assignment 2, the outline says that the executable
     should be named "./a1" as such the name stays as a1, instead of a2
+
+------------------------------------------------------------------------------
+## What you need to know
+
+Players team is RED
+Opponent team is BLUE
+
+------------------------------------------------------------------------------
+## Opponent AI (BLUE TEAM)
+
+A breif description of how the opponent AI is implemented. The AI has a heavier
+focus on spawning trucks as this leads to collecting meteors faster. The AI
+also tries to place towers to get as close to the players base as possible.
+
+If opponent team's meteor count is greater than 3
+    generate random number between 0 and 1
+if the generated number is less than 0.75 and the team has less than 10 trucks
+    spawn a truck
+if the generated number is greater than 0.75 and the team has less than 6 towers
+    spawn a tower at the maximum distance from the last tower possible
 
 ------------------------------------------------------------------------------
 ## Configuration

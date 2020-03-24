@@ -1,8 +1,8 @@
 
 #ifdef __APPLE__
+#include <GLUT/glut.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
-#include <GLUT/glut.h>
 #endif
 
 #ifndef msansome_graphics_h
@@ -26,6 +26,10 @@ extern int testWorld;
 extern int fps;
 /* flag to indicate the space bar has been pressed */
 extern int space;
+/* flag indicates the user wants to spawn a truck */
+extern int spawnTruck;
+/* flag indicates teh user wants to spawn a tower */
+extern int spawnTower;
 /* flag indicates the program is a client when set = 1 */
 extern int netClient;
 /* flag indicates the program is a server when set = 1 */

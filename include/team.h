@@ -4,12 +4,12 @@
  * 0916066
 */
 
-#ifndef msansome_team_h
-#define msansome_team_h
-
 #include "base.h"
 #include "linkedList.h"
 #include "utility.h"
+
+#ifndef msansome_team_h
+#define msansome_team_h
 
 typedef enum team_type
 {

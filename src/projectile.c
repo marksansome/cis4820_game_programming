@@ -59,9 +59,9 @@ void setProjectileToViewPosition(Projectile *p)
     p->y -= 0.5;
     p->z -= 0.5;
 
-    p->xDir = (sin(toRadians(p->yRot)));
+    p->xDir = sin(toRadians(p->yRot)) * cos(toRadians(p->xRot));
     p->yDir = (sin(toRadians(p->xRot))) * -1.0;
-    p->zDir = (cos(toRadians(p->yRot))) * -1.0;
+    p->zDir = (cos(toRadians(p->yRot)) * cos(toRadians(p->xRot))) * -1.0;
 }
 
 void setProjectilePosition(Projectile *p, float x, float y, float z)
