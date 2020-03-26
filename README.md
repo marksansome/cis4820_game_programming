@@ -1,9 +1,5 @@
 # CIS4820 Game Programming - University of Guelph - Winter 2020
 
-Name:      Mark Sansome
-
-Student #: 0916066
-
 ## Deliverables
 
 ### Assignment 1 - Building a Three Dimensional World
